@@ -15,8 +15,7 @@ final class QuoteRepository {
     /// 전체 문장 (최신순)
     func fetchAll() -> Observable<[Quote]> {
         let results = realm.objects(Quote.self).sorted(byKeyPath: "createdAt", ascending: false)
-        return Observable.collection(from: results)
-            .map(Array.init)
+        return observe(results)
     }
 
     /// 특정 책의 문장 (최신순)
@@ -24,8 +23,7 @@ final class QuoteRepository {
         let results = realm.objects(Quote.self)
             .filter("book.id == %@", bookId)
             .sorted(byKeyPath: "createdAt", ascending: false)
-        return Observable.collection(from: results)
-            .map(Array.init)
+        return observe(results)
     }
 
     /// 태그 필터링 (선택한 태그를 모두 포함하는 문장, AND 조건)
@@ -34,8 +32,7 @@ final class QuoteRepository {
         for name in tagNames {
             results = results.filter("ANY tags.name == %@", name)
         }
-        return Observable.collection(from: results.sorted(byKeyPath: "createdAt", ascending: false))
-            .map(Array.init)
+        return observe(results.sorted(byKeyPath: "createdAt", ascending: false))
     }
 
     /// 태그가 없는 문장
@@ -43,8 +40,23 @@ final class QuoteRepository {
         let results = realm.objects(Quote.self)
             .filter("tags.@count == 0")
             .sorted(byKeyPath: "createdAt", ascending: false)
-        return Observable.collection(from: results)
-            .map(Array.init)
+        return observe(results)
+    }
+
+    // MARK: - Private
+
+    private func observe<T: Object>(_ results: Results<T>) -> Observable<[T]> {
+        Observable.create { observer in
+            let token = results.observe { changes in
+                switch changes {
+                case .initial(let col), .update(let col, _, _, _):
+                    observer.onNext(Array(col))
+                case .error(let error):
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
+        }
     }
 
     func fetch(id: ObjectId) -> Quote? {

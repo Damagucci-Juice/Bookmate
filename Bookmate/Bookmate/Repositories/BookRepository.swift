@@ -1,6 +1,7 @@
 import Foundation
 import RealmSwift
 import RxSwift
+import RxCocoa
 
 final class BookRepository {
 
@@ -14,8 +15,7 @@ final class BookRepository {
 
     func fetchAll() -> Observable<[Book]> {
         let results = realm.objects(Book.self).sorted(byKeyPath: "createdAt", ascending: false)
-        return Observable.collection(from: results)
-            .map(Array.init)
+        return observe(results)
     }
 
     /// 문장이 하나 이상 있는 도서 (최신순)
@@ -23,8 +23,7 @@ final class BookRepository {
         let results = realm.objects(Book.self)
             .filter("quotes.@count > 0")
             .sorted(byKeyPath: "createdAt", ascending: false)
-        return Observable.collection(from: results)
-            .map(Array.init)
+        return observe(results)
     }
 
     func fetch(id: ObjectId) -> Book? {
@@ -35,8 +34,23 @@ final class BookRepository {
         let results = realm.objects(Book.self)
             .filter("title CONTAINS[c] %@ OR author CONTAINS[c] %@", keyword, keyword)
             .sorted(byKeyPath: "createdAt", ascending: false)
-        return Observable.collection(from: results)
-            .map(Array.init)
+        return observe(results)
+    }
+
+    // MARK: - Private
+
+    private func observe<T: Object>(_ results: Results<T>) -> Observable<[T]> {
+        Observable.create { observer in
+            let token = results.observe { changes in
+                switch changes {
+                case .initial(let col), .update(let col, _, _, _):
+                    observer.onNext(Array(col))
+                case .error(let error):
+                    observer.onError(error)
+                }
+            }
+            return Disposables.create()
+        }
     }
 
     // MARK: - Write
