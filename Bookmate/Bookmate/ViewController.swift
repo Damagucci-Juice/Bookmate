@@ -57,7 +57,7 @@ class ViewController: UIViewController {
     private let quoteBodyLabel: UILabel = {
         let label = UILabel()
         label.text = "우리가 어떤 사람인지는 우리가 무엇을 반복해서 하느냐에 달려 있다. 그러므로 탁월함은 행위가 아니라 습관이다."
-        label.font = AppFont.cardQuoteBody.font
+        label.font = AppFont.quoteText.font
         label.textColor = AppColor.textPrimary
         label.numberOfLines = 0
         return label
