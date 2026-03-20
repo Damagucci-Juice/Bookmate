@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(jq \". | map\\(select\\(.type == \"\"frame\"\" and \\(.name | startswith\\(\"\"\"\"\\) \\)\\)\\) | .[] | \"\"\\\\\\(.id\\): \\\\\\(.name\\)\"\"\")",
+      "Bash(jq \". | map\\(select\\(.type == \"\"frame\"\" and .children == null\\)\\) | .[] | \"\"\\\\\\(.id\\): \\\\\\(.name\\)\"\"\")",
+      "Bash(jq \". as $root | map\\(select\\(.type == \"\"frame\"\" and \\(.name | test\\(\"\"^[0-9]\"\"\\)\\)\\)\\) | .[] | \"\"\\\\\\(.id\\): \\\\\\(.name\\)\"\"\")",
+      "WebFetch(domain:developers.naver.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl -s --request GET --url 'https://openapi.naver.com/v1/search/book_adv.json?d_isbn=9791190073882' --header 'X-Naver-Client-Id: f9wsBFtLC3K3f4leqcnn' --header 'X-Naver-Client-Secret: qckLPltNbz')",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl:*)"
+    ]
+  }
+}
