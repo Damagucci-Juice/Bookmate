@@ -21,6 +21,13 @@ final class BookSelectionViewController: UIViewController {
     private var recentBooks: [Book] = []
     private var searchResults: [BookItem] = []
 
+    // Pagination state
+    private var currentQuery: String = ""
+    private var currentStart: Int = 1
+    private let pageSize: Int = 20
+    private var totalResults: Int = 0
+    private var isLoadingMore: Bool = false
+
     // MARK: - UI
 
     private let searchContainer: UIView = {
@@ -175,15 +182,44 @@ final class BookSelectionViewController: UIViewController {
         sectionTitleLabel.text = "검색 결과"
         clearButton.isHidden = true
 
-        bookService.search(query: query)
+        // Reset pagination state for new search
+        currentQuery = query
+        currentStart = 1
+        totalResults = 0
+        isLoadingMore = false
+        searchResults = []
+
+        bookService.search(query: query, display: pageSize, start: currentStart)
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] response in
                 guard let self, self.state == .searching else { return }
                 self.searchResults = response.items
+                self.totalResults = response.total
                 self.tableView.reloadData()
             }, onError: { [weak self] _ in
                 self?.searchResults = []
                 self?.tableView.reloadData()
+            })
+            .disposed(by: disposeBag)
+    }
+
+    private func loadNextPage() {
+        guard !isLoadingMore,
+              searchResults.count < totalResults,
+              state == .searching else { return }
+
+        isLoadingMore = true
+        let nextStart = searchResults.count + 1
+
+        bookService.search(query: currentQuery, display: pageSize, start: nextStart)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] response in
+                guard let self else { return }
+                self.searchResults.append(contentsOf: response.items)
+                self.isLoadingMore = false
+                self.tableView.reloadData()
+            }, onError: { [weak self] _ in
+                self?.isLoadingMore = false
             })
             .disposed(by: disposeBag)
     }
@@ -234,6 +270,14 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         78
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard state == .searching else { return }
+        // Trigger load when user approaches the last 3 cells
+        if indexPath.row >= searchResults.count - 3 {
+            loadNextPage()
+        }
     }
 }
 
