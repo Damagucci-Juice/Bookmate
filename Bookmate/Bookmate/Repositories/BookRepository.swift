@@ -1,5 +1,6 @@
 import Foundation
 import RealmSwift
+import Realm
 import RxSwift
 import RxCocoa
 
@@ -37,6 +38,12 @@ final class BookRepository {
         return observe(results)
     }
 
+    /// 최근 검색한 책 (lastSearchedAt 내림차순)
+    func fetchRecentlySearched() -> Observable<[Book]> {
+        let results = realm.objects(Book.self).sorted(byKeyPath: "lastSearchedAt", ascending: false)
+        return observe(results)
+    }
+
     // MARK: - Private
 
     private func observe<T: Object>(_ results: Results<T>) -> Observable<[T]> {
@@ -49,7 +56,7 @@ final class BookRepository {
                     observer.onError(error)
                 }
             }
-            return Disposables.create()
+            return Disposables.create { token.invalidate() }
         }
     }
 
@@ -61,6 +68,7 @@ final class BookRepository {
         if let existing = realm.objects(Book.self)
             .filter("isbn == %@", item.isbn)
             .first {
+            try? realm.write { existing.lastSearchedAt = Date() }
             return existing
         }
 

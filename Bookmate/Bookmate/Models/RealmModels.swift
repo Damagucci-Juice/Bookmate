@@ -1,5 +1,6 @@
 import Foundation
 import RealmSwift
+import Realm
 
 // MARK: - Book
 
@@ -10,6 +11,7 @@ class Book: Object {
     @Persisted var isbn: String = ""
     @Persisted var coverImageData: Data?
     @Persisted var createdAt: Date = Date()
+    @Persisted var lastSearchedAt: Date = Date()
 
     @Persisted(originProperty: "book") var quotes: LinkingObjects<Quote>
 }
@@ -56,8 +58,14 @@ enum CardStyleType: String, CaseIterable {
 extension Realm {
     static func configured() -> Realm {
         let config = Realm.Configuration(
-            schemaVersion: 1,
-            migrationBlock: { _, _ in },
+            schemaVersion: 2,
+            migrationBlock: { migration, oldSchemaVersion in
+                if oldSchemaVersion < 2 {
+                    migration.enumerateObjects(ofType: Book.className()) { oldObject, newObject in
+                        newObject?["lastSearchedAt"] = oldObject?["createdAt"] as? Date ?? Date()
+                    }
+                }
+            },
             objectTypes: [Book.self, Quote.self, Tag.self, CardStyle.self]
         )
         return try! Realm(configuration: config)

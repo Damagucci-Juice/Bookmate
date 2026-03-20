@@ -52,10 +52,18 @@ final class BookSelectionViewController: UIViewController {
         tf.placeholder = "책 제목 또는 저자를 검색하세요"
         tf.font = AppFont.body.font
         tf.textColor = AppColor.textPrimary
-        tf.clearButtonMode = .whileEditing
         tf.returnKeyType = .search
         tf.autocorrectionType = .no
         return tf
+    }()
+
+    private let searchClearButton: UIButton = {
+        let btn = UIButton(type: .system)
+        let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .medium)
+        btn.setImage(UIImage(systemName: "xmark.circle.fill", withConfiguration: config), for: .normal)
+        btn.tintColor = AppColor.textTertiary
+        btn.isHidden = true
+        return btn
     }()
 
     private let sectionTitleLabel: UILabel = {
@@ -95,12 +103,20 @@ final class BookSelectionViewController: UIViewController {
         loadRecentBooks()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if state == .recent {
+            loadRecentBooks()
+        }
+    }
+
     // MARK: - Layout
 
     private func setupLayout() {
         view.addSubview(searchContainer)
         searchContainer.addSubview(searchIconView)
         searchContainer.addSubview(searchTextField)
+        searchContainer.addSubview(searchClearButton)
 
         let headerStack = UIStackView(arrangedSubviews: [sectionTitleLabel, clearButton])
         headerStack.axis = .horizontal
@@ -120,8 +136,13 @@ final class BookSelectionViewController: UIViewController {
         }
         searchTextField.snp.makeConstraints {
             $0.leading.equalTo(searchIconView.snp.trailing).offset(12)
-            $0.trailing.equalToSuperview().offset(-16)
+            $0.trailing.equalTo(searchClearButton.snp.leading).offset(-4)
             $0.centerY.equalToSuperview()
+        }
+        searchClearButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().offset(-12)
+            $0.centerY.equalToSuperview()
+            $0.size.equalTo(28)
         }
         headerStack.snp.makeConstraints {
             $0.top.equalTo(searchContainer.snp.bottom).offset(24)
@@ -143,9 +164,8 @@ final class BookSelectionViewController: UIViewController {
     // MARK: - Rx Bindings
 
     private func bindSearch() {
-        searchTextField.rx.text.orEmpty
-            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
-            .distinctUntilChanged()
+        searchTextField.rx.controlEvent(.editingDidEndOnExit)
+            .withLatestFrom(searchTextField.rx.text.orEmpty)
             .subscribe(onNext: { [weak self] query in
                 guard let self else { return }
                 if query.trimmingCharacters(in: .whitespaces).isEmpty {
@@ -155,12 +175,27 @@ final class BookSelectionViewController: UIViewController {
                 }
             })
             .disposed(by: disposeBag)
+
+        searchTextField.rx.text.orEmpty
+            .map { $0.isEmpty }
+            .distinctUntilChanged()
+            .bind(to: searchClearButton.rx.isHidden)
+            .disposed(by: disposeBag)
+
+        searchClearButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let self else { return }
+                self.searchTextField.text = ""
+                self.searchTextField.sendActions(for: .valueChanged)
+                self.switchToRecent()
+            })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Data
 
     private func loadRecentBooks() {
-        bookRepository.fetchAll()
+        bookRepository.fetchRecentlySearched()
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] books in
                 guard let self, self.state == .recent else { return }
@@ -174,7 +209,7 @@ final class BookSelectionViewController: UIViewController {
         state = .recent
         sectionTitleLabel.text = "최근 검색한 책"
         clearButton.isHidden = false
-        tableView.reloadData()
+        loadRecentBooks()
     }
 
     private func performSearch(query: String) {
@@ -195,6 +230,7 @@ final class BookSelectionViewController: UIViewController {
                 guard let self, self.state == .searching else { return }
                 self.searchResults = response.items
                 self.totalResults = response.total
+                self.sectionTitleLabel.text = "검색 결과 \(response.total)건"
                 self.tableView.reloadData()
             }, onError: { [weak self] _ in
                 self?.searchResults = []
@@ -255,6 +291,7 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
         case .searching:
             let item = searchResults[indexPath.row]
             let book = bookRepository.findOrCreate(from: item)
+            print("[BookSelection] 검색 결과에서 책 선택: \(book.title) - \(book.author)")
             // Download cover image if not already stored
             if book.coverImageData == nil, let url = URL(string: item.image) {
                 KingfisherManager.shared.retrieveImage(with: url) { [weak self] result in
