@@ -21,6 +21,10 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NAVER_CLIENT_ID</key>
+	<string>$(NAVER_CLIENT_ID)</string>
+	<key>NAVER_CLIENT_SECRET</key>
+	<string>$(NAVER_CLIENT_SECRET)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>NanumMyeongjo.ttf</string>

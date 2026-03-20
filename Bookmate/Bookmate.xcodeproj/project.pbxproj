@@ -18,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		BE01DE652F6D10E30027755F /* Bookmate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bookmate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE01DF5A2F6D40000027755F /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -62,6 +63,7 @@
 		BE01DE5C2F6D10E30027755F = {
 			isa = PBXGroup;
 			children = (
+				BE01DF5A2F6D40000027755F /* Secrets.xcconfig */,
 				BE01DE672F6D10E30027755F /* Bookmate */,
 				BE01DE662F6D10E30027755F /* Products */,
 			);
@@ -171,6 +173,7 @@
 /* Begin XCBuildConfiguration section */
 		BE01DE792F6D10E50027755F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BE01DF5A2F6D40000027755F /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -208,6 +211,7 @@
 		};
 		BE01DE7A2F6D10E50027755F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BE01DF5A2F6D40000027755F /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - Response
 
-struct BookSearchResponse: Decodable {
+struct BookSearchResponse: Decodable, Sendable {
     let lastBuildDate: String
     let total: Int
     let start: Int
@@ -12,7 +12,7 @@ struct BookSearchResponse: Decodable {
 
 // MARK: - BookItem
 
-struct BookItem: Decodable {
+struct BookItem: Decodable, Sendable {
     let title: String
     let link: String
     let image: String

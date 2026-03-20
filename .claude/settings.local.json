@@ -8,7 +8,12 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(curl -s --request GET --url 'https://openapi.naver.com/v1/search/book_adv.json?d_isbn=9791190073882' --header 'X-Naver-Client-Id: f9wsBFtLC3K3f4leqcnn' --header 'X-Naver-Client-Secret: qckLPltNbz')",
       "Bash(python3 -m json.tool)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(find /Users/will/Desktop/Bookmate/Bookmate -type f -name *.pbxproj -o -name Podfile* -o -name Pods-*)",
+      "Bash(xcodebuild -scheme Bookmate -destination 'platform=iOS Simulator,name=iPhone 16' build)",
+      "Bash(xcodebuild -scheme Bookmate -destination 'platform=iOS Simulator,id=2E38CD16-C1B2-4269-9E14-C3AA10C89780' build)",
+      "Bash(ls /Users/will/Desktop/Bookmate/Bookmate/*.xcconfig)",
+      "Bash(ls /Users/will/Desktop/Bookmate/Bookmate/Bookmate/*.xcconfig)"
     ]
   }
 }
