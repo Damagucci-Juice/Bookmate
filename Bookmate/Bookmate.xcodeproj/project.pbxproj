@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		BE01DE852F6D25650027755F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = BE01DE842F6D25650027755F /* SnapKit */; };
+		BE01DF442F6D31A10027755F /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = BE01DF432F6D31A10027755F /* Kingfisher */; };
+		BE01DF472F6D31BE0027755F /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = BE01DF462F6D31BE0027755F /* RxCocoa */; };
+		BE01DF492F6D31BE0027755F /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = BE01DF482F6D31BE0027755F /* RxRelay */; };
+		BE01DF4B2F6D31BE0027755F /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = BE01DF4A2F6D31BE0027755F /* RxSwift */; };
+		BE01DF4E2F6D31D10027755F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = BE01DF4D2F6D31D10027755F /* Alamofire */; };
+		BE01DF512F6D32000027755F /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = BE01DF502F6D32000027755F /* RealmSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +46,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE01DF472F6D31BE0027755F /* RxCocoa in Frameworks */,
+				BE01DF442F6D31A10027755F /* Kingfisher in Frameworks */,
+				BE01DF512F6D32000027755F /* RealmSwift in Frameworks */,
+				BE01DF4B2F6D31BE0027755F /* RxSwift in Frameworks */,
+				BE01DF4E2F6D31D10027755F /* Alamofire in Frameworks */,
+				BE01DF492F6D31BE0027755F /* RxRelay in Frameworks */,
 				BE01DE852F6D25650027755F /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,6 +96,12 @@
 			name = Bookmate;
 			packageProductDependencies = (
 				BE01DE842F6D25650027755F /* SnapKit */,
+				BE01DF432F6D31A10027755F /* Kingfisher */,
+				BE01DF462F6D31BE0027755F /* RxCocoa */,
+				BE01DF482F6D31BE0027755F /* RxRelay */,
+				BE01DF4A2F6D31BE0027755F /* RxSwift */,
+				BE01DF4D2F6D31D10027755F /* Alamofire */,
+				BE01DF502F6D32000027755F /* RealmSwift */,
 			);
 			productName = Bookmate;
 			productReference = BE01DE652F6D10E30027755F /* Bookmate.app */;
@@ -115,6 +133,10 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				BE01DE832F6D25650027755F /* XCRemoteSwiftPackageReference "SnapKit" */,
+				BE01DF422F6D31A10027755F /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				BE01DF452F6D31BE0027755F /* XCRemoteSwiftPackageReference "RxSwift" */,
+				BE01DF4C2F6D31D10027755F /* XCRemoteSwiftPackageReference "Alamofire" */,
+				BE01DF4F2F6D32000027755F /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BE01DE662F6D10E30027755F /* Products */;
@@ -374,6 +396,38 @@
 				minimumVersion = 5.7.1;
 			};
 		};
+		BE01DF422F6D31A10027755F /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.8.0;
+			};
+		};
+		BE01DF452F6D31BE0027755F /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.10.2;
+			};
+		};
+		BE01DF4C2F6D31D10027755F /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.11.1;
+			};
+		};
+		BE01DF4F2F6D32000027755F /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 20.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -381,6 +435,36 @@
 			isa = XCSwiftPackageProductDependency;
 			package = BE01DE832F6D25650027755F /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		BE01DF432F6D31A10027755F /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE01DF422F6D31A10027755F /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		BE01DF462F6D31BE0027755F /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE01DF452F6D31BE0027755F /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		BE01DF482F6D31BE0027755F /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE01DF452F6D31BE0027755F /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		BE01DF4A2F6D31BE0027755F /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE01DF452F6D31BE0027755F /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		BE01DF4D2F6D31D10027755F /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE01DF4C2F6D31D10027755F /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		BE01DF502F6D32000027755F /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE01DF4F2F6D32000027755F /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
