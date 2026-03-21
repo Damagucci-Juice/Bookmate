@@ -17,7 +17,7 @@ final class BookSelectionViewController: UIViewController {
     }
     private var state: ScreenState = .recent
 
-    private var recentBooks: [Book] = []
+    private var recentBooks: [SearchedBook] = []
     private var searchResults: [BookItem] = []
 
     // Pagination state
@@ -194,6 +194,8 @@ final class BookSelectionViewController: UIViewController {
             .subscribe(onNext: { [weak self] in
                 guard let self else { return }
                 self.bookRepository.clearRecentSearches()
+                ImageCache.default.clearMemoryCache()
+                ImageCache.default.clearDiskCache()
             })
             .disposed(by: disposeBag)
     }
@@ -283,7 +285,7 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
         switch state {
         case .recent:
             let book = recentBooks[indexPath.row]
-            cell.configure(title: book.title, author: book.author, coverData: book.coverImageData)
+            cell.configure(title: book.title, author: book.author, coverURL: book.coverImageURL)
         case .searching:
             let item = searchResults[indexPath.row]
             cell.configure(title: item.cleanTitle, author: item.authors.joined(separator: ", "), coverURL: item.image)
@@ -295,10 +297,11 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
         tableView.deselectRow(at: indexPath, animated: true)
         switch state {
         case .recent:
-            let book = recentBooks[indexPath.row]
-            bookRepository.markAsRecentlySearched(book)
+            let searched = recentBooks[indexPath.row]
+            bookRepository.markAsRecentlySearched(searched)
         case .searching:
             let item = searchResults[indexPath.row]
+            bookRepository.addToSearchHistory(from: item)
             let book = bookRepository.findOrCreate(from: item)
             // Download cover image if not already stored
             if book.coverImageData == nil, let url = URL(string: item.image) {
@@ -406,7 +409,7 @@ private final class BookCell: UITableViewCell {
 
         if let data = coverData, let image = UIImage(data: data) {
             coverImageView.image = image
-        } else if let urlString = coverURL, let url = URL(string: urlString) {
+        } else if let urlString = coverURL, !urlString.isEmpty, let url = URL(string: urlString) {
             coverImageView.kf.setImage(with: url)
         } else {
             coverImageView.image = nil

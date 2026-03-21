@@ -12,7 +12,7 @@ final class BookRepository {
         self.realm = realm
     }
 
-    // MARK: - Read
+    // MARK: - Read (Book)
 
     func fetchAll() -> Observable<[Book]> {
         let results = realm.objects(Book.self).sorted(byKeyPath: "createdAt", ascending: false)
@@ -38,19 +38,20 @@ final class BookRepository {
         return observe(results)
     }
 
-    /// 최근 검색한 책 (lastSearchedAt 내림차순)
-    func fetchRecentlySearched() -> Observable<[Book]> {
-        let results = realm.objects(Book.self)
-            .filter("lastSearchedAt != nil")
-            .sorted(byKeyPath: "lastSearchedAt", ascending: false)
+    // MARK: - Read (SearchedBook)
+
+    /// 최근 검색한 책 (searchedAt 내림차순)
+    func fetchRecentlySearched() -> Observable<[SearchedBook]> {
+        let results = realm.objects(SearchedBook.self)
+            .sorted(byKeyPath: "searchedAt", ascending: false)
         return observe(results)
     }
 
     /// 최근 검색 기록 전체 삭제
     func clearRecentSearches() {
-        let books = Array(realm.objects(Book.self).filter("lastSearchedAt != nil"))
+        let searched = realm.objects(SearchedBook.self)
         try? realm.write {
-            books.forEach { $0.lastSearchedAt = nil }
+            realm.delete(searched)
         }
     }
 
@@ -70,7 +71,7 @@ final class BookRepository {
         }
     }
 
-    // MARK: - Write
+    // MARK: - Write (Book)
 
     /// Naver API BookItem으로 Book을 생성하거나 ISBN이 같은 기존 Book을 반환
     @discardableResult
@@ -78,7 +79,6 @@ final class BookRepository {
         if let existing = realm.objects(Book.self)
             .filter("isbn == %@", item.isbn)
             .first {
-            try? realm.write { existing.lastSearchedAt = Date() }
             return existing
         }
 
@@ -86,7 +86,6 @@ final class BookRepository {
         book.title = item.cleanTitle
         book.author = item.authors.joined(separator: ", ")
         book.isbn = item.isbn
-        book.lastSearchedAt = Date()
 
         try? realm.write { realm.add(book) }
         return book
@@ -94,10 +93,6 @@ final class BookRepository {
 
     func save(_ book: Book) {
         try? realm.write { realm.add(book, update: .modified) }
-    }
-
-    func markAsRecentlySearched(_ book: Book) {
-        try? realm.write { book.lastSearchedAt = Date() }
     }
 
     func updateCoverImage(_ data: Data, for book: Book) {
@@ -110,5 +105,32 @@ final class BookRepository {
             book.quotes.forEach { $0.book = nil }
             realm.delete(book)
         }
+    }
+
+    // MARK: - Write (SearchedBook)
+
+    /// 검색 이력에 추가하거나 기존 이력의 searchedAt 갱신
+    @discardableResult
+    func addToSearchHistory(from item: BookItem) -> SearchedBook {
+        if let existing = realm.objects(SearchedBook.self)
+            .filter("isbn == %@", item.isbn)
+            .first {
+            try? realm.write { existing.searchedAt = Date() }
+            return existing
+        }
+
+        let searched = SearchedBook()
+        searched.title = item.cleanTitle
+        searched.author = item.authors.joined(separator: ", ")
+        searched.isbn = item.isbn
+        searched.coverImageURL = item.image
+
+        try? realm.write { realm.add(searched) }
+        return searched
+    }
+
+    /// 기존 SearchedBook의 searchedAt 갱신
+    func markAsRecentlySearched(_ searched: SearchedBook) {
+        try? realm.write { searched.searchedAt = Date() }
     }
 }

@@ -2,7 +2,18 @@ import Foundation
 import RealmSwift
 import Realm
 
-// MARK: - Book
+// MARK: - SearchedBook (검색 이력 전용, 임시)
+
+class SearchedBook: Object {
+    @Persisted(primaryKey: true) var id: ObjectId
+    @Persisted var title: String = ""
+    @Persisted var author: String = ""
+    @Persisted var isbn: String = ""
+    @Persisted var coverImageURL: String = ""
+    @Persisted var searchedAt: Date = Date()
+}
+
+// MARK: - Book (영구, Quote가 있는 도서)
 
 class Book: Object {
     @Persisted(primaryKey: true) var id: ObjectId
@@ -11,7 +22,6 @@ class Book: Object {
     @Persisted var isbn: String = ""
     @Persisted var coverImageData: Data?
     @Persisted var createdAt: Date = Date()
-    @Persisted var lastSearchedAt: Date?
 
     @Persisted(originProperty: "book") var quotes: LinkingObjects<Quote>
 }
@@ -58,7 +68,7 @@ enum CardStyleType: String, CaseIterable {
 extension Realm {
     static func configured() -> Realm {
         let config = Realm.Configuration(
-            schemaVersion: 3,
+            schemaVersion: 4,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 2 {
                     migration.enumerateObjects(ofType: Book.className()) { oldObject, newObject in
@@ -66,8 +76,22 @@ extension Realm {
                     }
                 }
                 // v3: lastSearchedAt changed from Date to Date? — Realm handles automatically
+                if oldSchemaVersion < 4 {
+                    // v4: Book.lastSearchedAt 제거, SearchedBook 테이블 신설
+                    // lastSearchedAt != nil인 기존 Book → SearchedBook으로 복사
+                    migration.enumerateObjects(ofType: Book.className()) { oldObject, _ in
+                        guard let oldObject,
+                              let searchedAt = oldObject["lastSearchedAt"] as? Date else { return }
+                        let searched = migration.create(SearchedBook.className())
+                        searched["title"] = oldObject["title"] as? String ?? ""
+                        searched["author"] = oldObject["author"] as? String ?? ""
+                        searched["isbn"] = oldObject["isbn"] as? String ?? ""
+                        searched["coverImageURL"] = ""
+                        searched["searchedAt"] = searchedAt
+                    }
+                }
             },
-            objectTypes: [Book.self, Quote.self, Tag.self, CardStyle.self]
+            objectTypes: [Book.self, SearchedBook.self, Quote.self, Tag.self, CardStyle.self]
         )
         return try! Realm(configuration: config)
     }
