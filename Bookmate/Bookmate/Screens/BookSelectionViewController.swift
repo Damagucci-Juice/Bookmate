@@ -6,9 +6,8 @@ import Kingfisher
 
 final class BookSelectionViewController: UIViewController {
 
-    var onBookSelected: ((Book) -> Void)?
-
     private let disposeBag = DisposeBag()
+    private var recentBooksDisposable: Disposable?
     private let bookService = NaverBookService()
     private let bookRepository = BookRepository()
 
@@ -190,23 +189,32 @@ final class BookSelectionViewController: UIViewController {
                 self.switchToRecent()
             })
             .disposed(by: disposeBag)
+
+        clearButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let self else { return }
+                self.bookRepository.clearRecentSearches()
+            })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Data
 
     private func loadRecentBooks() {
-        bookRepository.fetchRecentlySearched()
+        recentBooksDisposable?.dispose()
+        recentBooksDisposable = bookRepository.fetchRecentlySearched()
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] books in
                 guard let self, self.state == .recent else { return }
                 self.recentBooks = books
                 self.tableView.reloadData()
             })
-            .disposed(by: disposeBag)
     }
 
     private func switchToRecent() {
         state = .recent
+        searchResults = []
+        tableView.reloadData()
         sectionTitleLabel.text = "최근 검색한 책"
         clearButton.isHidden = false
         loadRecentBooks()
@@ -223,6 +231,7 @@ final class BookSelectionViewController: UIViewController {
         totalResults = 0
         isLoadingMore = false
         searchResults = []
+        tableView.reloadData()
 
         bookService.search(query: query, display: pageSize, start: currentStart)
             .observe(on: MainScheduler.instance)
@@ -287,11 +296,10 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
         switch state {
         case .recent:
             let book = recentBooks[indexPath.row]
-            onBookSelected?(book)
+            bookRepository.markAsRecentlySearched(book)
         case .searching:
             let item = searchResults[indexPath.row]
             let book = bookRepository.findOrCreate(from: item)
-            print("[BookSelection] 검색 결과에서 책 선택: \(book.title) - \(book.author)")
             // Download cover image if not already stored
             if book.coverImageData == nil, let url = URL(string: item.image) {
                 KingfisherManager.shared.retrieveImage(with: url) { [weak self] result in
@@ -301,7 +309,6 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
                     }
                 }
             }
-            onBookSelected?(book)
         }
     }
 

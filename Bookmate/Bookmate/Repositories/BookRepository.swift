@@ -40,8 +40,18 @@ final class BookRepository {
 
     /// 최근 검색한 책 (lastSearchedAt 내림차순)
     func fetchRecentlySearched() -> Observable<[Book]> {
-        let results = realm.objects(Book.self).sorted(byKeyPath: "lastSearchedAt", ascending: false)
+        let results = realm.objects(Book.self)
+            .filter("lastSearchedAt != nil")
+            .sorted(byKeyPath: "lastSearchedAt", ascending: false)
         return observe(results)
+    }
+
+    /// 최근 검색 기록 전체 삭제
+    func clearRecentSearches() {
+        let books = Array(realm.objects(Book.self).filter("lastSearchedAt != nil"))
+        try? realm.write {
+            books.forEach { $0.lastSearchedAt = nil }
+        }
     }
 
     // MARK: - Private
@@ -76,6 +86,7 @@ final class BookRepository {
         book.title = item.cleanTitle
         book.author = item.authors.joined(separator: ", ")
         book.isbn = item.isbn
+        book.lastSearchedAt = Date()
 
         try? realm.write { realm.add(book) }
         return book
@@ -83,6 +94,10 @@ final class BookRepository {
 
     func save(_ book: Book) {
         try? realm.write { realm.add(book, update: .modified) }
+    }
+
+    func markAsRecentlySearched(_ book: Book) {
+        try? realm.write { book.lastSearchedAt = Date() }
     }
 
     func updateCoverImage(_ data: Data, for book: Book) {

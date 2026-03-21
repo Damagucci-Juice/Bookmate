@@ -11,7 +11,7 @@ class Book: Object {
     @Persisted var isbn: String = ""
     @Persisted var coverImageData: Data?
     @Persisted var createdAt: Date = Date()
-    @Persisted var lastSearchedAt: Date = Date()
+    @Persisted var lastSearchedAt: Date?
 
     @Persisted(originProperty: "book") var quotes: LinkingObjects<Quote>
 }
@@ -58,13 +58,14 @@ enum CardStyleType: String, CaseIterable {
 extension Realm {
     static func configured() -> Realm {
         let config = Realm.Configuration(
-            schemaVersion: 2,
+            schemaVersion: 3,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 2 {
                     migration.enumerateObjects(ofType: Book.className()) { oldObject, newObject in
                         newObject?["lastSearchedAt"] = oldObject?["createdAt"] as? Date ?? Date()
                     }
                 }
+                // v3: lastSearchedAt changed from Date to Date? — Realm handles automatically
             },
             objectTypes: [Book.self, Quote.self, Tag.self, CardStyle.self]
         )
