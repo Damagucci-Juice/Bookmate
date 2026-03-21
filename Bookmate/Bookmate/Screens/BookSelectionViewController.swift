@@ -305,6 +305,10 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
         case .recent:
             let searched = recentBooks[indexPath.row]
             bookRepository.markAsRecentlySearched(searched)
+            // Find or create a Book from SearchedBook and navigate
+            let book = findOrCreateBook(from: searched)
+            let detailVC = BookDetailViewController(book: book)
+            navigationController?.pushViewController(detailVC, animated: true)
         case .searching:
             let item = searchResults[indexPath.row]
             bookRepository.addToSearchHistory(from: item)
@@ -322,7 +326,22 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
                     }
                 }
             }
+            let detailVC = BookDetailViewController(book: book)
+            navigationController?.pushViewController(detailVC, animated: true)
         }
+    }
+
+    private func findOrCreateBook(from searched: SearchedBook) -> Book {
+        let realm = Realm.configured()
+        if let existing = realm.objects(Book.self).filter("isbn == %@", searched.isbn).first {
+            return existing
+        }
+        let book = Book()
+        book.title = searched.title
+        book.author = searched.author
+        book.isbn = searched.isbn
+        try? realm.write { realm.add(book) }
+        return book
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
