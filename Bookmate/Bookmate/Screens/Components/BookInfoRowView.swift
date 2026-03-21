@@ -73,4 +73,13 @@ final class BookInfoRowView: UIView {
             coverImageView.kf.setImage(with: url)
         }
     }
+
+    func configureCover(data: Data) {
+        coverImageView.image = UIImage(data: data)
+    }
+
+    func configurePage(_ page: String?) {
+        pageLabel.text = page
+        pageLabel.isHidden = page == nil
+    }
 }

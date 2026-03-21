@@ -10,11 +10,11 @@ final class BookDetailViewController: UIViewController {
     // MARK: - Dependencies
 
     private let disposeBag = DisposeBag()
+    private let bookRepository = BookRepository()
     private let quoteRepository = QuoteRepository()
     private let book: Book
     private var quotes: [Quote] = []
     private var selectedTags: [Tag] = []
-    private let realm = Realm.configured()
 
     // MARK: - Init
 
@@ -64,6 +64,7 @@ final class BookDetailViewController: UIViewController {
         btn.setTitle("더보기", for: .normal)
         btn.titleLabel?.font = AppFont.caption.font
         btn.setTitleColor(AppColor.accent, for: .normal)
+        btn.isHidden = true
         return btn
     }()
 
@@ -188,11 +189,6 @@ final class BookDetailViewController: UIViewController {
         appearance.shadowColor = .clear
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
-
-        let backImage = AppIcon.chevronLeft.image(pointSize: 22, weight: .medium)
-        navigationController?.navigationBar.backIndicatorImage = backImage
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = backImage
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationController?.navigationBar.tintColor = AppColor.textPrimary
     }
 
@@ -227,6 +223,8 @@ final class BookDetailViewController: UIViewController {
         quoteSectionLabelRow.addArrangedSubview(quoteSectionLabel)
         quoteSectionLabelRow.addArrangedSubview(quoteMoreButton)
 
+        quoteCardStack.addArrangedSubview(emptyQuoteLabel)
+
         quoteCard.addSubview(quoteCardStack)
         quoteCardStack.snp.makeConstraints {
             $0.edges.equalToSuperview().inset(UIEdgeInsets(top: 18, left: 16, bottom: 18, right: 16))
@@ -255,15 +253,15 @@ final class BookDetailViewController: UIViewController {
         contentStack.addArrangedSubview(saveButton)
     }
 
-    // MARK: - Configure
+    // MARK: - Configure Book Info (from Model)
 
     private func configureBookInfo() {
+        // Cover: prefer local data, fall back to URL
         let coverURL: URL? = {
-            if let data = book.coverImageData, let _ = UIImage(data: data) {
-                return nil
-            }
-            return nil
+            guard !book.coverImageURL.isEmpty else { return nil }
+            return URL(string: book.coverImageURL)
         }()
+
         bookInfoRow.configure(
             title: book.title,
             author: book.author,
@@ -271,21 +269,17 @@ final class BookDetailViewController: UIViewController {
             coverURL: coverURL
         )
 
-        // Set cover from local data if available
-        if let data = book.coverImageData, let image = UIImage(data: data) {
-            setCoverImage(image)
+        if let data = book.coverImageData {
+            bookInfoRow.configureCover(data: data)
+        }
+
+        // Memo: restore from Book model
+        if !book.memo.isEmpty {
+            memoInputView.text = book.memo
         }
     }
 
-    private func setCoverImage(_ image: UIImage) {
-        // Access the coverImageView via the BookInfoRowView's subviews
-        if let mainStack = bookInfoRow.subviews.first as? UIStackView,
-           let imageView = mainStack.arrangedSubviews.first as? UIImageView {
-            imageView.image = image
-        }
-    }
-
-    // MARK: - Data
+    // MARK: - Load Quotes (from QuoteRepository)
 
     private func loadQuotes() {
         quoteRepository.fetch(bookId: book.id)
@@ -306,12 +300,9 @@ final class BookDetailViewController: UIViewController {
             quoteCardStack.addArrangedSubview(emptyQuoteLabel)
             quoteMoreButton.isHidden = true
         } else {
-            quoteMoreButton.isHidden = false
+            quoteMoreButton.isHidden = quotes.count <= 3
             for (index, quote) in quotes.prefix(3).enumerated() {
                 let label = UILabel()
-                label.text = quote.text
-                label.font = .systemFont(ofSize: 15, weight: .regular)
-                label.textColor = AppColor.textPrimary
                 label.numberOfLines = 0
 
                 let style = NSMutableParagraphStyle()
@@ -340,22 +331,17 @@ final class BookDetailViewController: UIViewController {
     private func updatePageLabel() {
         guard let latestQuote = quotes.first,
               let page = latestQuote.pageNumber else {
-            bookInfoRow.configure(title: book.title, author: book.author, page: nil)
+            bookInfoRow.configurePage(nil)
             return
         }
-        bookInfoRow.configure(
-            title: book.title,
-            author: book.author,
-            page: "p. \(page)"
-        )
-        // Re-apply cover image
-        if let data = book.coverImageData, let image = UIImage(data: data) {
-            setCoverImage(image)
-        }
+        bookInfoRow.configurePage("p. \(page)")
     }
 
+    // MARK: - Load Tags (from Realm)
+
     private func loadTags() {
-        let allTags = Array(realm.objects(Tag.self).sorted(byKeyPath: "name"))
+        seedDefaultTagsIfNeeded(realm: Realm.configured())
+        let allTags = Array(Realm.configured().objects(Tag.self).sorted(byKeyPath: "name"))
         updateTagChips(allTags: allTags)
     }
 
@@ -363,27 +349,18 @@ final class BookDetailViewController: UIViewController {
         tagFlowContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         for tag in selectedTags {
-            let chip = TagChipView(title: "# \(tag.name)")
-            chip.configure(title: "# \(tag.name)", textColor: AppColor.accent, bgColor: AppColor.accentLight)
+            let chip = makeTagChip(tag: tag, selected: true)
             tagFlowContainer.addArrangedSubview(chip)
         }
 
-        // Unselected tags (up to fill 3 total)
         let unselected = allTags.filter { tag in !selectedTags.contains(where: { $0.id == tag.id }) }
         let remaining = 3 - selectedTags.count
         for tag in unselected.prefix(max(0, remaining)) {
-            let chip = TagChipView(title: "# \(tag.name)")
-            chip.configure(
-                title: "# \(tag.name)",
-                textColor: AppColor.textSecondary,
-                bgColor: AppColor.bg
-            )
-            chip.layer.borderWidth = 1
-            chip.layer.borderColor = AppColor.border.cgColor
+            let chip = makeTagChip(tag: tag, selected: false)
             tagFlowContainer.addArrangedSubview(chip)
         }
 
-        // Add button
+        // + 추가 button
         if selectedTags.count < 3 {
             let addChip = TagChipView(title: "+ 추가")
             addChip.configure(
@@ -395,6 +372,45 @@ final class BookDetailViewController: UIViewController {
             addChip.layer.borderColor = AppColor.border.cgColor
             tagFlowContainer.addArrangedSubview(addChip)
         }
+
+        // Trailing spacer to prevent chips from stretching
+        let spacer = UIView()
+        spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        tagFlowContainer.addArrangedSubview(spacer)
+    }
+
+    private func makeTagChip(tag: Tag, selected: Bool) -> TagChipView {
+        let chip = TagChipView(title: "# \(tag.name)")
+        if selected {
+            chip.configure(title: "# \(tag.name)", textColor: AppColor.accent, bgColor: AppColor.accentLight)
+        } else {
+            chip.configure(title: "# \(tag.name)", textColor: AppColor.textSecondary, bgColor: AppColor.bg)
+            chip.layer.borderWidth = 1
+            chip.layer.borderColor = AppColor.border.cgColor
+        }
+
+        let tapGesture = UITapGestureRecognizer()
+        chip.addGestureRecognizer(tapGesture)
+        chip.isUserInteractionEnabled = true
+
+        tapGesture.rx.event
+            .subscribe(onNext: { [weak self] _ in
+                self?.toggleTag(tag)
+            })
+            .disposed(by: disposeBag)
+
+        return chip
+    }
+
+    private func toggleTag(_ tag: Tag) {
+        if let index = selectedTags.firstIndex(where: { $0.id == tag.id }) {
+            selectedTags.remove(at: index)
+        } else {
+            guard selectedTags.count < 3 else { return }
+            selectedTags.append(tag)
+        }
+        let allTags = Array(Realm.configured().objects(Tag.self).sorted(byKeyPath: "name"))
+        updateTagChips(allTags: allTags)
     }
 
     // MARK: - Actions
@@ -402,17 +418,21 @@ final class BookDetailViewController: UIViewController {
     private func bindActions() {
         saveButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                self?.saveMemo()
+                self?.save()
             })
             .disposed(by: disposeBag)
     }
 
-    private func saveMemo() {
+    private func save() {
+        // Save memo to Book
         let memoText = memoInputView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-        // Save memo to the latest quote if exists
-        if let latestQuote = quotes.first, !memoText.isEmpty {
-            quoteRepository.updateMemo(memoText, for: latestQuote)
+        bookRepository.updateMemo(memoText, for: book)
+
+        // Apply selected tags to all quotes of this book
+        for quote in quotes {
+            quoteRepository.setTags(selectedTags, for: quote)
         }
+
         navigationController?.popViewController(animated: true)
     }
 }

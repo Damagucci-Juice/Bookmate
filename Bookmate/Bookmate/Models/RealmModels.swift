@@ -21,6 +21,8 @@ class Book: Object {
     @Persisted var author: String = ""
     @Persisted var isbn: String = ""
     @Persisted var coverImageData: Data?
+    @Persisted var coverImageURL: String = ""
+    @Persisted var memo: String = ""
     @Persisted var createdAt: Date = Date()
 
     @Persisted(originProperty: "book") var quotes: LinkingObjects<Quote>
@@ -68,7 +70,7 @@ enum CardStyleType: String, CaseIterable {
 extension Realm {
     static func configured() -> Realm {
         let config = Realm.Configuration(
-            schemaVersion: 4,
+            schemaVersion: 5,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 2 {
                     migration.enumerateObjects(ofType: Book.className()) { oldObject, newObject in
@@ -90,6 +92,7 @@ extension Realm {
                         searched["searchedAt"] = searchedAt
                     }
                 }
+                // v5: Book에 coverImageURL, memo 추가 — Realm이 자동 처리
             },
             objectTypes: [Book.self, SearchedBook.self, Quote.self, Tag.self, CardStyle.self]
         )

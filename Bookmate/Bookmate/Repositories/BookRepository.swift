@@ -86,6 +86,7 @@ final class BookRepository {
         book.title = item.cleanTitle
         book.author = item.authors.joined(separator: ", ")
         book.isbn = item.isbn
+        book.coverImageURL = item.image
 
         try? realm.write { realm.add(book) }
         return book
@@ -97,6 +98,10 @@ final class BookRepository {
 
     func updateCoverImage(_ data: Data, for book: Book) {
         try? realm.write { book.coverImageData = data }
+    }
+
+    func updateMemo(_ memo: String, for book: Book) {
+        try? realm.write { book.memo = memo }
     }
 
     func delete(_ book: Book) {
