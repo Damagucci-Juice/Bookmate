@@ -421,6 +421,15 @@ final class BookDetailViewController: UIViewController {
                 self?.save()
             })
             .disposed(by: disposeBag)
+
+        manualEntryButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let self else { return }
+                let vc = ManualQuoteEntryViewController(book: self.book)
+                vc.modalPresentationStyle = .pageSheet
+                self.present(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 
     private func save() {
