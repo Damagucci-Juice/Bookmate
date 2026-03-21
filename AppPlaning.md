@@ -298,27 +298,39 @@
 
 ```
 Book
-├── id: UUID
+├── id: ObjectId (PK)
 ├── title: String
 ├── author: String
-└── coverImage: Data?
+├── isbn: String
+├── coverImageData: Data?  // 로컬 바이너리 PNG
+├── createdAt: Date
+└── quotes: LinkingObjects<Quote>  // 역관계
+
+SearchedBook (검색 기록)
+├── id: ObjectId (PK)
+├── title: String
+├── author: String
+├── isbn: String
+├── coverImageURL: String  // Naver API 이미지 URL
+└── searchedAt: Date       // 마지막 검색 일시
 
 Quote
-├── id: UUID
+├── id: ObjectId (PK)
 ├── text: String          // 수집된 문장
 ├── memo: String?         // 나의 메모
-├── tags: [Tag]
-├── book: Book
 ├── pageNumber: Int?
 ├── createdAt: Date
-└── cardStyle: CardStyle  // 저장 당시 카드 스타일
+├── cardStyle: CardStyle? // 카드 스타일 (임베디드)
+├── book: Book?           // 출처 도서 (N:1)
+└── tags: List<Tag>       // 연결된 태그 (N:N)
 
 Tag
-├── id: UUID
-└── name: String          // 자아, 성장, 사랑, 위로 등
+├── id: ObjectId (PK)
+├── name: String          // 자아, 성장, 사랑, 위로 등
+└── quotes: LinkingObjects<Quote>  // 역관계
 
-CardStyle
-└── type: Enum(green, coral, dark, white, blue, photo)
+CardStyle (EmbeddedObject)
+└── type: String  // green, coral, dark, white, blue, photo
 ```
 
 ### 5-4 태그 시스템

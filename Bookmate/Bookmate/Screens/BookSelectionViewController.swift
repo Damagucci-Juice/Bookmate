@@ -95,6 +95,7 @@ final class BookSelectionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "도서 선택"
+        navigationItem.title = "도서 선택"
         view.backgroundColor = AppColor.bg
         setupLayout()
         setupTableView()
@@ -262,9 +263,14 @@ final class BookSelectionViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] response in
                 guard let self else { return }
+                let startIndex = self.searchResults.count
                 self.searchResults.append(contentsOf: response.items)
                 self.isLoadingMore = false
-                self.tableView.reloadData()
+
+                let indexPaths = (startIndex..<self.searchResults.count).map {
+                    IndexPath(row: $0, section: 0)
+                }
+                self.tableView.insertRows(at: indexPaths, with: .none)
             }, onError: { [weak self] _ in
                 self?.isLoadingMore = false
             })
@@ -420,7 +426,6 @@ private final class BookCell: UITableViewCell {
                 options: [
                     .processor(processor),
                     .scaleFactor(UIScreen.main.scale),
-                    .cacheOriginalImage,
                     .diskCacheExpiration(.days(7)),
                     .memoryCacheExpiration(.days(1))
                 ]

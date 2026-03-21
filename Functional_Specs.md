@@ -20,13 +20,18 @@
 
 | 분류 | 기술 |
 |---|---|
-| UI | UIKit (코드 기반) |
+| UI | UIKit (코드 기반) + SnapKit (Auto Layout DSL) |
+| 반응형 프로그래밍 | RxSwift / RxCocoa |
+| 네트워킹 | Alamofire |
+| 이미지 로딩 | Kingfisher |
 | 카메라 | AVFoundation |
 | OCR | Vision Framework (`VNRecognizeTextRequest`) |
 | 이미지 저장 | PHPhotoLibrary |
-| 로컬 저장소 | Core Data 또는 SwiftData |
+| 로컬 저장소 | RealmSwift |
 | 카드 렌더링 | UIGraphicsImageRenderer |
 | 공유 | UIActivityViewController |
+| 도서 검색 API | Naver Books API |
+| 패키지 관리 | Swift Package Manager (SPM) |
 
 ---
 
@@ -67,13 +72,17 @@
 
 | 용도 | Font | Size | Weight | 비고 |
 |---|---|---|---|---|
-| 로고 / 화면 타이틀 | Outfit | 26px | 700 (Bold) | letterSpacing: -0.3 |
-| 헤더 타이틀 | Outfit | 18px | 600 (SemiBold) | letterSpacing: -0.2 |
-| 본문 | Inter / Outfit | 16px | 600 | — |
-| 본문 (인용문) | Outfit | 15px | 500 | lineHeight: 1.6 |
-| 필터 칩 | Outfit | 13px | 600 (Active) / 500 (Inactive) | — |
-| 메타 텍스트 | Outfit | 12px | 400 (Normal) | — |
-| 탭 라벨 | Outfit | 10px | 600 (Active) / 500 (Inactive) | — |
+| 로고 | Outfit | 26px | 700 (Bold) | letterSpacing: -0.3 |
+| 섹션 타이틀 | SF Pro (System) | 22px | 600 (SemiBold) | — |
+| 헤더 타이틀 | SF Pro (System) | 18px | 600 (SemiBold) | letterSpacing: -0.2 |
+| 본문 | SF Pro (System) | 15px | 500 (Medium) | lineHeight: 1.6 |
+| 버튼 라벨 | SF Pro (System) | 16px | 600 (SemiBold) | — |
+| 필터 칩 | SF Pro (System) | 13px | 600 (Active) / 500 (Inactive) | — |
+| 메타 텍스트 | SF Pro (System) | 12px | 400 (Regular) | — |
+| 탭 라벨 | SF Pro (System) | 10px | 600 (Active) / 500 (Inactive) | — |
+| 태그 | SF Pro (System) | 11px | 600 (SemiBold) | — |
+| 공유 카드 인용문 | Nanum Myeongjo | 20px | 400 (Regular) | lineHeight: 1.6 |
+| 공유 카드 큰따옴표 | Nanum Myeongjo ExtraBold | 56px | 800 | — |
 | 상태바 시간 | Inter | 16px | 600 | — |
 
 ### 2.3 공통 레이아웃 규칙
@@ -123,7 +132,7 @@
 | 수집 | `circle-plus` | 수집 | 스캔 플로우 시작 (Modal) |
 | 설정 | `user` | 설정 | — |
 
-비활성 탭: 아이콘/텍스트 `$tab-inactive`, Outfit 10/500
+비활성 탭: 아이콘/텍스트 `$tab-inactive`, SF Pro 10/500
 
 #### Deep Focus 탭 구성 (4탭)
 
@@ -161,7 +170,7 @@
 | cornerRadius | 100 (pill) |
 | 배경 | `$text-primary` |
 | 패딩 | top/bottom: 8, left/right: 16 |
-| 텍스트 | Outfit 13/600, fill: white |
+| 텍스트 | SF Pro 13/600, fill: white |
 | 동작 | 탭 → 비활성(Inactive) 상태로 전환, 해당 태그 필터 해제 |
 
 ### 3.5 FilterChip (Inactive)
@@ -173,7 +182,7 @@
 | 배경 | 투명 |
 | Stroke | `$border`, 1px, inside |
 | 패딩 | top/bottom: 8, left/right: 16 |
-| 텍스트 | Outfit 13/500, fill: `$text-secondary` |
+| 텍스트 | SF Pro 13/500, fill: `$text-secondary` |
 | 동작 | 탭 → 활성(Active) 상태로 전환, 해당 태그 필터 적용 |
 
 ### 3.6 QuoteListItem
@@ -184,10 +193,10 @@
 | 레이아웃 | 수직 (vertical), gap: 10 |
 | 패딩 | top/bottom: 20 |
 | 구성 요소 | |
-| — 인용 텍스트 | Outfit 15/500, `$text-primary`, lineHeight: 1.6, fixed-width |
+| — 인용 텍스트 | SF Pro 15/500, `$text-primary`, lineHeight: 1.6, fixed-width |
 | — 메타 행 | 수평, gap: 6 |
-| —— 출처 | Outfit 12/400, `$text-tertiary` (예: "데미안 · 헤르만 헤세") |
-| —— 태그 | pill chip, fill: `$accent-light`, text: Outfit 10/500 `$accent` |
+| —— 출처 | SF Pro 12/400, `$text-tertiary` (예: "데미안 · 헤르만 헤세") |
+| —— 태그 | pill chip, fill: `$accent-light`, text: SF Pro 10/500 `$accent` |
 | 동작 | 탭 → 문장 상세 보기 (미설계, 추후 추가) |
 
 ### 3.7 SaveButton
@@ -198,7 +207,7 @@
 | 크기 | W: fill_container (390), H: 52px |
 | cornerRadius | 14 |
 | 배경 | `$accent` |
-| 텍스트 | "문장 저장하기", Outfit 16/600, white, 중앙 정렬 |
+| 텍스트 | "문장 저장하기", SF Pro 16/600, white, 중앙 정렬 |
 | 동작 | 탭 → 해당 화면의 저장/확인 액션 실행 |
 
 ### 3.8 BackHeader
@@ -209,7 +218,7 @@
 | 크기 | W: fill_container (390), H: 52px |
 | 패딩 | left/right: 20 |
 | 레이아웃 | 수평 (space_between) |
-| 좌측 | backRow: chevron-left (22px, `$text-primary`) + 타이틀 (Outfit 18/600, `$text-primary`), gap: 8 |
+| 좌측 | backRow: chevron-left (22px, `$text-primary`) + 타이틀 (SF Pro 18/600, `$text-primary`), gap: 8 |
 | 우측 | X 아이콘 (22px, `$text-secondary`) |
 | 동작 | chevron-left 탭 → 이전 화면 pop / X 탭 → 플로우 dismiss |
 
@@ -853,30 +862,47 @@
 
 | 필드 | 타입 | 필수 | 설명 |
 |---|---|---|---|
-| id | UUID | O | 고유 식별자 |
+| id | ObjectId | O | Primary Key (자동 생성) |
 | title | String | O | 책 제목 |
 | author | String | O | 저자명 |
-| coverImage | Data? | X | 표지 이미지 (로컬 저장) |
+| isbn | String | O | ISBN |
+| coverImageData | Data? | X | 표지 이미지 (로컬 바이너리 PNG) |
+| createdAt | Date | O | 생성 일시 |
+| quotes | LinkingObjects\<Quote\> | — | 역관계 (이 책에 연결된 문장 목록) |
+
+### 5.1-2 SearchedBook (검색 기록)
+
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| id | ObjectId | O | Primary Key (자동 생성) |
+| title | String | O | 책 제목 |
+| author | String | O | 저자명 |
+| isbn | String | O | ISBN |
+| coverImageURL | String | O | 표지 이미지 URL (Naver API) |
+| searchedAt | Date | O | 마지막 검색 일시 |
+
+> **Note**: Book과 SearchedBook은 분리된 테이블. SearchedBook은 검색 기록용이며, Book은 문장이 수집된 도서 정보를 저장한다. ISBN으로 매칭하여 중복을 방지한다.
 
 ### 5.2 Quote
 
 | 필드 | 타입 | 필수 | 설명 |
 |---|---|---|---|
-| id | UUID | O | 고유 식별자 |
+| id | ObjectId | O | Primary Key (자동 생성) |
 | text | String | O | 수집된 문장 |
 | memo | String? | X | 사용자 메모 |
-| tags | [Tag] | X | 연결된 태그 (다대다) |
-| book | Book | O | 출처 도서 (다대일) |
 | pageNumber | Int? | X | 페이지 번호 |
 | createdAt | Date | O | 생성 일시 |
-| cardStyle | CardStyle | O | 저장 당시 카드 스타일 |
+| cardStyle | CardStyle? | O | 카드 스타일 (임베디드) |
+| book | Book? | O | 출처 도서 (N:1 관계) |
+| tags | List\<Tag\> | X | 연결된 태그 (N:N 관계) |
 
 ### 5.3 Tag
 
 | 필드 | 타입 | 필수 | 설명 |
 |---|---|---|---|
-| id | UUID | O | 고유 식별자 |
+| id | ObjectId | O | Primary Key (자동 생성) |
 | name | String | O | 태그명 (자아, 성장, 사랑, 위로 등) |
+| quotes | LinkingObjects\<Quote\> | — | 역관계 (이 태그가 연결된 문장 목록) |
 
 ### 5.4 CardStyle
 
@@ -939,15 +965,19 @@ UINavigationController (Modal, fullScreen)
 
 ## 7. 필수 프레임워크 및 권한
 
-### 7.1 프레임워크
+### 7.1 프레임워크 및 라이브러리
 
-| 프레임워크 | 용도 |
+| 프레임워크/라이브러리 | 용도 |
 |---|---|
 | UIKit | 전체 UI 구성 |
+| SnapKit | Auto Layout DSL |
+| RxSwift / RxCocoa | 반응형 프로그래밍 및 UIKit 바인딩 |
+| Alamofire | HTTP 네트워킹 (Naver Books API) |
+| Kingfisher | 이미지 로딩 및 캐싱 |
+| RealmSwift | 로컬 데이터 영속화 |
 | AVFoundation | 카메라 세션 관리 (AVCaptureSession) |
 | Vision | OCR 텍스트 인식 (VNRecognizeTextRequest) |
 | Photos / PhotosUI | 갤러리 접근 및 카메라롤 저장 |
-| CoreData / SwiftData | 로컬 데이터 영속화 |
 
 ### 7.2 Info.plist 권한
 
@@ -970,4 +1000,4 @@ UINavigationController (Modal, fullScreen)
 | 온보딩 / 권한 요청 | 최초 실행 시 카메라/사진 권한 안내 |
 | 설정 화면 | 테마 변경, 계정 정보 등 |
 | 책 상세 / 책별 목록 | 특정 도서의 수집 문장 모아보기 |
-| 도서 검색 API | 외부 도서 검색 서비스 연동 (Kakao 도서 API 등) |
+| ~~도서 검색 API~~ | ~~구현 완료~~ — Naver Books API 연동 (NaverBookService, BookSearchModels), Secrets.xcconfig으로 크레덴셜 관리 |

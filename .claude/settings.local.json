@@ -14,7 +14,8 @@
       "Bash(xcodebuild -scheme Bookmate -destination 'platform=iOS Simulator,id=2E38CD16-C1B2-4269-9E14-C3AA10C89780' build)",
       "Bash(ls /Users/will/Desktop/Bookmate/Bookmate/*.xcconfig)",
       "Bash(ls /Users/will/Desktop/Bookmate/Bookmate/Bookmate/*.xcconfig)",
-      "Bash(find /Users/will/Desktop/Bookmate/Bookmate/Bookmate -type f -name *.swift)"
+      "Bash(find /Users/will/Desktop/Bookmate/Bookmate/Bookmate -type f -name *.swift)",
+      "Bash(find /Users/will/Desktop/Bookmate -type d -not -path */.*)"
     ]
   }
 }

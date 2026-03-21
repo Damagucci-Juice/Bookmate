@@ -9,9 +9,10 @@
 | 항목 | 내용 |
 |---|---|
 | ORM | Realm Swift (RealmSwift) |
-| 주요 테이블 | Book, Quote, Tag |
+| 주요 테이블 | Book, SearchedBook, Quote, Tag |
 | 임베디드 객체 | CardStyle |
 | 관계 | Book ↔ Quote (1:N), Quote ↔ Tag (N:N) |
+| 스키마 버전 | 4 |
 
 ---
 
@@ -26,7 +27,8 @@
 | `id` | `ObjectId` | O | 자동 생성 | Primary Key |
 | `title` | `String` | O | — | 책 제목 |
 | `author` | `String` | O | — | 저자명 |
-| `coverImageData` | `Data?` | X | `nil` | 표지 이미지 (로컬 바이너리) |
+| `isbn` | `String` | O | — | ISBN |
+| `coverImageData` | `Data?` | X | `nil` | 표지 이미지 (로컬 바이너리 PNG) |
 | `createdAt` | `Date` | O | `Date()` | 생성 일시 |
 
 **역관계 (Inverse Relationship):**
@@ -40,6 +42,7 @@ class Book: Object {
     @Persisted(primaryKey: true) var id: ObjectId
     @Persisted var title: String
     @Persisted var author: String
+    @Persisted var isbn: String
     @Persisted var coverImageData: Data?
     @Persisted var createdAt: Date = Date()
 
@@ -47,6 +50,34 @@ class Book: Object {
     @Persisted(originProperty: "book") var quotes: LinkingObjects<Quote>
 }
 ```
+
+---
+
+### 2.1-2 SearchedBook (검색 기록)
+
+도서 검색 기록을 저장하는 테이블. Book 테이블과 분리하여 검색 이력과 수집 도서를 독립 관리.
+
+| 필드명 | 타입 | 필수 | 기본값 | 설명 |
+|---|---|---|---|---|
+| `id` | `ObjectId` | O | 자동 생성 | Primary Key |
+| `title` | `String` | O | — | 책 제목 |
+| `author` | `String` | O | — | 저자명 |
+| `isbn` | `String` | O | — | ISBN |
+| `coverImageURL` | `String` | O | — | 표지 이미지 URL (Naver API) |
+| `searchedAt` | `Date` | O | `Date()` | 마지막 검색 일시 |
+
+```swift
+class SearchedBook: Object {
+    @Persisted(primaryKey: true) var id: ObjectId
+    @Persisted var title: String
+    @Persisted var author: String
+    @Persisted var isbn: String
+    @Persisted var coverImageURL: String
+    @Persisted var searchedAt: Date = Date()
+}
+```
+
+> **Book vs SearchedBook**: SearchedBook은 Naver API 검색 결과의 이력을 저장하며, coverImageURL로 원격 이미지를 참조한다. Book은 실제 문장이 수집된 도서의 정보를 저장하며, coverImageData로 이미지를 로컬 바이너리로 캐싱한다. ISBN으로 매칭하여 중복을 방지한다.
 
 ---
 
@@ -146,16 +177,27 @@ enum CardStyleType: String, CaseIterable {
 ## 3. 관계 다이어그램 (ERD)
 
 ```
+┌──────────────┐
+│ SearchedBook │  (검색 기록, 독립 테이블)
+├──────────────┤
+│ id (PK)      │
+│ title        │
+│ author       │
+│ isbn         │
+│ coverImageURL│
+│ searchedAt   │
+└──────────────┘
+
 ┌──────────┐       1:N       ┌──────────┐       N:N       ┌──────────┐
 │   Book   │────────────────▶│  Quote   │◀──────────────▶│   Tag    │
 ├──────────┤                 ├──────────┤                 ├──────────┤
 │ id (PK)  │                 │ id (PK)  │                 │ id (PK)  │
 │ title    │                 │ text     │                 │ name     │
 │ author   │                 │ memo     │                 └──────────┘
-│ coverImg │                 │ pageNum  │
-│ createdAt│                 │ createdAt│
-└──────────┘                 │ cardStyle│ ◀── EmbeddedObject
-                             │ book ──▶ │      ┌───────────┐
+│ isbn     │                 │ pageNum  │
+│ coverImg │                 │ createdAt│
+│ createdAt│                 │ cardStyle│ ◀── EmbeddedObject
+└──────────┘                 │ book ──▶ │      ┌───────────┐
                              │ tags ──▶ │      │ CardStyle │
                              └──────────┘      ├───────────┤
                                                │ type      │
@@ -231,12 +273,25 @@ realm.objects(Book.self)
     .filter("title CONTAINS[c] %@ OR author CONTAINS[c] %@", keyword, keyword)
 ```
 
-### 5.6 최근 선택 도서 (문장이 있는 도서, 최신순)
+### 5.6 최근 검색 도서 (SearchedBook, 최신순)
+
+```swift
+realm.objects(SearchedBook.self)
+    .sorted(byKeyPath: "searchedAt", ascending: false)
+```
+
+### 5.7 문장이 있는 도서 (최신순)
 
 ```swift
 realm.objects(Book.self)
     .filter("quotes.@count > 0")
     .sorted(byKeyPath: "createdAt", ascending: false)
+```
+
+### 5.8 ISBN으로 도서 조회
+
+```swift
+realm.objects(Book.self).filter("isbn == %@", isbn).first
 ```
 
 ---
@@ -245,11 +300,30 @@ realm.objects(Book.self)
 
 ```swift
 let config = Realm.Configuration(
-    schemaVersion: 1,
+    schemaVersion: 4,
     migrationBlock: { migration, oldSchemaVersion in
-        // 마이그레이션 로직
+        if oldSchemaVersion < 2 {
+            // v1→v2: Book에 lastSearchedAt 추가
+        }
+        if oldSchemaVersion < 3 {
+            // v2→v3: lastSearchedAt: Date → Date?
+        }
+        if oldSchemaVersion < 4 {
+            // v3→v4: Book.lastSearchedAt 제거, SearchedBook 테이블 생성
+            // 기존 Book.lastSearchedAt 데이터를 SearchedBook으로 마이그레이션
+            migration.enumerateObjects(ofType: Book.className()) { oldObject, newObject in
+                if let lastSearchedAt = oldObject?["lastSearchedAt"] as? Date {
+                    let searchedBook = migration.create(SearchedBook.className())
+                    searchedBook["title"] = oldObject?["title"]
+                    searchedBook["author"] = oldObject?["author"]
+                    searchedBook["isbn"] = oldObject?["isbn"] ?? ""
+                    searchedBook["coverImageURL"] = ""
+                    searchedBook["searchedAt"] = lastSearchedAt
+                }
+            }
+        }
     },
-    objectTypes: [Book.self, Quote.self, Tag.self, CardStyle.self]
+    objectTypes: [Book.self, SearchedBook.self, Quote.self, Tag.self, CardStyle.self]
 )
 Realm.Configuration.defaultConfiguration = config
 ```

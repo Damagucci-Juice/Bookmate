@@ -61,27 +61,27 @@
 
 | 폰트 | 타입 | 용도 |
 |---|---|---|
-| **Pretendard** | Sans-serif (고딕체) | 시스템 UI 전반 — 헤더, 본문, 캡션, 버튼, 태그 등 |
+| **SF Pro (System)** | Sans-serif (시스템 폰트) | 시스템 UI 전반 — 헤더, 본문, 캡션, 버튼, 태그 등 |
 | **Nanum Myeongjo (나눔명조)** | Serif (명조체) | 공유 카드 인용문 — 문학적/감성적 표현 |
 | **Outfit** | Sans-serif | 브랜드 로고 ("Bookmate") 전용 |
 | **Inter** | Sans-serif | 시간 표시, 숫자/기술 텍스트 |
 
-> **디자인 원칙:** Serif (Nanum Myeongjo) vs Sans-serif (Pretendard) 대비를 통해 "콘텐츠(인용문)"와 "크롬(UI)"을 시각적으로 명확히 구분합니다.
+> **디자인 원칙:** Serif (Nanum Myeongjo) vs Sans-serif (SF Pro) 대비를 통해 "콘텐츠(인용문)"와 "크롬(UI)"을 시각적으로 명확히 구분합니다.
 
-#### 타입 스케일 — System UI (Pretendard)
+#### 타입 스케일 — System UI (SF Pro)
 
 | 용도 | Font | Size | Weight | Letter Spacing | Line Height | Color Variable |
 |---|---|---|---|---|---|---|
-| Screen Title (헤더) | Pretendard | 18px | 600 (SemiBold) | -0.2 | — | `$text-primary` |
-| Body (본문) | Pretendard | 15px | 500 (Medium) | — | 1.6 | `$text-primary` |
-| Caption (캡션/라벨) | Pretendard | 13px | 500 (Medium) | — | — | `$text-secondary` |
-| Meta (메타/출처) | Pretendard | 12px | 400 (Regular) | — | — | `$text-tertiary` |
-| Button Label | Pretendard | 16px | 600 (SemiBold) | — | — | `#FFFFFF` |
-| Filter Chip (Active) | Pretendard | 13px | 600 (SemiBold) | — | — | `#FFFFFF` |
-| Filter Chip (Inactive) | Pretendard | 13px | 500 (Medium) | — | — | `$text-secondary` |
-| Tag | Pretendard | 11px | 600 (SemiBold) | — | — | `$accent` / 해당 색상 |
-| Tab Label (Active) | Pretendard | 10px | 600 (SemiBold) | — | — | `#FFFFFF` |
-| Tab Label (Inactive) | Pretendard | 10px | 500 (Medium) | — | — | `$tab-inactive` |
+| Screen Title (헤더) | SF Pro | 18px | 600 (SemiBold) | -0.2 | — | `$text-primary` |
+| Body (본문) | SF Pro | 15px | 500 (Medium) | — | 1.6 | `$text-primary` |
+| Caption (캡션/라벨) | SF Pro | 13px | 500 (Medium) | — | — | `$text-secondary` |
+| Meta (메타/출처) | SF Pro | 12px | 400 (Regular) | — | — | `$text-tertiary` |
+| Button Label | SF Pro | 16px | 600 (SemiBold) | — | — | `#FFFFFF` |
+| Filter Chip (Active) | SF Pro | 13px | 600 (SemiBold) | — | — | `#FFFFFF` |
+| Filter Chip (Inactive) | SF Pro | 13px | 500 (Medium) | — | — | `$text-secondary` |
+| Tag | SF Pro | 11px | 600 (SemiBold) | — | — | `$accent` / 해당 색상 |
+| Tab Label (Active) | SF Pro | 10px | 600 (SemiBold) | — | — | `#FFFFFF` |
+| Tab Label (Inactive) | SF Pro | 10px | 500 (Medium) | — | — | `$tab-inactive` |
 
 #### 타입 스케일 — Share Card (Nanum Myeongjo)
 
@@ -89,7 +89,7 @@
 |---|---|---|---|---|---|---|
 | Quote Icon `"` | Nanum Myeongjo | 56px | 800 (ExtraBold) | — | 0.5 | 스타일별 |
 | Quote Text (인용문) | Nanum Myeongjo | 20px | 400 (Regular) | -0.3 | 1.6 | 스타일별 |
-| Author · Book (출처) | Pretendard | 12px | 500 (Medium) | — | — | 스타일별 |
+| Author · Book (출처) | SF Pro | 12px | 500 (Medium) | — | — | 스타일별 |
 | Bookmate Logo (워터마크) | Outfit | 13px | 700 (Bold) | -0.3 | — | 스타일별 |
 
 #### 타입 스케일 — Brand & Misc
@@ -179,7 +179,7 @@
 | 항목 | 값 |
 |---|---|
 | Background | `$text-primary` (`#1A1918`) |
-| Text | Pretendard 13px / 600, `#FFFFFF` |
+| Text | SF Pro 13px / 600, `#FFFFFF` |
 | Corner Radius | 100px (pill) |
 | Padding | top/bottom: 8px, left/right: 16px |
 | 동작 | 탭 → Inactive 상태 전환, 필터 해제 |
@@ -190,7 +190,7 @@
 |---|---|
 | Background | 투명 |
 | Stroke | `$border` (`#E5E4E1`), 1px, inside |
-| Text | Pretendard 13px / 500, `$text-secondary` |
+| Text | SF Pro 13px / 500, `$text-secondary` |
 | Corner Radius | 100px (pill) |
 | Padding | top/bottom: 8px, left/right: 16px |
 | 동작 | 탭 → Active 상태 전환, 필터 적용 |
@@ -213,7 +213,7 @@
 
 | 항목 | 값 |
 |---|---|
-| Font | Pretendard 11px / 600 |
+| Font | SF Pro 11px / 600 |
 | Corner Radius | 100px (pill) |
 | Padding | top/bottom: 3px, left/right: 8px |
 
@@ -227,7 +227,7 @@
 | Height | 52px |
 | Background | `$accent` (`#3D8A5A`) |
 | Corner Radius | 14px |
-| Text | "문장 저장하기", Pretendard 16px / 600, `#FFFFFF`, 중앙 정렬 |
+| Text | "문장 저장하기", SF Pro 16px / 600, `#FFFFFF`, 중앙 정렬 |
 | Layout | `justifyContent: center`, `alignItems: center` |
 
 ### 3.5 FAB (Floating Action Button)
@@ -251,7 +251,7 @@
 | Background | `$accent` (`#3D8A5A`) |
 | Corner Radius | 12px |
 | Icon | `save` (Lucide), 20px, `#FFFFFF` |
-| Text | "기록 저장", Pretendard 16px / 600, `#FFFFFF` |
+| Text | "기록 저장", SF Pro 16px / 600, `#FFFFFF` |
 | Layout | horizontal, gap: 8px, `justifyContent: center`, `alignItems: center` |
 
 ---
@@ -308,7 +308,7 @@
 | 설정 | `user` | 설정 | — |
 
 - 각 탭: cornerRadius 26px, vertical layout, gap: 4px, `justifyContent: center`, `alignItems: center`
-- 비활성: 아이콘/텍스트 `$tab-inactive`, Pretendard 10px / 500
+- 비활성: 아이콘/텍스트 `$tab-inactive`, SF Pro 10px / 500
 
 ### 4.3 Tab Bar — Deep Focus Theme
 
@@ -354,7 +354,7 @@
 **좌측 (backRow):**
 - Layout: horizontal, gap: 8px
 - `chevron-left` icon — 22px, `$text-primary`
-- 타이틀 텍스트 — Pretendard 18px / 600, `$text-primary`, letterSpacing: -0.2
+- 타이틀 텍스트 — SF Pro 18px / 600, `$text-primary`, letterSpacing: -0.2
 
 **우측:**
 - `x` icon — 22px, `$text-secondary`
@@ -370,13 +370,13 @@
 | Padding | top: 20, bottom: 20 |
 
 **인용 텍스트:**
-- Pretendard 15px / 500, `$text-primary`, lineHeight: 1.6
+- SF Pro 15px / 500, `$text-primary`, lineHeight: 1.6
 - `textGrowth: fixed-width`, `width: fill_container`
 
 **메타 행 (하단):**
 - Layout: horizontal, gap: 6px
-- 출처 텍스트: Pretendard 12px / 400, `$text-tertiary` (예: "데미안 · 헤르만 헤세")
-- 태그 Chip: pill 스타일, fill: `$accent-light`, text: Pretendard 10px / 500, `$accent`
+- 출처 텍스트: SF Pro 12px / 400, `$text-tertiary` (예: "데미안 · 헤르만 헤세")
+- 태그 Chip: pill 스타일, fill: `$accent-light`, text: SF Pro 10px / 500, `$accent`
 
 ---
 
@@ -393,11 +393,11 @@
 
 **내부 구성:**
 
-1. **큰따옴표 아이콘**: `"` 텍스트, Pretendard 48px / 700, `$coral` (`#D89575`), lineHeight: 0.6
-2. **인용문 텍스트**: Pretendard 18px / 500, `$text-primary`, letterSpacing: -0.2, lineHeight: 1.6, `textGrowth: fixed-width`, `width: fill_container`
+1. **큰따옴표 아이콘**: `"` 텍스트, SF Pro 48px / 700, `$coral` (`#D89575`), lineHeight: 0.6
+2. **인용문 텍스트**: SF Pro 18px / 500, `$text-primary`, letterSpacing: -0.2, lineHeight: 1.6, `textGrowth: fixed-width`, `width: fill_container`
 3. **출처 행** (horizontal, gap: 8px):
    - 구분선: rectangle, 24 × 1px, `$border`
-   - 출처 텍스트: Pretendard 13px / 500, `$text-tertiary` (예: "헤르만 헤세 · 데미안")
+   - 출처 텍스트: SF Pro 13px / 500, `$text-tertiary` (예: "헤르만 헤세 · 데미안")
 
 ---
 
@@ -624,7 +624,7 @@
 │                          │
 │  선택한 문장 텍스트         │  ← Nanum Myeongjo 20px / 400, lineHeight: 1.6
 │                          │
-│  ── 책명 · 저자명          │  ← Pretendard 12px / 500, 출처
+│  ── 책명 · 저자명          │  ← SF Pro 12px / 500, 출처
 │                          │
 │          Bookmate         │  ← Outfit 13px / 700, 워터마크 로고
 └──────────────────────────┘
@@ -661,7 +661,7 @@ static let dfTextSecondary = UIColor(hex: "#ADB5BD")
 static let dfTextOnAccent  = UIColor(hex: "#FAFAFA")
 
 // MARK: - Typography
-// System UI: Pretendard (headers, body, captions, buttons, tags)
+// System UI: SF Pro (headers, body, captions, buttons, tags)
 // Share Card: Nanum Myeongjo (quote icon, quote text — literary/serif)
 // Brand Logo: Outfit ("Bookmate" only)
 // Numeric/Tech: Inter (status bar time)
