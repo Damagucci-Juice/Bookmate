@@ -305,7 +305,11 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
             let book = bookRepository.findOrCreate(from: item)
             // Download cover image if not already stored
             if book.coverImageData == nil, let url = URL(string: item.image) {
-                KingfisherManager.shared.retrieveImage(with: url) { [weak self] result in
+                let options: KingfisherOptionsInfo = [
+                    .diskCacheExpiration(.days(7)),
+                    .memoryCacheExpiration(.days(1))
+                ]
+                KingfisherManager.shared.retrieveImage(with: url, options: options) { [weak self] result in
                     if case .success(let value) = result,
                        let data = value.image.pngData() {
                         self?.bookRepository.updateCoverImage(data, for: book)
@@ -410,7 +414,17 @@ private final class BookCell: UITableViewCell {
         if let data = coverData, let image = UIImage(data: data) {
             coverImageView.image = image
         } else if let urlString = coverURL, !urlString.isEmpty, let url = URL(string: urlString) {
-            coverImageView.kf.setImage(with: url)
+            let processor = DownsamplingImageProcessor(size: CGSize(width: 44 * 3, height: 62 * 3))
+            coverImageView.kf.setImage(
+                with: url,
+                options: [
+                    .processor(processor),
+                    .scaleFactor(UIScreen.main.scale),
+                    .cacheOriginalImage,
+                    .diskCacheExpiration(.days(7)),
+                    .memoryCacheExpiration(.days(1))
+                ]
+            )
         } else {
             coverImageView.image = nil
         }
