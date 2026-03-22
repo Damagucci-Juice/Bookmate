@@ -1,0 +1,266 @@
+import UIKit
+import SnapKit
+import RxSwift
+import RxCocoa
+
+final class SentenceSelectionViewController: UIViewController {
+
+    // MARK: - Properties
+
+    private let sentences: [String]
+    private let book: Book
+    private let disposeBag = DisposeBag()
+    private let maxSelection = 5
+
+    private var selectionRange: ClosedRange<Int>?
+
+    // MARK: - Init
+
+    init(sentences: [String], book: Book) {
+        self.sentences = sentences
+        self.book = book
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) { fatalError() }
+
+    // MARK: - UI
+
+    private let scrollView: UIScrollView = {
+        let sv = UIScrollView()
+        sv.alwaysBounceVertical = true
+        sv.keyboardDismissMode = .interactive
+        return sv
+    }()
+
+    private let contentStack: UIStackView = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        sv.spacing = 8
+        return sv
+    }()
+
+    private let bottomContainer = UIView()
+
+    private let pageLabel: UILabel = {
+        let l = UILabel()
+        l.text = "페이지"
+        l.font = .systemFont(ofSize: 14, weight: .medium)
+        l.textColor = AppColor.textSecondary
+        return l
+    }()
+
+    private let pageTextField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "p."
+        tf.font = .systemFont(ofSize: 14)
+        tf.textColor = AppColor.textTertiary
+        tf.backgroundColor = .white
+        tf.layer.cornerRadius = 10
+        tf.layer.borderWidth = 1
+        tf.layer.borderColor = AppColor.border.cgColor
+        tf.keyboardType = .numberPad
+        tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 0))
+        tf.leftViewMode = .always
+        tf.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 0))
+        tf.rightViewMode = .always
+        return tf
+    }()
+
+    private let optionalLabel: UILabel = {
+        let l = UILabel()
+        l.text = "(선택)"
+        l.font = .systemFont(ofSize: 13)
+        l.textColor = AppColor.textTertiary
+        return l
+    }()
+
+    private let continueButton = PrimaryButton(title: "계속")
+
+    private var bottomContainerBottom: Constraint?
+
+    // MARK: - Lifecycle
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = AppColor.bg
+        setupNavigation()
+        setupLayout()
+        buildSentenceLines()
+        bindActions()
+        observeKeyboard()
+    }
+
+    // MARK: - Navigation Bar
+
+    private func setupNavigation() {
+        title = "문장 선택"
+
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = "최대 5줄"
+        subtitleLabel.font = .systemFont(ofSize: 14, weight: .medium)
+        subtitleLabel.textColor = AppColor.textTertiary
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: subtitleLabel)
+    }
+
+    // MARK: - Layout
+
+    private func setupLayout() {
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentStack)
+
+        view.addSubview(bottomContainer)
+
+        let pageInputRow = UIStackView(arrangedSubviews: [pageLabel, pageTextField, optionalLabel])
+        pageInputRow.axis = .horizontal
+        pageInputRow.spacing = 10
+        pageInputRow.alignment = .center
+
+        pageTextField.snp.makeConstraints {
+            $0.width.equalTo(80)
+            $0.height.equalTo(40)
+        }
+
+        bottomContainer.addSubview(pageInputRow)
+        bottomContainer.addSubview(continueButton)
+
+        bottomContainer.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            bottomContainerBottom = $0.bottom.equalTo(view.safeAreaLayoutGuide).constraint
+        }
+
+        pageInputRow.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(16)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-20)
+        }
+
+        continueButton.snp.makeConstraints {
+            $0.top.equalTo(pageInputRow.snp.bottom).offset(12)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().offset(-16)
+        }
+
+        scrollView.snp.makeConstraints {
+            $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(bottomContainer.snp.top)
+        }
+
+        contentStack.snp.makeConstraints {
+            $0.edges.equalToSuperview().inset(UIEdgeInsets(top: 24, left: 20, bottom: 24, right: 20))
+            $0.width.equalTo(scrollView).offset(-40)
+        }
+    }
+
+    // MARK: - Sentence Lines
+
+    private func buildSentenceLines() {
+        for (index, sentence) in sentences.enumerated() {
+            let lineView = SentenceLineView()
+            lineView.configure(text: sentence, selected: false)
+            lineView.tag = index
+            lineView.isUserInteractionEnabled = true
+
+            let tap = UITapGestureRecognizer()
+            lineView.addGestureRecognizer(tap)
+
+            tap.rx.event
+                .subscribe(onNext: { [weak self] _ in
+                    self?.toggleSelection(at: index)
+                })
+                .disposed(by: disposeBag)
+
+            contentStack.addArrangedSubview(lineView)
+        }
+    }
+
+    private func toggleSelection(at index: Int) {
+        guard let range = selectionRange else {
+            // No selection yet — start new range
+            selectionRange = index...index
+            updateLineAppearances()
+            return
+        }
+
+        if range.contains(index) {
+            // Tap inside range
+            if range.count == 1 {
+                // Only one selected — deselect all
+                selectionRange = nil
+            } else if index == range.lowerBound {
+                // Shrink from start
+                selectionRange = (index + 1)...range.upperBound
+            } else if index == range.upperBound {
+                // Shrink from end
+                selectionRange = range.lowerBound...(index - 1)
+            } else {
+                // Middle tap — trim from tapped line onward
+                selectionRange = range.lowerBound...(index - 1)
+            }
+        } else {
+            // Tap outside range — extend to include, fill gap
+            let newLower = min(range.lowerBound, index)
+            let newUpper = max(range.upperBound, index)
+            let newRange = newLower...newUpper
+            guard newRange.count <= maxSelection else { return }
+            selectionRange = newRange
+        }
+        updateLineAppearances()
+    }
+
+    private func updateLineAppearances() {
+        for (i, arrangedView) in contentStack.arrangedSubviews.enumerated() {
+            guard let lineView = arrangedView as? SentenceLineView else { continue }
+            lineView.configure(text: sentences[i], selected: selectionRange?.contains(i) == true)
+        }
+    }
+
+    // MARK: - Keyboard
+
+    private func observeKeyboard() {
+        NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
+            .compactMap { $0.userInfo }
+            .subscribe(onNext: { [weak self] info in
+                guard let self,
+                      let frame = info[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+                      let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else { return }
+                let keyboardHeight = frame.height - self.view.safeAreaInsets.bottom
+                self.bottomContainerBottom?.update(offset: -keyboardHeight)
+                UIView.animate(withDuration: duration) { self.view.layoutIfNeeded() }
+            })
+            .disposed(by: disposeBag)
+
+        NotificationCenter.default.rx.notification(UIResponder.keyboardWillHideNotification)
+            .compactMap { $0.userInfo }
+            .subscribe(onNext: { [weak self] info in
+                guard let self,
+                      let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else { return }
+                self.bottomContainerBottom?.update(offset: 0)
+                UIView.animate(withDuration: duration) { self.view.layoutIfNeeded() }
+            })
+            .disposed(by: disposeBag)
+    }
+
+    // MARK: - Actions
+
+    private func bindActions() {
+        continueButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let self else { return }
+                let selectedText = self.selectionRange.map { range in
+                    range.map { self.sentences[$0] }.joined(separator: "\n")
+                } ?? ""
+                let page = self.pageTextField.text
+                // TODO: Navigate to next screen (5 카드 꾸미기)
+                print("Selected: \(selectedText), Page: \(page ?? "")")
+            })
+            .disposed(by: disposeBag)
+
+        // Dismiss keyboard on scroll
+        scrollView.rx.willBeginDragging
+            .subscribe(onNext: { [weak self] in
+                self?.view.endEditing(true)
+            })
+            .disposed(by: disposeBag)
+    }
+}

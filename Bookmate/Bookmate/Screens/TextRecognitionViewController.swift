@@ -372,7 +372,13 @@ final class TextRecognitionViewController: UIViewController {
 
         actionButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                // TODO: Navigate to SentenceSelectionViewController (4 문장 선택)
+                guard let self else { return }
+                let sentences = self.imageOCR.observations.compactMap {
+                    $0.topCandidates(1).first?.string
+                }
+                guard !sentences.isEmpty else { return }
+                let vc = SentenceSelectionViewController(sentences: sentences, book: self.book)
+                self.navigationController?.pushViewController(vc, animated: true)
             })
             .disposed(by: disposeBag)
     }
