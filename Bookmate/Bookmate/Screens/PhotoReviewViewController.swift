@@ -113,7 +113,9 @@ final class PhotoReviewViewController: UIViewController {
 
         recognizeButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                // TODO: Navigate to TextRecognitionViewController (3-3 텍스트 인식)
+                guard let self else { return }
+                let vc = TextRecognitionViewController(imageData: self.imageData, book: self.book)
+                self.navigationController?.pushViewController(vc, animated: true)
             })
             .disposed(by: disposeBag)
     }
