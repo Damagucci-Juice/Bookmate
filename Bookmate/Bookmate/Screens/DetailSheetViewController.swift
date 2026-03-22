@@ -277,23 +277,36 @@ final class DetailSheetViewController: UIViewController {
 
         btn.rx.tap
             .subscribe(onNext: { [weak self] in
-                self?.addTag(tag, fromChip: btn)
+                self?.toggleTag(tag, fromChip: btn)
             })
             .disposed(by: disposeBag)
 
         return btn
     }
 
-    private func addTag(_ tag: String, fromChip chip: UIButton) {
-        guard selectedTags.count < maxTags, !selectedTags.contains(tag) else { return }
-        selectedTags.append(tag)
-
-        // Highlight selected chip
-        chip.setTitleColor(AppColor.accent, for: .normal)
-        chip.backgroundColor = AppColor.accentLight
-        chip.layer.borderWidth = 0
-
+    private func toggleTag(_ tag: String, fromChip chip: UIButton) {
+        if selectedTags.contains(tag) {
+            selectedTags.removeAll { $0 == tag }
+            applyChipStyle(chip, selected: false)
+        } else {
+            guard selectedTags.count < maxTags else { return }
+            selectedTags.append(tag)
+            applyChipStyle(chip, selected: true)
+        }
         updateTagHint()
+    }
+
+    private func applyChipStyle(_ chip: UIButton, selected: Bool) {
+        if selected {
+            chip.setTitleColor(AppColor.accent, for: .normal)
+            chip.backgroundColor = AppColor.accentLight
+            chip.layer.borderWidth = 0
+        } else {
+            chip.setTitleColor(AppColor.textSecondary, for: .normal)
+            chip.backgroundColor = .clear
+            chip.layer.borderWidth = 1
+            chip.layer.borderColor = AppColor.border.cgColor
+        }
     }
 
     private func addTagFromInput() {
@@ -309,9 +322,7 @@ final class DetailSheetViewController: UIViewController {
         for chip in allChips {
             let chipTag = chip.title(for: .normal)?.replacingOccurrences(of: "# ", with: "") ?? ""
             if chipTag == text {
-                chip.setTitleColor(AppColor.accent, for: .normal)
-                chip.backgroundColor = AppColor.accentLight
-                chip.layer.borderWidth = 0
+                applyChipStyle(chip, selected: true)
             }
         }
 
