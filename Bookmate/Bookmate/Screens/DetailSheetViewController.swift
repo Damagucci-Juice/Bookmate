@@ -17,14 +17,6 @@ final class DetailSheetViewController: UIViewController {
     private let suggestedTags = ["사랑", "위로", "용기", "인생", "지혜", "철학", "감성"]
 
     // MARK: - UI
-
-//    private let handleBar: UIView = {
-//        let v = UIView()
-//        v.backgroundColor = AppColor.border
-//        v.layer.cornerRadius = 2
-//        return v
-//    }()
-
     private let titleLabel: UILabel = {
         let l = UILabel()
         l.text = "상세 정보"
@@ -149,15 +141,6 @@ final class DetailSheetViewController: UIViewController {
     // MARK: - Layout
 
     private func setupLayout() {
-        // Handle bar
-//        view.addSubview(handleBar)
-//        handleBar.snp.makeConstraints {
-//            $0.top.equalToSuperview().offset(8)
-//            $0.centerX.equalToSuperview()
-//            $0.width.equalTo(40)
-//            $0.height.equalTo(4)
-//        }
-
         // Header
         let headerStack = UIStackView(arrangedSubviews: [titleLabel, closeButton])
         headerStack.axis = .horizontal
