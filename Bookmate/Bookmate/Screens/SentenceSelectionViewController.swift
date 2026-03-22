@@ -10,7 +10,7 @@ final class SentenceSelectionViewController: UIViewController {
     private let sentences: [String]
     private let book: Book
     private let disposeBag = DisposeBag()
-    private let maxSelection = 5
+    private let maxSelection = 3
 
     private var selectionRange: ClosedRange<Int>?
 
@@ -97,7 +97,7 @@ final class SentenceSelectionViewController: UIViewController {
         title = "문장 선택"
 
         let subtitleLabel = UILabel()
-        subtitleLabel.text = "최대 5줄"
+        subtitleLabel.text = "최대 3문장"
         subtitleLabel.font = .systemFont(ofSize: 14, weight: .medium)
         subtitleLabel.textColor = AppColor.textTertiary
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: subtitleLabel)
