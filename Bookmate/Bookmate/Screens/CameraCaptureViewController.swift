@@ -20,7 +20,6 @@ final class CameraCaptureViewController: UIViewController {
     init(book: Book) {
         self.book = book
         super.init(nibName: nil, bundle: nil)
-        modalPresentationStyle = .fullScreen
     }
 
     required init?(coder: NSCoder) { fatalError() }
@@ -94,16 +93,6 @@ final class CameraCaptureViewController: UIViewController {
         return btn
     }()
 
-    private let textModeButton: UIButton = {
-        let btn = UIButton(type: .system)
-        btn.setTitle("T", for: .normal)
-        btn.titleLabel?.font = .systemFont(ofSize: 18, weight: .semibold)
-        btn.tintColor = .white
-        btn.backgroundColor = UIColor(hex: "#333333")
-        btn.layer.cornerRadius = 22
-        return btn
-    }()
-
     // Corner guide layers
     private let cornerTL = CAShapeLayer()
     private let cornerTR = CAShapeLayer()
@@ -119,6 +108,24 @@ final class CameraCaptureViewController: UIViewController {
         configureBookInfo()
         bindActions()
         setupCamera()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if captureSession.isRunning == false {
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                self?.captureSession.startRunning()
+            }
+        }
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if captureSession.isRunning {
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                self?.captureSession.stopRunning()
+            }
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -187,7 +194,6 @@ final class CameraCaptureViewController: UIViewController {
         view.addSubview(bottomBar)
         bottomBar.addSubview(galleryButton)
         bottomBar.addSubview(shutterButton)
-        bottomBar.addSubview(textModeButton)
 
         bottomBar.snp.makeConstraints {
             $0.top.equalTo(viewfinderView.snp.bottom)
@@ -205,12 +211,6 @@ final class CameraCaptureViewController: UIViewController {
             $0.centerX.equalToSuperview()
             $0.top.equalToSuperview().offset(20)
             $0.size.equalTo(68)
-        }
-
-        textModeButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().offset(-40)
-            $0.top.equalToSuperview().offset(20)
-            $0.size.equalTo(44)
         }
 
         setupShutterButton()
@@ -324,7 +324,7 @@ final class CameraCaptureViewController: UIViewController {
     private func bindActions() {
         closeButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                self?.dismiss(animated: true)
+                self?.navigationController?.dismiss(animated: true)
             })
             .disposed(by: disposeBag)
 
@@ -354,9 +354,8 @@ final class CameraCaptureViewController: UIViewController {
     }
 
     private func handleCapturedImage(data: Data) {
-        // TODO: Navigate to PhotoReviewViewController (3-2 사진 확인)
-        // For now, print confirmation that photo was captured
-        print("Photo captured: \(data.count) bytes for book: \(book.title)")
+        let vc = PhotoReviewViewController(imageData: data, book: book)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

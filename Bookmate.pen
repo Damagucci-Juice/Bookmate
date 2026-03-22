@@ -14368,26 +14368,11 @@
             },
             {
               "type": "frame",
-              "id": "ODPys",
-              "name": "Text Mode Button",
+              "id": "1TYrs",
+              "name": "spacer",
               "width": 44,
               "height": 44,
-              "fill": "#333333",
-              "cornerRadius": 22,
-              "justifyContent": "center",
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "text",
-                  "id": "eC2MV",
-                  "name": "textIcon",
-                  "fill": "#FFFFFF",
-                  "content": "T",
-                  "fontFamily": "Pretendard",
-                  "fontSize": 18,
-                  "fontWeight": "600"
-                }
-              ]
+              "fill": "#00000000"
             }
           ]
         }

@@ -286,15 +286,13 @@ final class BookDetailViewController: UIViewController {
     private func requestCameraAccessAndPresent() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
-            let vc = CameraCaptureViewController(book: book)
-            present(vc, animated: true)
+            presentCameraFlow()
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
                 DispatchQueue.main.async {
                     guard let self else { return }
                     if granted {
-                        let vc = CameraCaptureViewController(book: self.book)
-                        self.present(vc, animated: true)
+                        self.presentCameraFlow()
                     } else {
                         self.showCameraAccessDeniedAlert()
                     }
@@ -303,6 +301,14 @@ final class BookDetailViewController: UIViewController {
         default:
             showCameraAccessDeniedAlert()
         }
+    }
+
+    private func presentCameraFlow() {
+        let vc = CameraCaptureViewController(book: book)
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .fullScreen
+        nav.setNavigationBarHidden(true, animated: false)
+        present(nav, animated: true)
     }
 
     private func showCameraAccessDeniedAlert() {
