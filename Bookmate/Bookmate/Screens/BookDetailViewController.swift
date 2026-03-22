@@ -14,7 +14,6 @@ final class BookDetailViewController: UIViewController {
     private let quoteRepository = QuoteRepository()
     private let book: Book
     private var quotes: [Quote] = []
-    private var selectedTags: [Tag] = []
 
     // MARK: - Init
 
@@ -45,7 +44,7 @@ final class BookDetailViewController: UIViewController {
     private let bookInfoRow = BookInfoRowView()
 
     // Memo Section
-    private let memoSectionLabel = SectionLabelView(text: "나의 메모")
+    private let memoSectionLabel = SectionLabelView(text: "메모")
     private let memoInputView = MemoInputView()
 
     // Quote Section
@@ -93,77 +92,6 @@ final class BookDetailViewController: UIViewController {
         return l
     }()
 
-    private let ctaContainer: UIStackView = {
-        let sv = UIStackView()
-        sv.axis = .horizontal
-        sv.spacing = 8
-        sv.distribution = .fillEqually
-        return sv
-    }()
-
-    private lazy var cameraScanButton: UIButton = {
-        let btn = UIButton(type: .system)
-        var config = UIButton.Configuration.plain()
-        config.image = AppIcon.scan.image(pointSize: 18, weight: .medium)
-        config.title = "카메라 스캔"
-        config.baseForegroundColor = AppColor.accent
-        config.imagePadding = 8
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
-            var out = incoming
-            out.font = AppFont.caption.font
-            return out
-        }
-        btn.configuration = config
-        btn.backgroundColor = AppColor.accent.withAlphaComponent(0.06)
-        btn.layer.cornerRadius = 10
-        return btn
-    }()
-
-    private lazy var manualEntryButton: UIButton = {
-        let btn = UIButton(type: .system)
-        var config = UIButton.Configuration.plain()
-        let pencilConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)
-        config.image = UIImage(systemName: "pencil.line", withConfiguration: pencilConfig)
-        config.title = "직접 등록"
-        config.baseForegroundColor = AppColor.accent
-        config.imagePadding = 8
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
-            var out = incoming
-            out.font = AppFont.caption.font
-            return out
-        }
-        btn.configuration = config
-        btn.backgroundColor = AppColor.accent.withAlphaComponent(0.06)
-        btn.layer.cornerRadius = 10
-        return btn
-    }()
-
-    // Tag Section
-    private let tagSectionLabelRow: UIStackView = {
-        let sv = UIStackView()
-        sv.axis = .horizontal
-        sv.distribution = .equalSpacing
-        sv.alignment = .center
-        return sv
-    }()
-
-    private let tagSectionLabel = SectionLabelView(text: "태그")
-
-    private let tagHintLabel: UILabel = {
-        let l = UILabel()
-        l.text = "최대 3개"
-        l.font = .systemFont(ofSize: 11, weight: .regular)
-        l.textColor = AppColor.textTertiary
-        return l
-    }()
-
-    private let tagFlowContainer: UIStackView = {
-        let sv = UIStackView()
-        sv.axis = .horizontal
-        sv.spacing = 8
-        return sv
-    }()
-
     // Save Button
     private let saveButton = SaveButton(title: "문장 저장하기")
 
@@ -177,7 +105,6 @@ final class BookDetailViewController: UIViewController {
         configureBookInfo()
         bindActions()
         loadQuotes()
-        loadTags()
     }
 
     // MARK: - Navigation Bar
@@ -196,10 +123,17 @@ final class BookDetailViewController: UIViewController {
 
     private func setupLayout() {
         view.addSubview(scrollView)
+        view.addSubview(saveButton)
         scrollView.addSubview(contentStack)
 
+        saveButton.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-16)
+        }
+
         scrollView.snp.makeConstraints {
-            $0.edges.equalTo(view.safeAreaLayoutGuide)
+            $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(saveButton.snp.top).offset(-16)
         }
 
         contentStack.snp.makeConstraints {
@@ -230,33 +164,15 @@ final class BookDetailViewController: UIViewController {
             $0.edges.equalToSuperview().inset(UIEdgeInsets(top: 18, left: 16, bottom: 18, right: 16))
         }
 
-        ctaContainer.addArrangedSubview(cameraScanButton)
-        ctaContainer.addArrangedSubview(manualEntryButton)
-        cameraScanButton.snp.makeConstraints { $0.height.equalTo(44) }
-        manualEntryButton.snp.makeConstraints { $0.height.equalTo(44) }
-
-        let quoteSection = UIStackView(arrangedSubviews: [quoteSectionLabelRow, quoteCard, ctaContainer])
+        let quoteSection = UIStackView(arrangedSubviews: [quoteSectionLabelRow, quoteCard])
         quoteSection.axis = .vertical
         quoteSection.spacing = 10
         contentStack.addArrangedSubview(quoteSection)
-
-        // Tag Section
-        tagSectionLabelRow.addArrangedSubview(tagSectionLabel)
-        tagSectionLabelRow.addArrangedSubview(tagHintLabel)
-
-        let tagSection = UIStackView(arrangedSubviews: [tagSectionLabelRow, tagFlowContainer])
-        tagSection.axis = .vertical
-        tagSection.spacing = 6
-        contentStack.addArrangedSubview(tagSection)
-
-        // Save Button
-        contentStack.addArrangedSubview(saveButton)
     }
 
     // MARK: - Configure Book Info (from Model)
 
     private func configureBookInfo() {
-        // Cover: prefer local data, fall back to URL
         let coverURL: URL? = {
             guard !book.coverImageURL.isEmpty else { return nil }
             return URL(string: book.coverImageURL)
@@ -273,7 +189,6 @@ final class BookDetailViewController: UIViewController {
             bookInfoRow.configureCover(data: data)
         }
 
-        // Memo: restore from Book model
         if !book.memo.isEmpty {
             memoInputView.text = book.memo
         }
@@ -288,7 +203,6 @@ final class BookDetailViewController: UIViewController {
                 guard let self else { return }
                 self.quotes = quotes
                 self.updateQuoteCard()
-                self.updatePageLabel()
             })
             .disposed(by: disposeBag)
     }
@@ -328,91 +242,6 @@ final class BookDetailViewController: UIViewController {
         }
     }
 
-    private func updatePageLabel() {
-        guard let latestQuote = quotes.first,
-              let page = latestQuote.pageNumber else {
-            bookInfoRow.configurePage(nil)
-            return
-        }
-        bookInfoRow.configurePage("p. \(page)")
-    }
-
-    // MARK: - Load Tags (from Realm)
-
-    private func loadTags() {
-        seedDefaultTagsIfNeeded(realm: Realm.configured())
-        let allTags = Array(Realm.configured().objects(Tag.self).sorted(byKeyPath: "name"))
-        updateTagChips(allTags: allTags)
-    }
-
-    private func updateTagChips(allTags: [Tag]) {
-        tagFlowContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
-
-        for tag in selectedTags {
-            let chip = makeTagChip(tag: tag, selected: true)
-            tagFlowContainer.addArrangedSubview(chip)
-        }
-
-        let unselected = allTags.filter { tag in !selectedTags.contains(where: { $0.id == tag.id }) }
-        let remaining = 3 - selectedTags.count
-        for tag in unselected.prefix(max(0, remaining)) {
-            let chip = makeTagChip(tag: tag, selected: false)
-            tagFlowContainer.addArrangedSubview(chip)
-        }
-
-        // + 추가 button
-        if selectedTags.count < 3 {
-            let addChip = TagChipView(title: "+ 추가")
-            addChip.configure(
-                title: "+ 추가",
-                textColor: AppColor.textTertiary,
-                bgColor: AppColor.bg
-            )
-            addChip.layer.borderWidth = 1
-            addChip.layer.borderColor = AppColor.border.cgColor
-            tagFlowContainer.addArrangedSubview(addChip)
-        }
-
-        // Trailing spacer to prevent chips from stretching
-        let spacer = UIView()
-        spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        tagFlowContainer.addArrangedSubview(spacer)
-    }
-
-    private func makeTagChip(tag: Tag, selected: Bool) -> TagChipView {
-        let chip = TagChipView(title: "# \(tag.name)")
-        if selected {
-            chip.configure(title: "# \(tag.name)", textColor: AppColor.accent, bgColor: AppColor.accentLight)
-        } else {
-            chip.configure(title: "# \(tag.name)", textColor: AppColor.textSecondary, bgColor: AppColor.bg)
-            chip.layer.borderWidth = 1
-            chip.layer.borderColor = AppColor.border.cgColor
-        }
-
-        let tapGesture = UITapGestureRecognizer()
-        chip.addGestureRecognizer(tapGesture)
-        chip.isUserInteractionEnabled = true
-
-        tapGesture.rx.event
-            .subscribe(onNext: { [weak self] _ in
-                self?.toggleTag(tag)
-            })
-            .disposed(by: disposeBag)
-
-        return chip
-    }
-
-    private func toggleTag(_ tag: Tag) {
-        if let index = selectedTags.firstIndex(where: { $0.id == tag.id }) {
-            selectedTags.remove(at: index)
-        } else {
-            guard selectedTags.count < 3 else { return }
-            selectedTags.append(tag)
-        }
-        let allTags = Array(Realm.configured().objects(Tag.self).sorted(byKeyPath: "name"))
-        updateTagChips(allTags: allTags)
-    }
-
     // MARK: - Actions
 
     private func bindActions() {
@@ -421,27 +250,11 @@ final class BookDetailViewController: UIViewController {
                 self?.save()
             })
             .disposed(by: disposeBag)
-
-        manualEntryButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                guard let self else { return }
-                let vc = ManualQuoteEntryViewController(book: self.book)
-                vc.modalPresentationStyle = .pageSheet
-                self.present(vc, animated: true)
-            })
-            .disposed(by: disposeBag)
     }
 
     private func save() {
-        // Save memo to Book
         let memoText = memoInputView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         bookRepository.updateMemo(memoText, for: book)
-
-        // Apply selected tags to all quotes of this book
-        for quote in quotes {
-            quoteRepository.setTags(selectedTags, for: quote)
-        }
-
         navigationController?.popViewController(animated: true)
     }
 }
