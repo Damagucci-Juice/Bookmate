@@ -250,9 +250,21 @@ final class SentenceSelectionViewController: UIViewController {
                 let selectedText = self.selectionRange.map { range in
                     range.map { self.sentences[$0] }.joined(separator: "\n")
                 } ?? ""
-                let page = self.pageTextField.text
-                // TODO: Navigate to next screen (5 카드 꾸미기)
-                print("Selected: \(selectedText), Page: \(page ?? "")")
+
+                let sheet = DetailSheetViewController()
+                sheet.initialPage = self.pageTextField.text
+                sheet.onSave = { page, tags in
+                    // TODO: Navigate to next screen (5 카드 꾸미기)
+                    print("Selected: \(selectedText), Page: \(page ?? ""), Tags: \(tags)")
+                }
+
+                if let presentationController = sheet.sheetPresentationController {
+                    presentationController.detents = [.medium(), .large()]
+                    presentationController.prefersGrabberVisible = true
+                    presentationController.preferredCornerRadius = 24
+                }
+
+                self.present(sheet, animated: true)
             })
             .disposed(by: disposeBag)
 
