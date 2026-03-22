@@ -242,19 +242,42 @@ final class BookDetailViewController: UIViewController {
         }
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        let memoText = memoInputView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        bookRepository.updateMemo(memoText, for: book)
+    }
+
     // MARK: - Actions
 
     private func bindActions() {
         saveButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                self?.save()
+                self?.presentAddQuoteSheet()
             })
             .disposed(by: disposeBag)
     }
 
-    private func save() {
-        let memoText = memoInputView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-        bookRepository.updateMemo(memoText, for: book)
-        navigationController?.popViewController(animated: true)
+    private func presentAddQuoteSheet() {
+        let sheet = AddQuoteSheetViewController()
+
+        sheet.onCameraScanTapped = { [weak self] in
+            // TODO: Navigate to camera scan flow
+        }
+
+        sheet.onManualEntryTapped = { [weak self] in
+            guard let self else { return }
+            let vc = ManualQuoteEntryViewController(book: self.book)
+            vc.modalPresentationStyle = .pageSheet
+            self.present(vc, animated: true)
+        }
+
+        if let presentationController = sheet.sheetPresentationController {
+            presentationController.detents = [.custom { _ in 250 }]
+            presentationController.prefersGrabberVisible = true
+            presentationController.preferredCornerRadius = 24
+        }
+
+        present(sheet, animated: true)
     }
 }
