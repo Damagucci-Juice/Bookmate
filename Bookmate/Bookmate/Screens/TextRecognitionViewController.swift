@@ -3,6 +3,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 import Vision
+import NaturalLanguage
 
 final class TextRecognitionViewController: UIViewController {
 
@@ -373,13 +374,32 @@ final class TextRecognitionViewController: UIViewController {
         actionButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 guard let self else { return }
-                let sentences = self.imageOCR.observations.compactMap {
+                let ocrLines = self.imageOCR.observations.compactMap {
                     $0.topCandidates(1).first?.string
                 }
+                guard !ocrLines.isEmpty else { return }
+                let fullText = ocrLines.joined(separator: " ")
+                let sentences = self.splitIntoSentences(fullText)
                 guard !sentences.isEmpty else { return }
                 let vc = SentenceSelectionViewController(sentences: sentences, book: self.book)
                 self.navigationController?.pushViewController(vc, animated: true)
             })
             .disposed(by: disposeBag)
+    }
+
+    // MARK: - Sentence Splitting
+
+    private func splitIntoSentences(_ text: String) -> [String] {
+        let tokenizer = NLTokenizer(unit: .sentence)
+        tokenizer.string = text
+        var sentences: [String] = []
+        tokenizer.enumerateTokens(in: text.startIndex..<text.endIndex) { range, _ in
+            let sentence = String(text[range]).trimmingCharacters(in: .whitespacesAndNewlines)
+            if !sentence.isEmpty {
+                sentences.append(sentence)
+            }
+            return true
+        }
+        return sentences
     }
 }
