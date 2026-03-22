@@ -13,6 +13,7 @@ final class DetailSheetViewController: UIViewController {
 
     var initialPage: String?
     var onSave: ((_ page: String?, _ tags: [String]) -> Void)?
+    var onShare: ((_ page: String?, _ tags: [String]) -> Void)?
 
     private let suggestedTags = ["사랑", "위로", "용기", "인생", "지혜", "철학", "감성"]
 
@@ -124,6 +125,18 @@ final class DetailSheetViewController: UIViewController {
 
     private let suggestRow1 = UIStackView()
     private let suggestRow2 = UIStackView()
+
+    private let shareButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle("공유하기", for: .normal)
+        btn.titleLabel?.font = .systemFont(ofSize: 15, weight: .semibold)
+        btn.setTitleColor(AppColor.accent, for: .normal)
+        btn.backgroundColor = .clear
+        btn.layer.cornerRadius = 12
+        btn.layer.borderWidth = 1.5
+        btn.layer.borderColor = AppColor.accent.cgColor
+        return btn
+    }()
 
     private let saveButton = PrimaryButton(title: "저장하기")
 
@@ -240,9 +253,18 @@ final class DetailSheetViewController: UIViewController {
             $0.leading.equalToSuperview().offset(20)
         }
 
-        // Save button
-        view.addSubview(saveButton)
-        saveButton.snp.makeConstraints {
+        // Button row
+        let buttonRow = UIStackView(arrangedSubviews: [shareButton, saveButton])
+        buttonRow.axis = .horizontal
+        buttonRow.spacing = 8
+        buttonRow.distribution = .fillEqually
+
+        shareButton.snp.makeConstraints {
+            $0.height.equalTo(48)
+        }
+
+        view.addSubview(buttonRow)
+        buttonRow.snp.makeConstraints {
             $0.top.equalTo(suggestRow2.snp.bottom).offset(32)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide).offset(-16)
@@ -347,6 +369,14 @@ final class DetailSheetViewController: UIViewController {
         tagTextField.rx.controlEvent(.editingDidEndOnExit)
             .subscribe(onNext: { [weak self] in
                 self?.addTagFromInput()
+            })
+            .disposed(by: disposeBag)
+
+        shareButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let self else { return }
+                let page = self.pageTextField.text?.trimmingCharacters(in: .whitespaces)
+                self.onShare?(page?.isEmpty == true ? nil : page, self.selectedTags)
             })
             .disposed(by: disposeBag)
 
