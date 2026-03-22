@@ -4,6 +4,7 @@ import RxSwift
 import RxCocoa
 import Kingfisher
 import RealmSwift
+import AVFoundation
 
 final class BookDetailViewController: UIViewController {
 
@@ -262,7 +263,8 @@ final class BookDetailViewController: UIViewController {
         let sheet = AddQuoteSheetViewController()
 
         sheet.onCameraScanTapped = { [weak self] in
-            // TODO: Navigate to camera scan flow
+            guard let self else { return }
+            self.requestCameraAccessAndPresent()
         }
 
         sheet.onManualEntryTapped = { [weak self] in
@@ -279,5 +281,42 @@ final class BookDetailViewController: UIViewController {
         }
 
         present(sheet, animated: true)
+    }
+
+    private func requestCameraAccessAndPresent() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            let vc = CameraCaptureViewController(book: book)
+            present(vc, animated: true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    if granted {
+                        let vc = CameraCaptureViewController(book: self.book)
+                        self.present(vc, animated: true)
+                    } else {
+                        self.showCameraAccessDeniedAlert()
+                    }
+                }
+            }
+        default:
+            showCameraAccessDeniedAlert()
+        }
+    }
+
+    private func showCameraAccessDeniedAlert() {
+        let alert = UIAlertController(
+            title: "카메라 접근 권한 필요",
+            message: "설정에서 카메라 접근을 허용해주세요.",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "설정으로 이동", style: .default) { _ in
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(url)
+            }
+        })
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+        present(alert, animated: true)
     }
 }

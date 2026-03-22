@@ -4849,7 +4849,8 @@
                               "fill": "#6D6C6A",
                               "content": "Outfit · 26px · Bold (700) · LS: -0.5 · $text-primary",
                               "fontFamily": "Outfit",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -4885,7 +4886,8 @@
                               "fill": "#6D6C6A",
                               "content": "Outfit · 18px · SemiBold (600) · LS: -0.2 · $text-primary",
                               "fontFamily": "Outfit",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -4921,7 +4923,8 @@
                               "fill": "#6D6C6A",
                               "content": "Outfit · 15px · Medium (500) · $text-primary",
                               "fontFamily": "Outfit",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -4957,7 +4960,8 @@
                               "fill": "#6D6C6A",
                               "content": "Outfit · 13px · Medium (500) · $text-secondary",
                               "fontFamily": "Outfit",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -4993,7 +4997,8 @@
                               "fill": "#6D6C6A",
                               "content": "Outfit · 12px · Normal (400) · $text-tertiary",
                               "fontFamily": "Outfit",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -5030,7 +5035,8 @@
                               "fill": "#6D6C6A",
                               "content": "$text-primary → #1A1918",
                               "fontFamily": "Outfit",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
@@ -5039,7 +5045,8 @@
                               "fill": "#6D6C6A",
                               "content": "$text-secondary → #6D6C6A",
                               "fontFamily": "Outfit",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
@@ -5048,7 +5055,8 @@
                               "fill": "#6D6C6A",
                               "content": "$text-tertiary → #9C9B99",
                               "fontFamily": "Outfit",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
@@ -5057,7 +5065,8 @@
                               "fill": "#3D8A5A",
                               "content": "$accent → #3D8A5A",
                               "fontFamily": "Outfit",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -5132,7 +5141,8 @@
                           "fill": "$text-tertiary",
                           "content": "Meta — 12px",
                           "fontFamily": "Pretendard",
-                          "fontSize": 12
+                          "fontSize": 12,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -5372,7 +5382,8 @@
                           "content": "우리는 그의 모습 속에\n들어앉은 우리 자신의 모습을\n미워하는 것이다.",
                           "lineHeight": 1.6,
                           "fontFamily": "Nanum Myeongjo",
-                          "fontSize": 20
+                          "fontSize": 20,
+                          "fontWeight": "normal"
                         },
                         {
                           "type": "text",
@@ -8749,7 +8760,7 @@
     {
       "type": "frame",
       "id": "ZZQXo",
-      "x": 1385,
+      "x": 1388,
       "y": -46,
       "name": "4 문장 선택",
       "width": 390,
@@ -9027,6 +9038,7 @@
           "name": "Bottom",
           "width": "fill_container",
           "layout": "vertical",
+          "gap": 12,
           "padding": [
             16,
             20,
@@ -9035,6 +9047,65 @@
           ],
           "alignItems": "center",
           "children": [
+            {
+              "type": "frame",
+              "id": "c5zlu",
+              "name": "pageInputRow",
+              "width": "fill_container",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "USBBh",
+                  "name": "pageLabel",
+                  "fill": "$text-secondary",
+                  "content": "페이지",
+                  "fontFamily": "Pretendard",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "TKGpa",
+                  "name": "pageInput",
+                  "width": 80,
+                  "height": 40,
+                  "fill": "$card",
+                  "cornerRadius": 10,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "$border"
+                  },
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "UYWF5",
+                      "name": "placeholder",
+                      "fill": "$text-tertiary",
+                      "content": "p.",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 14
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "pkQFI",
+                  "name": "optionalLabel",
+                  "fill": "$text-tertiary",
+                  "content": "(선택)",
+                  "fontFamily": "Pretendard",
+                  "fontSize": 13
+                }
+              ]
+            },
             {
               "type": "frame",
               "id": "nC7Lh",
@@ -9271,6 +9342,7 @@
                       "lineHeight": 1.6,
                       "fontFamily": "Nanum Myeongjo",
                       "fontSize": 20,
+                      "fontWeight": "normal",
                       "letterSpacing": -0.3
                     }
                   ]
@@ -10370,6 +10442,7 @@
                       "lineHeight": 1.6,
                       "fontFamily": "Nanum Myeongjo",
                       "fontSize": 20,
+                      "fontWeight": "normal",
                       "letterSpacing": -0.3
                     }
                   ]
@@ -11147,7 +11220,7 @@
     {
       "type": "frame",
       "id": "HHG5a",
-      "x": 1829,
+      "x": 1832,
       "y": -46,
       "name": "4-2 태그 추가",
       "width": 390,
@@ -11474,7 +11547,7 @@
               "type": "frame",
               "id": "1YsEK",
               "x": 0,
-              "y": 404,
+              "y": 324,
               "name": "Bottom Sheet",
               "width": 390,
               "fill": "$card",
@@ -11541,7 +11614,7 @@
                           "id": "2DRWK",
                           "name": "sheetTitle",
                           "fill": "$text-primary",
-                          "content": "태그 추가",
+                          "content": "상세 정보",
                           "fontFamily": "Pretendard",
                           "fontSize": 18,
                           "fontWeight": "700"
@@ -11557,6 +11630,85 @@
                           "fill": "$text-secondary"
                         }
                       ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "uKnTb",
+                      "name": "pageSection",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "pY2a6",
+                          "name": "pgLabel",
+                          "fill": "$text-secondary",
+                          "content": "페이지 번호",
+                          "fontFamily": "Pretendard",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "sSKs1",
+                          "name": "pageInputRow",
+                          "width": "fill_container",
+                          "gap": 10,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "9liPF",
+                              "name": "pageInput",
+                              "width": 80,
+                              "height": 48,
+                              "fill": "$card",
+                              "cornerRadius": 12,
+                              "stroke": {
+                                "align": "inside",
+                                "thickness": 1,
+                                "fill": "$border"
+                              },
+                              "padding": [
+                                0,
+                                14
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "VWWLC",
+                                  "name": "pgPlaceholder",
+                                  "fill": "$text-primary",
+                                  "content": "42",
+                                  "fontFamily": "Pretendard",
+                                  "fontSize": 15,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "pqszU",
+                              "name": "pgHint",
+                              "fill": "$text-tertiary",
+                              "content": "(선택사항)",
+                              "fontFamily": "Pretendard",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "bedwv",
+                      "name": "pageDivider",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
                     },
                     {
                       "type": "frame",
@@ -11885,7 +12037,7 @@
                           "id": "Q37DD",
                           "name": "addBtnText",
                           "fill": "#FFFFFF",
-                          "content": "추가하기",
+                          "content": "저장하기",
                           "fontFamily": "Pretendard",
                           "fontSize": 15,
                           "fontWeight": "600"
@@ -14052,7 +14204,8 @@
               "fill": "#FFFFFF80",
               "content": "데미안 · 헤르만 헤세",
               "fontFamily": "Pretendard",
-              "fontSize": 14
+              "fontSize": 14,
+              "fontWeight": "normal"
             }
           ]
         },
@@ -14094,7 +14247,8 @@
                   "fill": "#FFFFFF99",
                   "content": "책 페이지에 카메라를 맞춰주세요",
                   "fontFamily": "Pretendard",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -14994,14 +15148,47 @@
               "height": 4
             },
             {
-              "type": "text",
-              "id": "aIXy2",
-              "name": "title",
-              "fill": "$text-primary",
-              "content": "문장 추가",
-              "fontFamily": "SF Pro",
-              "fontSize": 20,
-              "fontWeight": "700"
+              "type": "frame",
+              "id": "EvslL",
+              "name": "header",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Vvtw0",
+                  "name": "titleText",
+                  "fill": "$text-primary",
+                  "content": "문장 추가",
+                  "fontFamily": "SF Pro Text",
+                  "fontSize": 20,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "BWmzo",
+                  "name": "closeBtn",
+                  "width": 32,
+                  "height": 32,
+                  "cornerRadius": 16,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "l72lP",
+                      "x": 6,
+                      "y": 6,
+                      "name": "closeIcon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "x",
+                      "iconFontFamily": "lucide",
+                      "fill": "$text-secondary"
+                    }
+                  ]
+                }
+              ]
             },
             {
               "type": "frame",

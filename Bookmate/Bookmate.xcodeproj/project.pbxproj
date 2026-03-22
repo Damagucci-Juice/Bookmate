@@ -14,7 +14,22 @@
 		BE01DF4B2F6D31BE0027755F /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = BE01DF4A2F6D31BE0027755F /* RxSwift */; };
 		BE01DF4E2F6D31D10027755F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = BE01DF4D2F6D31D10027755F /* Alamofire */; };
 		BE01DF512F6D32000027755F /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = BE01DF502F6D32000027755F /* RealmSwift */; };
+		BE01E0482F6F9D030027755F /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = BE01DF502F6D32000027755F /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BE01E0492F6F9D030027755F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				BE01E0482F6F9D030027755F /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		BE01DE652F6D10E30027755F /* Bookmate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bookmate.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,6 +80,7 @@
 			children = (
 				BE01DF5A2F6D40000027755F /* Secrets.xcconfig */,
 				BE01DE672F6D10E30027755F /* Bookmate */,
+				BE01E0472F6F9CFF0027755F /* Frameworks */,
 				BE01DE662F6D10E30027755F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -77,6 +93,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		BE01E0472F6F9CFF0027755F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -87,6 +110,7 @@
 				BE01DE612F6D10E30027755F /* Sources */,
 				BE01DE622F6D10E30027755F /* Frameworks */,
 				BE01DE632F6D10E30027755F /* Resources */,
+				BE01E0492F6F9D030027755F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

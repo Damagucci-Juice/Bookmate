@@ -69,34 +69,35 @@ enum CardStyleType: String, CaseIterable {
 
 extension Realm {
     static func configured() -> Realm {
-        let config = Realm.Configuration(
-            schemaVersion: 5,
-            migrationBlock: { migration, oldSchemaVersion in
-                if oldSchemaVersion < 2 {
-                    migration.enumerateObjects(ofType: Book.className()) { oldObject, newObject in
-                        newObject?["lastSearchedAt"] = oldObject?["createdAt"] as? Date ?? Date()
-                    }
-                }
-                // v3: lastSearchedAt changed from Date to Date? — Realm handles automatically
-                if oldSchemaVersion < 4 {
-                    // v4: Book.lastSearchedAt 제거, SearchedBook 테이블 신설
-                    // lastSearchedAt != nil인 기존 Book → SearchedBook으로 복사
-                    migration.enumerateObjects(ofType: Book.className()) { oldObject, _ in
-                        guard let oldObject,
-                              let searchedAt = oldObject["lastSearchedAt"] as? Date else { return }
-                        let searched = migration.create(SearchedBook.className())
-                        searched["title"] = oldObject["title"] as? String ?? ""
-                        searched["author"] = oldObject["author"] as? String ?? ""
-                        searched["isbn"] = oldObject["isbn"] as? String ?? ""
-                        searched["coverImageURL"] = ""
-                        searched["searchedAt"] = searchedAt
-                    }
-                }
-                // v5: Book에 coverImageURL, memo 추가 — Realm이 자동 처리
-            },
-            objectTypes: [Book.self, SearchedBook.self, Quote.self, Tag.self, CardStyle.self]
-        )
-        return try! Realm(configuration: config)
+//        let config = Realm.Configuration(
+//            schemaVersion: 5,
+//            migrationBlock: { migration, oldSchemaVersion in
+//                if oldSchemaVersion < 2 {
+//                    migration.enumerateObjects(ofType: Book.className()) { oldObject, newObject in
+//                        newObject?["lastSearchedAt"] = oldObject?["createdAt"] as? Date ?? Date()
+//                    }
+//                }
+//                // v3: lastSearchedAt changed from Date to Date? — Realm handles automatically
+//                if oldSchemaVersion < 4 {
+//                    // v4: Book.lastSearchedAt 제거, SearchedBook 테이블 신설
+//                    // lastSearchedAt != nil인 기존 Book → SearchedBook으로 복사
+//                    migration.enumerateObjects(ofType: Book.className()) { oldObject, _ in
+//                        guard let oldObject,
+//                              let searchedAt = oldObject["lastSearchedAt"] as? Date else { return }
+//                        let searched = migration.create(SearchedBook.className())
+//                        searched["title"] = oldObject["title"] as? String ?? ""
+//                        searched["author"] = oldObject["author"] as? String ?? ""
+//                        searched["isbn"] = oldObject["isbn"] as? String ?? ""
+//                        searched["coverImageURL"] = ""
+//                        searched["searchedAt"] = searchedAt
+//                    }
+//                }
+//                // v5: Book에 coverImageURL, memo 추가 — Realm이 자동 처리
+//            },
+//            objectTypes: [Book.self, SearchedBook.self, Quote.self, Tag.self, CardStyle.self]
+//        )
+//        return try! Realm(configuration: config)
+        return try! Realm(configuration: .defaultConfiguration)
     }
 }
 
