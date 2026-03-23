@@ -43,39 +43,6 @@ final class SentenceSelectionViewController: UIViewController {
 
     private let bottomContainer = UIView()
 
-    private let pageLabel: UILabel = {
-        let l = UILabel()
-        l.text = "페이지"
-        l.font = .systemFont(ofSize: 14, weight: .medium)
-        l.textColor = AppColor.textSecondary
-        return l
-    }()
-
-    private let pageTextField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "p."
-        tf.font = .systemFont(ofSize: 14)
-        tf.textColor = AppColor.textTertiary
-        tf.backgroundColor = .white
-        tf.layer.cornerRadius = 10
-        tf.layer.borderWidth = 1
-        tf.layer.borderColor = AppColor.border.cgColor
-        tf.keyboardType = .numberPad
-        tf.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 0))
-        tf.leftViewMode = .always
-        tf.rightView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 0))
-        tf.rightViewMode = .always
-        return tf
-    }()
-
-    private let optionalLabel: UILabel = {
-        let l = UILabel()
-        l.text = "(선택)"
-        l.font = .systemFont(ofSize: 13)
-        l.textColor = AppColor.textTertiary
-        return l
-    }()
-
     private let continueButton: PrimaryButton = {
         let btn = PrimaryButton(title: "계속")
         btn.isEnabled = false
@@ -154,17 +121,6 @@ final class SentenceSelectionViewController: UIViewController {
 
         view.addSubview(bottomContainer)
 
-        let pageInputRow = UIStackView(arrangedSubviews: [pageLabel, pageTextField, optionalLabel])
-        pageInputRow.axis = .horizontal
-        pageInputRow.spacing = 10
-        pageInputRow.alignment = .center
-
-        pageTextField.snp.makeConstraints {
-            $0.width.equalTo(80)
-            $0.height.equalTo(40)
-        }
-
-        bottomContainer.addSubview(pageInputRow)
         bottomContainer.addSubview(continueButton)
 
         bottomContainer.snp.makeConstraints {
@@ -172,14 +128,8 @@ final class SentenceSelectionViewController: UIViewController {
             bottomContainerBottom = $0.bottom.equalTo(view.safeAreaLayoutGuide).constraint
         }
 
-        pageInputRow.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.lessThanOrEqualToSuperview().offset(-20)
-        }
-
         continueButton.snp.makeConstraints {
-            $0.top.equalTo(pageInputRow.snp.bottom).offset(12)
+            $0.top.equalToSuperview().offset(16)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.bottom.equalToSuperview().offset(-16)
         }
@@ -299,7 +249,7 @@ final class SentenceSelectionViewController: UIViewController {
                 } ?? ""
 
                 let sheet = DetailSheetViewController()
-                sheet.initialPage = self.pageTextField.text
+                sheet.initialPage = nil
                 sheet.onSave = { [weak self] page, tags in
                     guard let self else { return }
 
