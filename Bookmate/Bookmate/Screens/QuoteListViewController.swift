@@ -15,6 +15,7 @@ final class QuoteListViewController: UIViewController {
     private var quotes: [Quote] = []
     private var allTags: [String] = []
     private var selectedFilter: String? = nil  // nil = 전체
+    private var searchQuery: String = ""
 
     // MARK: - Init
 
@@ -62,6 +63,13 @@ final class QuoteListViewController: UIViewController {
         return l
     }()
 
+    private let searchController: UISearchController = {
+        let sc = UISearchController(searchResultsController: nil)
+        sc.searchBar.placeholder = "문장 검색"
+        sc.obscuresBackgroundDuringPresentation = false
+        return sc
+    }()
+
     private let fab = FABButton()
 
     // MARK: - Lifecycle
@@ -72,6 +80,7 @@ final class QuoteListViewController: UIViewController {
         setupNavBar()
         setupLayout()
         setupTableView()
+        bindSearch()
         bindActions()
         loadQuotes()
     }
@@ -80,20 +89,9 @@ final class QuoteListViewController: UIViewController {
 
     private func setupNavBar() {
         navigationItem.title = book != nil ? "수집한 문장" : "내 문장"
-
-        let searchButton = UIBarButtonItem(
-            image: UIImage(systemName: "magnifyingglass")?
-                .withConfiguration(UIImage.SymbolConfiguration(pointSize: 22, weight: .regular)),
-            style: .plain,
-            target: self,
-            action: #selector(searchTapped)
-        )
-        searchButton.tintColor = AppColor.textSecondary
-        navigationItem.rightBarButtonItem = searchButton
-    }
-
-    @objc private func searchTapped() {
-        // TODO: 검색 기능 구현
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = true
+        definesPresentationContext = true
     }
 
     // MARK: - Layout
@@ -222,7 +220,18 @@ final class QuoteListViewController: UIViewController {
             filtered = base
         }
 
-        filtered
+        // 검색어 필터링
+        let searched: Observable<[Quote]>
+        if !searchQuery.isEmpty {
+            let query = searchQuery.lowercased()
+            searched = filtered.map { quotes in
+                quotes.filter { $0.text.lowercased().contains(query) }
+            }
+        } else {
+            searched = filtered
+        }
+
+        searched
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] quotes in
                 guard let self else { return }
@@ -246,6 +255,26 @@ final class QuoteListViewController: UIViewController {
             allTags = newTags
             buildFilterChips()
         }
+    }
+
+    // MARK: - Search
+
+    private func bindSearch() {
+        searchController.searchBar.rx.text.orEmpty
+            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] query in
+                self?.searchQuery = query
+                self?.loadQuotes()
+            })
+            .disposed(by: disposeBag)
+
+        searchController.searchBar.rx.cancelButtonClicked
+            .subscribe(onNext: { [weak self] in
+                self?.searchQuery = ""
+                self?.loadQuotes()
+            })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Actions
@@ -335,7 +364,8 @@ extension QuoteListViewController: UITableViewDataSource, UITableViewDelegate {
             bookInfo: bookInfo,
             tag: firstTag?.name,
             tagColor: colors?.text,
-            tagBgColor: colors?.bg
+            tagBgColor: colors?.bg,
+            highlightText: searchQuery.isEmpty ? nil : searchQuery
         )
 
         cell.showDivider = indexPath.row < quotes.count - 1

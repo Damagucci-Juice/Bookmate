@@ -53,10 +53,11 @@ final class QuoteListItemView: UIView {
         }
     }
 
-    func configure(quote: String, bookInfo: String, tag: String?, tagColor: UIColor? = nil, tagBgColor: UIColor? = nil) {
+    func configure(quote: String, bookInfo: String, tag: String?, tagColor: UIColor? = nil, tagBgColor: UIColor? = nil, highlightText: String? = nil) {
         let style = NSMutableParagraphStyle()
         style.lineHeightMultiple = AppFont.Spacing.bodyLineHeight
-        quoteLabel.attributedText = NSAttributedString(
+
+        let attributed = NSMutableAttributedString(
             string: quote,
             attributes: [
                 .font: AppFont.body.font,
@@ -64,6 +65,18 @@ final class QuoteListItemView: UIView {
                 .paragraphStyle: style
             ]
         )
+
+        if let keyword = highlightText, !keyword.isEmpty {
+            var searchRange = quote.startIndex..<quote.endIndex
+            while let range = quote.range(of: keyword, options: .caseInsensitive, range: searchRange) {
+                let nsRange = NSRange(range, in: quote)
+                attributed.addAttribute(.backgroundColor, value: AppColor.accentLight, range: nsRange)
+                attributed.addAttribute(.foregroundColor, value: AppColor.accent, range: nsRange)
+                searchRange = range.upperBound..<quote.endIndex
+            }
+        }
+
+        quoteLabel.attributedText = attributed
         bookLabel.text = bookInfo
 
         if let tag = tag, !tag.isEmpty {
