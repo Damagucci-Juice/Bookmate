@@ -3,7 +3,6 @@ import SnapKit
 import RxSwift
 import RxCocoa
 import Vision
-import NaturalLanguage
 
 final class TextRecognitionViewController: UIViewController {
 
@@ -353,32 +352,23 @@ final class TextRecognitionViewController: UIViewController {
         actionButton.rx.tap
             .subscribe(onNext: { [weak self] in
                 guard let self else { return }
-                let ocrLines = self.imageOCR.observations.compactMap {
-                    $0.topCandidates(1).first?.string
+                // Y 내림차순 정렬 (Vision 좌표계: 아래가 0) → 위에서 아래 순서
+                let sortedObservations = self.imageOCR.observations.sorted {
+                    $0.boundingBox.origin.y > $1.boundingBox.origin.y
                 }
-                guard !ocrLines.isEmpty else { return }
-                let fullText = ocrLines.joined(separator: " ")
-                let sentences = self.splitIntoSentences(fullText)
-                guard !sentences.isEmpty else { return }
-                let vc = SentenceSelectionViewController(sentences: sentences, book: self.book)
+                let lines = sortedObservations
+                    .compactMap { $0.topCandidates(1).first }
+                    .filter { $0.confidence > 0.3 && $0.string.count >= 2 }
+                    .flatMap { candidate in
+                        candidate.string.components(separatedBy: .newlines)
+                            .map { $0.trimmingCharacters(in: .whitespaces) }
+                            .filter { !$0.isEmpty && $0.count >= 2 }
+                    }
+                guard !lines.isEmpty else { return }
+                let vc = SentenceSelectionViewController(sentences: lines, book: self.book)
                 self.navigationController?.pushViewController(vc, animated: true)
             })
             .disposed(by: disposeBag)
     }
 
-    // MARK: - Sentence Splitting
-
-    private func splitIntoSentences(_ text: String) -> [String] {
-        let tokenizer = NLTokenizer(unit: .sentence)
-        tokenizer.string = text
-        var sentences: [String] = []
-        tokenizer.enumerateTokens(in: text.startIndex..<text.endIndex) { range, _ in
-            let sentence = String(text[range]).trimmingCharacters(in: .whitespacesAndNewlines)
-            if !sentence.isEmpty {
-                sentences.append(sentence)
-            }
-            return true
-        }
-        return sentences
-    }
 }

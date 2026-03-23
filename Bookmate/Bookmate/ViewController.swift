@@ -17,6 +17,7 @@ import RxCocoa
 class ViewController: UIViewController {
 
     private let bookRepository = BookRepository()
+    private let quoteRepository = QuoteRepository()
     private let disposeBag = DisposeBag()
 
     // MARK: - Scroll & Content
@@ -27,18 +28,17 @@ class ViewController: UIViewController {
     // MARK: - Greeting Section
 
     private let greetingSection = UIView()
-    private let dateLabel: UILabel = {
+    private let logoLabel: UILabel = {
         let label = UILabel()
-        label.text = "3월 19일 수요일"
-        label.font = AppFont.caption.font
-        label.textColor = AppColor.textTertiary
-        return label
-    }()
-    private let todayLabel: UILabel = {
-        let label = UILabel()
-        label.text = "오늘의 문장"
-        label.font = AppFont.sectionTitle.font
-        label.textColor = AppColor.textPrimary
+        let text = "Bookmate"
+        label.attributedText = NSAttributedString(
+            string: text,
+            attributes: [
+                .font: AppFont.logo.font,
+                .foregroundColor: AppColor.textPrimary,
+                .kern: AppFont.Spacing.logoLetterSpacing
+            ]
+        )
         return label
     }()
 
@@ -71,7 +71,6 @@ class ViewController: UIViewController {
     }()
     private let quoteBodyLabel: UILabel = {
         let label = UILabel()
-        label.text = "우리가 어떤 사람인지는 우리가 무엇을 반복해서 하느냐에 달려 있다. 그러므로 탁월함은 행위가 아니라 습관이다."
         label.font = AppFont.quoteText.font
         label.textColor = AppColor.textPrimary
         label.numberOfLines = 0
@@ -84,7 +83,6 @@ class ViewController: UIViewController {
     }()
     private let quoteSourceLabel: UILabel = {
         let label = UILabel()
-        label.text = "아리스토텔레스 · 니코마코스 윤리학"
         label.font = AppFont.caption.font
         label.textColor = AppColor.textTertiary
         return label
@@ -121,6 +119,7 @@ class ViewController: UIViewController {
         view.backgroundColor = AppColor.bg
         setupHierarchy()
         setupConstraints()
+        loadTodayQuote()
         loadRecentBooks()
         myQuotesButton.addTarget(self, action: #selector(myQuotesTapped), for: .touchUpInside)
     }
@@ -133,6 +132,7 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
+        loadTodayQuote()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -147,8 +147,7 @@ class ViewController: UIViewController {
         scrollView.addSubview(contentView)
 
         // Greeting
-        greetingSection.addSubview(dateLabel)
-        greetingSection.addSubview(todayLabel)
+        greetingSection.addSubview(logoLabel)
         greetingSection.addSubview(myQuotesButton)
         contentView.addSubview(greetingSection)
 
@@ -185,15 +184,11 @@ class ViewController: UIViewController {
             $0.top.equalToSuperview().offset(24)
             $0.leading.trailing.equalToSuperview().inset(sideInset)
         }
-        dateLabel.snp.makeConstraints {
-            $0.top.leading.trailing.equalToSuperview()
-        }
-        todayLabel.snp.makeConstraints {
-            $0.top.equalTo(dateLabel.snp.bottom).offset(4)
-            $0.leading.bottom.equalToSuperview()
+        logoLabel.snp.makeConstraints {
+            $0.top.leading.bottom.equalToSuperview()
         }
         myQuotesButton.snp.makeConstraints {
-            $0.centerY.equalTo(todayLabel)
+            $0.centerY.equalTo(logoLabel)
             $0.trailing.equalToSuperview()
         }
 
@@ -234,6 +229,27 @@ class ViewController: UIViewController {
             $0.top.equalTo(recentBooksHeaderStack.snp.bottom).offset(12)
             $0.leading.trailing.bottom.equalToSuperview()
         }
+    }
+
+    private func loadTodayQuote() {
+        quoteRepository.fetchAll()
+            .take(1)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] quotes in
+                guard let self else { return }
+                if let random = quotes.randomElement() {
+                    self.quoteBodyLabel.text = random.text
+                    if let book = random.book {
+                        self.quoteSourceLabel.text = "\(book.author) · \(book.title)"
+                    } else {
+                        self.quoteSourceLabel.text = nil
+                    }
+                } else {
+                    self.quoteBodyLabel.text = "우리가 어떤 사람인지는 우리가 무엇을 반복해서 하느냐에 달려 있다. 그러므로 탁월함은 행위가 아니라 습관이다."
+                    self.quoteSourceLabel.text = "아리스토텔레스 · 니코마코스 윤리학"
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
     private func loadRecentBooks() {
