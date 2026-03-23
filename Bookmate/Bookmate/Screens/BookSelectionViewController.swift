@@ -7,6 +7,9 @@ import RealmSwift
 
 final class BookSelectionViewController: UIViewController {
 
+    /// 책 선택 콜백 — 설정되면 BookDetail 대신 콜백 호출 후 dismiss
+    var onBookSelected: ((Book) -> Void)?
+
     private let disposeBag = DisposeBag()
     private var recentBooksDisposable: Disposable?
     private let bookService = NaverBookService()
@@ -306,10 +309,8 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
         case .recent:
             let searched = recentBooks[indexPath.row]
             bookRepository.markAsRecentlySearched(searched)
-            // Find or create a Book from SearchedBook and navigate
             let book = findOrCreateBook(from: searched)
-            let detailVC = BookDetailViewController(book: book)
-            navigationController?.pushViewController(detailVC, animated: true)
+            handleBookSelected(book)
         case .searching:
             let item = searchResults[indexPath.row]
             bookRepository.addToSearchHistory(from: item)
@@ -327,8 +328,7 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
                     }
                 }
             }
-            let detailVC = BookDetailViewController(book: book)
-            navigationController?.pushViewController(detailVC, animated: true)
+            handleBookSelected(book)
         }
     }
 
@@ -343,6 +343,17 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
         book.isbn = searched.isbn
         try? realm.write { realm.add(book) }
         return book
+    }
+
+    private func handleBookSelected(_ book: Book) {
+        if let onBookSelected {
+            dismiss(animated: true) {
+                onBookSelected(book)
+            }
+        } else {
+            let detailVC = BookDetailViewController(book: book)
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

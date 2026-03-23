@@ -257,6 +257,14 @@ final class BookDetailViewController: UIViewController {
                 self?.presentAddQuoteSheet()
             })
             .disposed(by: disposeBag)
+
+        quoteMoreButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let self else { return }
+                let vc = QuoteListViewController(book: self.book)
+                self.navigationController?.pushViewController(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 
     private func presentAddQuoteSheet() {

@@ -25,7 +25,7 @@ final class CountBadgeView: UIView {
 
         addSubview(countLabel)
         countLabel.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview().inset(3)
+            $0.top.bottom.equalToSuperview().inset(9.5)
             $0.leading.trailing.equalToSuperview().inset(10)
         }
     }
