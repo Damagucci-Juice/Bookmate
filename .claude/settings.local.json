@@ -17,7 +17,8 @@
       "Bash(find /Users/will/Desktop/Bookmate/Bookmate/Bookmate -type f -name *.swift)",
       "Bash(find /Users/will/Desktop/Bookmate -type d -not -path */.*)",
       "Bash(grep -r \"RecognizeTextRequest\\\\|RecognizedTextObservation\" /Users/will/Desktop/Bookmate --include=*.pbxproj)",
-      "Bash(grep \"\\\\.swift$\")"
+      "Bash(grep \"\\\\.swift$\")",
+      "Bash(wc:*)"
     ]
   }
 }
