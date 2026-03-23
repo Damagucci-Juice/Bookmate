@@ -22,15 +22,14 @@ final class QuoteListItemView: UIView {
         return l
     }()
 
-    private let tagChip = TagChipView(title: "")
-
-    private let metaStack: UIStackView = {
+    private let tagStack: UIStackView = {
         let sv = UIStackView()
         sv.axis = .horizontal
         sv.spacing = 6
         sv.alignment = .center
         return sv
     }()
+
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,12 +39,10 @@ final class QuoteListItemView: UIView {
     required init?(coder: NSCoder) { fatalError() }
 
     private func setupUI() {
-        let stack = UIStackView(arrangedSubviews: [quoteLabel, metaStack])
+        let stack = UIStackView(arrangedSubviews: [quoteLabel, bookLabel, tagStack])
         stack.axis = .vertical
         stack.spacing = 10
-
-        metaStack.addArrangedSubview(bookLabel)
-        metaStack.addArrangedSubview(tagChip)
+        stack.alignment = .leading
 
         addSubview(stack)
         stack.snp.makeConstraints {
@@ -53,7 +50,7 @@ final class QuoteListItemView: UIView {
         }
     }
 
-    func configure(quote: String, bookInfo: String, tag: String?, tagColor: UIColor? = nil, tagBgColor: UIColor? = nil, highlightText: String? = nil) {
+    func configure(quote: String, bookInfo: String, tags: [(name: String, textColor: UIColor, bgColor: UIColor)], highlightText: String? = nil) {
         let style = NSMutableParagraphStyle()
         style.lineHeightMultiple = AppFont.Spacing.bodyLineHeight
 
@@ -79,11 +76,49 @@ final class QuoteListItemView: UIView {
         quoteLabel.attributedText = attributed
         bookLabel.text = bookInfo
 
-        if let tag = tag, !tag.isEmpty {
-            tagChip.isHidden = false
-            tagChip.configure(title: tag, textColor: tagColor ?? AppColor.accent, bgColor: tagBgColor ?? AppColor.accentLight)
-        } else {
-            tagChip.isHidden = true
+        tagStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+        for tag in tags.prefix(3) {
+            let capsule = CapsuleTagLabel()
+            capsule.text = tag.name
+            capsule.textColor = tag.textColor
+            capsule.backgroundColor = tag.bgColor
+            tagStack.addArrangedSubview(capsule)
         }
+
+        tagStack.isHidden = tags.isEmpty
+    }
+}
+
+// MARK: - Capsule Tag Label
+
+private final class CapsuleTagLabel: UILabel {
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        font = AppFont.meta.font
+        textAlignment = .center
+        clipsToBounds = true
+    }
+
+    required init?(coder: NSCoder) { fatalError() }
+
+    private let insets = UIEdgeInsets(top: 4, left: 10, bottom: 4, right: 10)
+
+    override func drawText(in rect: CGRect) {
+        super.drawText(in: rect.inset(by: insets))
+    }
+
+    override var intrinsicContentSize: CGSize {
+        let size = super.intrinsicContentSize
+        return CGSize(
+            width: size.width + insets.left + insets.right,
+            height: size.height + insets.top + insets.bottom
+        )
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = bounds.height / 2
     }
 }

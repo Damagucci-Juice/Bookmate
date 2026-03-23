@@ -37,6 +37,7 @@ final class TagChipView: UIView {
 
     private func setupUI() {
         layer.cornerRadius = 100
+        clipsToBounds = true
 
         contentStack.addArrangedSubview(tagLabel)
         contentStack.addArrangedSubview(removeButton)

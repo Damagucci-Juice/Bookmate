@@ -281,7 +281,9 @@ final class ManualQuoteEntryViewController: UIViewController {
         if selectedTags.contains(tag) {
             selectedTags.removeAll { $0 == tag }
         } else {
-            guard selectedTags.count < maxTags else { return }
+            if selectedTags.count >= maxTags {
+                selectedTags.removeFirst()
+            }
             selectedTags.append(tag)
         }
         suggestCollectionView.reloadData()
@@ -291,8 +293,10 @@ final class ManualQuoteEntryViewController: UIViewController {
     private func addTagFromInput() {
         guard let text = tagTextField.text?.trimmingCharacters(in: .whitespaces),
               !text.isEmpty,
-              selectedTags.count < maxTags,
               !selectedTags.contains(text) else { return }
+        if selectedTags.count >= maxTags {
+            selectedTags.removeFirst()
+        }
         selectedTags.append(text)
         tagTextField.text = ""
         suggestCollectionView.reloadData()

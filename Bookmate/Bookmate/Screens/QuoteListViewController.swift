@@ -356,15 +356,15 @@ extension QuoteListViewController: UITableViewDataSource, UITableViewDelegate {
             return b.author.isEmpty ? b.title : "\(b.title) · \(b.author)"
         }()
 
-        let firstTag = quote.tags.first
-        let colors = firstTag.map { tagColor(for: $0.name) }
+        let tags = Array(quote.tags.prefix(3)).map { tag in
+            let colors = tagColor(for: tag.name)
+            return (name: tag.name, textColor: colors.text, bgColor: colors.bg)
+        }
 
         cell.itemView.configure(
             quote: quote.text,
             bookInfo: bookInfo,
-            tag: firstTag?.name,
-            tagColor: colors?.text,
-            tagBgColor: colors?.bg,
+            tags: tags,
             highlightText: searchQuery.isEmpty ? nil : searchQuery
         )
 
