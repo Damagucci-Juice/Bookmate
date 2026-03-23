@@ -49,5 +49,9 @@ final class CloseHeaderView: UIView {
         closeButton.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
     }
 
+    func updateTitle(_ title: String) {
+        titleLabel.text = title
+    }
+
     @objc private func closeTapped() { onCloseTapped?() }
 }

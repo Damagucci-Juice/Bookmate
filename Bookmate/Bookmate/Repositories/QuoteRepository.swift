@@ -127,6 +127,26 @@ final class QuoteRepository {
         }
     }
 
+    // MARK: - Update (All-in-one)
+
+    func update(_ quote: Quote, text: String, pageNumber: Int?, tagNames: [String]) {
+        try? realm.write {
+            quote.text = text
+            quote.pageNumber = pageNumber
+            quote.tags.removeAll()
+            for name in tagNames {
+                if let existing = realm.objects(Tag.self).filter("name == %@", name).first {
+                    quote.tags.append(existing)
+                } else {
+                    let newTag = Tag()
+                    newTag.name = name
+                    realm.add(newTag)
+                    quote.tags.append(newTag)
+                }
+            }
+        }
+    }
+
     // MARK: - Delete
 
     func delete(_ quote: Quote) {

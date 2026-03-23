@@ -9,13 +9,15 @@ final class ManualQuoteEntryViewController: UIViewController {
     // MARK: - Dependencies
 
     private let book: Book
+    private let existingQuote: Quote?
     private let quoteRepository = QuoteRepository()
     private let disposeBag = DisposeBag()
 
     // MARK: - Init
 
-    init(book: Book) {
+    init(book: Book, quote: Quote? = nil) {
         self.book = book
+        self.existingQuote = quote
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -135,8 +137,28 @@ final class ManualQuoteEntryViewController: UIViewController {
         return l
     }()
 
-    private let suggestRow1 = UIStackView()
-    private let suggestRow2 = UIStackView()
+    private lazy var suggestCollectionView: UICollectionView = {
+        let item = NSCollectionLayoutItem(layoutSize: .init(
+            widthDimension: .fractionalWidth(1.0 / 4.0),
+            heightDimension: .absolute(36)
+        ))
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: .init(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(36)),
+            subitems: [item]
+        )
+        group.interItemSpacing = .fixed(8)
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 8
+        let layout = UICollectionViewCompositionalLayout(section: section)
+
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.backgroundColor = .clear
+        cv.isScrollEnabled = false
+        cv.register(SuggestTagCell.self, forCellWithReuseIdentifier: SuggestTagCell.reuseId)
+        cv.dataSource = self
+        cv.delegate = self
+        return cv
+    }()
 
     private let suggestedTags = ["사랑", "위로", "용기", "인생", "지혜", "철학", "감성"]
     private let maxTags = 3
@@ -152,6 +174,7 @@ final class ManualQuoteEntryViewController: UIViewController {
         view.backgroundColor = AppColor.bg
         setupLayout()
         bindActions()
+        configureForEdit()
     }
 
     // MARK: - Layout
@@ -233,80 +256,36 @@ final class ManualQuoteEntryViewController: UIViewController {
             $0.height.equalTo(48)
         }
 
-        [suggestRow1, suggestRow2].forEach {
-            $0.axis = .horizontal
-            $0.spacing = 8
+        let rows = ceil(Double(suggestedTags.count) / 4.0)
+        let gridHeight = rows * 36 + max(rows - 1, 0) * 8
+
+        suggestCollectionView.snp.makeConstraints {
+            $0.height.equalTo(gridHeight)
         }
 
         let tagSection = UIStackView(arrangedSubviews: [
             tagSectionLabel, tagInputContainer, tagHintLabel,
-            suggestLabel, suggestRow1, suggestRow2
+            suggestLabel, suggestCollectionView
         ])
         tagSection.axis = .vertical
         tagSection.spacing = 8
         tagSection.setCustomSpacing(12, after: tagHintLabel)
         tagSection.setCustomSpacing(12, after: suggestLabel)
         contentStack.addArrangedSubview(tagSection)
-
-        setupSuggestedTags()
     }
 
-    // MARK: - Suggested Tags
+    // MARK: - Tag Selection
 
-    private func setupSuggestedTags() {
-        let row1Tags = Array(suggestedTags.prefix(4))
-        let row2Tags = Array(suggestedTags.dropFirst(4))
-
-        for tag in row1Tags {
-            suggestRow1.addArrangedSubview(makeSuggestChip(tag))
-        }
-        for tag in row2Tags {
-            suggestRow2.addArrangedSubview(makeSuggestChip(tag))
-        }
-    }
-
-    private func makeSuggestChip(_ tag: String) -> UIButton {
-        let btn = UIButton(type: .system)
-        btn.setTitle("# \(tag)", for: .normal)
-        btn.titleLabel?.font = .systemFont(ofSize: 12, weight: .medium)
-        btn.setTitleColor(AppColor.textSecondary, for: .normal)
-        btn.layer.cornerRadius = 100
-        btn.layer.borderWidth = 1
-        btn.layer.borderColor = AppColor.border.cgColor
-        btn.contentEdgeInsets = UIEdgeInsets(top: 8, left: 14, bottom: 8, right: 14)
-
-        btn.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.toggleTag(tag, fromChip: btn)
-            })
-            .disposed(by: disposeBag)
-
-        return btn
-    }
-
-    private func toggleTag(_ tag: String, fromChip chip: UIButton) {
+    private func toggleTag(at index: Int) {
+        let tag = suggestedTags[index]
         if selectedTags.contains(tag) {
             selectedTags.removeAll { $0 == tag }
-            applyChipStyle(chip, selected: false)
         } else {
             guard selectedTags.count < maxTags else { return }
             selectedTags.append(tag)
-            applyChipStyle(chip, selected: true)
         }
+        suggestCollectionView.reloadData()
         updateTagHint()
-    }
-
-    private func applyChipStyle(_ chip: UIButton, selected: Bool) {
-        if selected {
-            chip.setTitleColor(AppColor.accent, for: .normal)
-            chip.backgroundColor = AppColor.accentLight
-            chip.layer.borderWidth = 0
-        } else {
-            chip.setTitleColor(AppColor.textSecondary, for: .normal)
-            chip.backgroundColor = .clear
-            chip.layer.borderWidth = 1
-            chip.layer.borderColor = AppColor.border.cgColor
-        }
     }
 
     private func addTagFromInput() {
@@ -316,14 +295,7 @@ final class ManualQuoteEntryViewController: UIViewController {
               !selectedTags.contains(text) else { return }
         selectedTags.append(text)
         tagTextField.text = ""
-
-        let allChips = (suggestRow1.arrangedSubviews + suggestRow2.arrangedSubviews).compactMap { $0 as? UIButton }
-        for chip in allChips {
-            let chipTag = chip.title(for: .normal)?.replacingOccurrences(of: "# ", with: "") ?? ""
-            if chipTag == text {
-                applyChipStyle(chip, selected: true)
-            }
-        }
+        suggestCollectionView.reloadData()
         updateTagHint()
     }
 
@@ -369,24 +341,57 @@ final class ManualQuoteEntryViewController: UIViewController {
             .disposed(by: disposeBag)
     }
 
+    // MARK: - Edit Mode
+
+    private func configureForEdit() {
+        guard let quote = existingQuote else { return }
+
+        headerView.updateTitle("문장 수정")
+        saveButton.setTitle("수정", for: .normal)
+
+        quoteTextView.text = quote.text
+        quotePlaceholder.isHidden = true
+
+        if let page = quote.pageNumber {
+            pageTextField.text = "\(page)"
+        }
+
+        for tag in quote.tags {
+            guard selectedTags.count < maxTags else { break }
+            selectedTags.append(tag.name)
+        }
+
+        suggestCollectionView.reloadData()
+        updateTagHint()
+    }
+
     // MARK: - Save
 
     private func saveQuote() {
         let text = quoteTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else { return }
 
-        let quote = Quote()
-        quote.text = text
-        quote.book = book
-
-        if let pageText = pageTextField.text, let page = Int(pageText) {
-            quote.pageNumber = page
-        }
-
-        if selectedTags.isEmpty {
-            quoteRepository.save(quote)
+        if let existing = existingQuote {
+            guard !existing.isInvalidated else {
+                dismiss(animated: true)
+                return
+            }
+            let page = pageTextField.text.flatMap { Int($0) }
+            quoteRepository.update(existing, text: text, pageNumber: page, tagNames: selectedTags)
         } else {
-            quoteRepository.save(quote, tagNames: selectedTags)
+            let quote = Quote()
+            quote.text = text
+            quote.book = book
+
+            if let pageText = pageTextField.text, let page = Int(pageText) {
+                quote.pageNumber = page
+            }
+
+            if selectedTags.isEmpty {
+                quoteRepository.save(quote)
+            } else {
+                quoteRepository.save(quote, tagNames: selectedTags)
+            }
         }
         dismiss(animated: true)
     }
@@ -397,5 +402,63 @@ final class ManualQuoteEntryViewController: UIViewController {
 extension ManualQuoteEntryViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         quotePlaceholder.isHidden = !textView.text.isEmpty
+    }
+}
+
+// MARK: - UICollectionView DataSource & Delegate
+
+extension ManualQuoteEntryViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        suggestedTags.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SuggestTagCell.reuseId, for: indexPath) as! SuggestTagCell
+        let tag = suggestedTags[indexPath.item]
+        cell.configure(tag: tag, selected: selectedTags.contains(tag))
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        toggleTag(at: indexPath.item)
+    }
+}
+
+// MARK: - Suggest Tag Cell
+
+private final class SuggestTagCell: UICollectionViewCell {
+
+    static let reuseId = "SuggestTagCell"
+
+    private let label: UILabel = {
+        let l = UILabel()
+        l.font = .systemFont(ofSize: 12, weight: .medium)
+        l.textAlignment = .center
+        return l
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        contentView.addSubview(label)
+        label.snp.makeConstraints { $0.edges.equalToSuperview() }
+        contentView.layer.cornerRadius = 18
+        contentView.clipsToBounds = true
+    }
+
+    required init?(coder: NSCoder) { fatalError() }
+
+    func configure(tag: String, selected: Bool) {
+        label.text = "# \(tag)"
+        if selected {
+            label.textColor = AppColor.accent
+            contentView.backgroundColor = AppColor.accentLight
+            contentView.layer.borderWidth = 0
+        } else {
+            label.textColor = AppColor.textSecondary
+            contentView.backgroundColor = .clear
+            contentView.layer.borderWidth = 1
+            contentView.layer.borderColor = AppColor.border.cgColor
+        }
     }
 }

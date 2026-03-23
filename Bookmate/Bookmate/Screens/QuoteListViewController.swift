@@ -374,6 +374,37 @@ extension QuoteListViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let quote = quotes[indexPath.row]
+        guard let book = quote.book else { return }
+        let vc = ManualQuoteEntryViewController(book: book, quote: quote)
+        vc.modalPresentationStyle = .pageSheet
+        present(vc, animated: true)
+    }
+
+    func tableView(_ tableView: UITableView,
+                    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
+        -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { [weak self] _, _, completion in
+            guard let self else { return completion(false) }
+            let quote = self.quotes[indexPath.row]
+            self.confirmDelete(quote, completion: completion)
+        }
+        deleteAction.backgroundColor = .systemRed
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+
+    private func confirmDelete(_ quote: Quote, completion: @escaping (Bool) -> Void) {
+        let alert = UIAlertController(
+            title: "문장 삭제",
+            message: "이 문장을 삭제하시겠습니까?",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel) { _ in completion(false) })
+        alert.addAction(UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
+            self?.quoteRepository.delete(quote)
+            completion(true)
+        })
+        present(alert, animated: true)
     }
 }
 
