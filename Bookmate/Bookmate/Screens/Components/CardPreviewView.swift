@@ -85,7 +85,7 @@ final class CardPreviewView: UIView {
             $0.top.leading.equalToSuperview()
         }
         quoteLabel.snp.makeConstraints {
-            $0.top.equalTo(quoteMarkLabel.snp.bottom).offset(8)
+            $0.top.equalTo(quoteMarkLabel.snp.bottom).offset(2)
             $0.leading.trailing.bottom.equalToSuperview()
         }
 

@@ -25,8 +25,6 @@ final class ManualQuoteEntryViewController: UIViewController {
 
     // MARK: - UI
 
-    private let headerView = CloseHeaderView(title: "문장 등록")
-
     private let scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.keyboardDismissMode = .onDrag
@@ -172,22 +170,46 @@ final class ManualQuoteEntryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = AppColor.bg
+        setupNavigation()
         setupLayout()
         bindActions()
         configureForEdit()
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
+    private func setupNavigation() {
+        title = "문장 등록"
+        navigationController?.navigationBar.titleTextAttributes = [
+            .font: AppFont.screenTitle.font,
+            .foregroundColor: AppColor.textPrimary
+        ]
+        let closeButton = UIBarButtonItem(
+            image: UIImage(systemName: AppIcon.close.sfSymbolName),
+            style: .plain,
+            target: self,
+            action: #selector(closeTapped)
+        )
+        closeButton.tintColor = AppColor.textSecondary
+        navigationItem.rightBarButtonItem = closeButton
+    }
+
+    @objc private func closeTapped() {
+        dismiss(animated: true)
     }
 
     // MARK: - Layout
 
     private func setupLayout() {
-        view.addSubview(headerView)
         view.addSubview(scrollView)
         view.addSubview(saveButton)
         scrollView.addSubview(contentStack)
-
-        headerView.snp.makeConstraints {
-            $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-        }
 
         saveButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(20)
@@ -195,7 +217,7 @@ final class ManualQuoteEntryViewController: UIViewController {
         }
 
         scrollView.snp.makeConstraints {
-            $0.top.equalTo(headerView.snp.bottom)
+            $0.top.equalTo(view.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(saveButton.snp.top).offset(-16)
         }
@@ -312,10 +334,6 @@ final class ManualQuoteEntryViewController: UIViewController {
     // MARK: - Bindings
 
     private func bindActions() {
-        headerView.onCloseTapped = { [weak self] in
-            self?.dismiss(animated: true)
-        }
-
         quoteTextView.delegate = self
 
         let hasText = quoteTextView.rx.text.orEmpty
@@ -350,7 +368,7 @@ final class ManualQuoteEntryViewController: UIViewController {
     private func configureForEdit() {
         guard let quote = existingQuote else { return }
 
-        headerView.updateTitle("문장 수정")
+        title = "문장 수정"
         saveButton.setTitle("수정", for: .normal)
 
         quoteTextView.text = quote.text

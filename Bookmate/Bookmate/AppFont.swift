@@ -65,8 +65,8 @@ enum AppFont {
         case .statusBarTime:       return .systemFont(ofSize: 16, weight: .semibold)
 
         // Share Card → Nanum Myeongjo (serif 감성 유지, Georgia 폴백)
-        case .quoteIcon:           return UIFont(name: "NanumMyeongjoExtraBold", size: 56) ?? UIFont(name: "Georgia-Bold", size: 56)!
-        case .quoteText:           return UIFont(name: "NanumMyeongjo", size: 20)          ?? UIFont(name: "Georgia", size: 20)!
+        case .quoteIcon:           return UIFont(name: "NanumMyeongjoExtraBold", size: 40) ?? UIFont(name: "Georgia-Bold", size: 40)!
+        case .quoteText:           return UIFont(name: "NanumMyeongjo", size: 17)          ?? UIFont(name: "Georgia", size: 17)!
         }
     }
 

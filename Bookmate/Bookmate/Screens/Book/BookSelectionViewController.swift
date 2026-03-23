@@ -98,8 +98,8 @@ final class BookSelectionViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "도서 선택"
-        navigationItem.title = "도서 선택"
+        title = "책찾기"
+        navigationItem.title = "책찾기"
         view.backgroundColor = AppColor.bg
         setupLayout()
         setupTableView()
@@ -352,6 +352,7 @@ extension BookSelectionViewController: UITableViewDataSource, UITableViewDelegat
             }
         } else {
             let detailVC = BookDetailViewController(book: book)
+            detailVC.hidesBottomBarWhenPushed = true
             navigationController?.pushViewController(detailVC, animated: true)
         }
     }

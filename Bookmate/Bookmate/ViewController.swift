@@ -7,10 +7,17 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
+import Kingfisher
+import RxSwift
+import RxCocoa
 
 // MARK: - HomeViewController
 
 class ViewController: UIViewController {
+
+    private let bookRepository = BookRepository()
+    private let disposeBag = DisposeBag()
 
     // MARK: - Scroll & Content
 
@@ -33,6 +40,14 @@ class ViewController: UIViewController {
         label.font = AppFont.sectionTitle.font
         label.textColor = AppColor.textPrimary
         return label
+    }()
+
+    private let myQuotesButton: UIButton = {
+        let btn = UIButton(type: .system)
+        let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .medium)
+        btn.setImage(UIImage(systemName: AppIcon.bookmark.sfSymbolName, withConfiguration: config), for: .normal)
+        btn.tintColor = AppColor.textPrimary
+        return btn
     }()
 
     // MARK: - Quote Card
@@ -92,57 +107,12 @@ class ViewController: UIViewController {
         label.textColor = AppColor.textPrimary
         return label
     }()
-    private let recentBooksRow: UIStackView = {
+    private let recentBooksGrid: UIStackView = {
         let stack = UIStackView()
-        stack.axis = .horizontal
+        stack.axis = .vertical
         stack.spacing = 10
-        stack.distribution = .fillEqually
         return stack
     }()
-
-    // MARK: - Recommendation Section
-
-    private let recommendSection = UIView()
-    private let recommendHeaderStack: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.distribution = .equalSpacing
-        stack.alignment = .center
-        return stack
-    }()
-    private let recommendLabel: UILabel = {
-        let label = UILabel()
-        label.text = "이런 문장은 어때요?"
-        label.font = AppFont.screenTitle.font
-        label.textColor = AppColor.textPrimary
-        return label
-    }()
-    private let recommendMoreButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("더보기", for: .normal)
-        button.titleLabel?.font = AppFont.caption.font
-        button.setTitleColor(AppColor.textTertiary, for: .normal)
-        return button
-    }()
-    private lazy var recommendCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 300, height: 100)
-        layout.minimumLineSpacing = 12
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.backgroundColor = .clear
-        cv.showsHorizontalScrollIndicator = false
-        cv.register(RecommendCell.self, forCellWithReuseIdentifier: RecommendCell.reuseID)
-        cv.dataSource = self
-        return cv
-    }()
-
-    private let recommendItems: [String] = [
-        "완벽함은 더 이상 더할 것이 없을 때가 아니라, 더 이상 뺄 것이 없을 때 달성된다.",
-        "당신이 멈추지 않는 한, 얼마나 천천히 가느냐는 문제가 되지 않는다.",
-        "오늘 할 수 있는 일에 최선을 다하라. 그것이 내일을 위한 최선의 준비다."
-    ]
 
     // MARK: - Lifecycle
 
@@ -151,7 +121,23 @@ class ViewController: UIViewController {
         view.backgroundColor = AppColor.bg
         setupHierarchy()
         setupConstraints()
-        setupRecentBooks()
+        loadRecentBooks()
+        myQuotesButton.addTarget(self, action: #selector(myQuotesTapped), for: .touchUpInside)
+    }
+
+    @objc private func myQuotesTapped() {
+        let vc = QuoteListViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
     // MARK: - Setup
@@ -163,6 +149,7 @@ class ViewController: UIViewController {
         // Greeting
         greetingSection.addSubview(dateLabel)
         greetingSection.addSubview(todayLabel)
+        greetingSection.addSubview(myQuotesButton)
         contentView.addSubview(greetingSection)
 
         // Quote card
@@ -175,15 +162,9 @@ class ViewController: UIViewController {
         // Recent books
         recentBooksHeaderStack.addArrangedSubview(recentBooksLabel)
         recentBooksSection.addSubview(recentBooksHeaderStack)
-        recentBooksSection.addSubview(recentBooksRow)
+        recentBooksSection.addSubview(recentBooksGrid)
         contentView.addSubview(recentBooksSection)
 
-        // Recommend
-        recommendHeaderStack.addArrangedSubview(recommendLabel)
-        recommendHeaderStack.addArrangedSubview(recommendMoreButton)
-        recommendSection.addSubview(recommendHeaderStack)
-        recommendSection.addSubview(recommendCollectionView)
-        contentView.addSubview(recommendSection)
     }
 
     private func setupConstraints() {
@@ -209,7 +190,11 @@ class ViewController: UIViewController {
         }
         todayLabel.snp.makeConstraints {
             $0.top.equalTo(dateLabel.snp.bottom).offset(4)
-            $0.leading.trailing.bottom.equalToSuperview()
+            $0.leading.bottom.equalToSuperview()
+        }
+        myQuotesButton.snp.makeConstraints {
+            $0.centerY.equalTo(todayLabel)
+            $0.trailing.equalToSuperview()
         }
 
         // MARK: Quote Card
@@ -240,47 +225,71 @@ class ViewController: UIViewController {
         recentBooksSection.snp.makeConstraints {
             $0.top.equalTo(quoteCard.snp.bottom).offset(sectionGap)
             $0.leading.trailing.equalToSuperview().inset(sideInset)
+            $0.bottom.equalToSuperview().inset(24)
         }
         recentBooksHeaderStack.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
         }
-        recentBooksRow.snp.makeConstraints {
+        recentBooksGrid.snp.makeConstraints {
             $0.top.equalTo(recentBooksHeaderStack.snp.bottom).offset(12)
             $0.leading.trailing.bottom.equalToSuperview()
         }
-
-        // MARK: Recommend Section
-        recommendSection.snp.makeConstraints {
-            $0.top.equalTo(recentBooksSection.snp.bottom).offset(sectionGap)
-            $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(24)
-        }
-        recommendHeaderStack.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.leading.trailing.equalToSuperview().inset(sideInset)
-        }
-        recommendCollectionView.snp.makeConstraints {
-            $0.top.equalTo(recommendHeaderStack.snp.bottom).offset(12)
-            $0.leading.equalToSuperview().offset(sideInset)
-            $0.trailing.equalToSuperview()
-            $0.height.equalTo(116)
-            $0.bottom.equalToSuperview()
-        }
     }
 
-    private func setupRecentBooks() {
-        let books: [(title: String, author: String)] = [
-            ("니코마코스 윤리학", "아리스토텔레스"),
-            ("미움받을 용기", "기시미 이치로"),
-            ("아주 작은 습관의 힘", "제임스 클리어")
-        ]
-        for book in books {
-            let card = makeBookCard(title: book.title, author: book.author)
-            recentBooksRow.addArrangedSubview(card)
-        }
+    private func loadRecentBooks() {
+        bookRepository.fetchRecentlySearched()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] books in
+                guard let self else { return }
+                self.recentBooksGrid.arrangedSubviews.forEach { $0.removeFromSuperview() }
+                let display = Array(books.prefix(4))
+                if display.isEmpty {
+                    self.recentBooksSection.isHidden = true
+                } else {
+                    self.recentBooksSection.isHidden = false
+                    for rowStart in stride(from: 0, to: display.count, by: 2) {
+                        let row = UIStackView()
+                        row.axis = .horizontal
+                        row.spacing = 10
+                        row.distribution = .fillEqually
+
+                        let first = display[rowStart]
+                        row.addArrangedSubview(self.makeBookCard(from: first))
+
+                        if rowStart + 1 < display.count {
+                            let second = display[rowStart + 1]
+                            row.addArrangedSubview(self.makeBookCard(from: second))
+                        } else {
+                            let spacer = UIView()
+                            row.addArrangedSubview(spacer)
+                        }
+
+                        self.recentBooksGrid.addArrangedSubview(row)
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
     }
 
-    private func makeBookCard(title: String, author: String) -> UIView {
+    private func navigateToBookDetail(isbn: String) {
+        let realm = Realm.configured()
+        guard let searched = realm.objects(SearchedBook.self).filter("isbn == %@", isbn).first else { return }
+        let book: Book
+        if let existing = realm.objects(Book.self).filter("isbn == %@", isbn).first {
+            book = existing
+        } else {
+            book = Book()
+            book.title = searched.title
+            book.author = searched.author
+            book.isbn = searched.isbn
+            try? realm.write { realm.add(book) }
+        }
+        let detailVC = BookDetailViewController(book: book)
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
+    private func makeBookCard(from searched: SearchedBook) -> UIView {
         let card = UIView()
         card.backgroundColor = AppColor.card
         card.layer.cornerRadius = 20
@@ -289,23 +298,41 @@ class ViewController: UIViewController {
         card.layer.shadowRadius = 12
         card.layer.shadowOffset = CGSize(width: 0, height: 2)
 
-        let coverPlaceholder = UIView()
-        coverPlaceholder.backgroundColor = AppColor.border
-        coverPlaceholder.layer.cornerRadius = 12
-        coverPlaceholder.snp.makeConstraints { $0.height.equalTo(120) }
+        let isbn = searched.isbn
+        let tap = UITapGestureRecognizer()
+        card.addGestureRecognizer(tap)
+        card.isUserInteractionEnabled = true
+        tap.rx.event
+            .subscribe(onNext: { [weak self] _ in
+                self?.navigateToBookDetail(isbn: isbn)
+            })
+            .disposed(by: disposeBag)
+
+        let coverImageView = UIImageView()
+        coverImageView.contentMode = .scaleAspectFill
+        coverImageView.clipsToBounds = true
+        coverImageView.layer.cornerRadius = 8
+        coverImageView.backgroundColor = AppColor.border
+        coverImageView.snp.makeConstraints {
+            $0.height.equalTo(coverImageView.snp.width).multipliedBy(1.45)
+        }
+
+        if !searched.coverImageURL.isEmpty, let url = URL(string: searched.coverImageURL) {
+            coverImageView.kf.setImage(with: url)
+        }
 
         let titleLabel = UILabel()
-        titleLabel.text = title
+        titleLabel.text = searched.title
         titleLabel.font = AppFont.filterChipActive.font
         titleLabel.textColor = AppColor.textPrimary
         titleLabel.numberOfLines = 2
 
         let authorLabel = UILabel()
-        authorLabel.text = author
+        authorLabel.text = searched.author
         authorLabel.font = AppFont.meta.font
         authorLabel.textColor = AppColor.textSecondary
 
-        let vStack = UIStackView(arrangedSubviews: [coverPlaceholder, titleLabel, authorLabel])
+        let vStack = UIStackView(arrangedSubviews: [coverImageView, titleLabel, authorLabel])
         vStack.axis = .vertical
         vStack.spacing = 8
         vStack.alignment = .fill
@@ -319,64 +346,3 @@ class ViewController: UIViewController {
     }
 }
 
-// MARK: - UICollectionViewDataSource
-
-extension ViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        recommendItems.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendCell.reuseID, for: indexPath) as! RecommendCell
-        cell.configure(with: recommendItems[indexPath.item])
-        return cell
-    }
-}
-
-// MARK: - RecommendCell
-
-private final class RecommendCell: UICollectionViewCell {
-    static let reuseID = "RecommendCell"
-
-    private let containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = AppColor.accentLight
-        view.layer.cornerRadius = 16
-        return view
-    }()
-    private let sparkleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "✦"
-        label.font = AppFont.decorIcon.font
-        label.textColor = AppColor.accent
-        label.setContentHuggingPriority(.required, for: .horizontal)
-        label.setContentCompressionResistancePriority(.required, for: .horizontal)
-        return label
-    }()
-    private let quoteLabel: UILabel = {
-        let label = UILabel()
-        label.font = AppFont.recommendBody.font
-        label.textColor = AppColor.textPrimary
-        label.numberOfLines = 0
-        return label
-    }()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        contentView.addSubview(containerView)
-        containerView.snp.makeConstraints { $0.edges.equalToSuperview() }
-
-        let hStack = UIStackView(arrangedSubviews: [sparkleLabel, quoteLabel])
-        hStack.axis = .horizontal
-        hStack.spacing = 12
-        hStack.alignment = .top
-        containerView.addSubview(hStack)
-        hStack.snp.makeConstraints { $0.edges.equalToSuperview().inset(16) }
-    }
-
-    required init?(coder: NSCoder) { fatalError() }
-
-    func configure(with text: String) {
-        quoteLabel.text = text
-    }
-}

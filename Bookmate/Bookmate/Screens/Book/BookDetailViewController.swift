@@ -278,8 +278,9 @@ final class BookDetailViewController: UIViewController {
         sheet.onManualEntryTapped = { [weak self] in
             guard let self else { return }
             let vc = ManualQuoteEntryViewController(book: self.book)
-            vc.modalPresentationStyle = .pageSheet
-            self.present(vc, animated: true)
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .pageSheet
+            self.present(nav, animated: true)
         }
 
         if let presentationController = sheet.sheetPresentationController {

@@ -225,7 +225,10 @@ final class QuoteListViewController: UIViewController {
         if !searchQuery.isEmpty {
             let query = searchQuery.lowercased()
             searched = filtered.map { quotes in
-                quotes.filter { $0.text.lowercased().contains(query) }
+                quotes.filter {
+                    $0.text.lowercased().contains(query) ||
+                    ($0.book?.title.lowercased().contains(query) == true)
+                }
             }
         } else {
             searched = filtered
@@ -235,11 +238,15 @@ final class QuoteListViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] quotes in
                 guard let self else { return }
+                let previousCount = self.quotes.count
                 self.quotes = quotes
                 self.countBadge.update(count: quotes.count)
                 self.emptyLabel.isHidden = !quotes.isEmpty
                 self.tableView.reloadData()
                 self.collectTags()
+                if quotes.count > previousCount && !quotes.isEmpty {
+                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+                }
             })
             .disposed(by: disposeBag)
     }
@@ -313,8 +320,9 @@ final class QuoteListViewController: UIViewController {
         sheet.onManualEntryTapped = { [weak self] in
             guard let self else { return }
             let vc = ManualQuoteEntryViewController(book: book)
-            vc.modalPresentationStyle = .pageSheet
-            self.present(vc, animated: true)
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .pageSheet
+            self.present(nav, animated: true)
         }
 
         if let presentationController = sheet.sheetPresentationController {
@@ -376,21 +384,41 @@ extension QuoteListViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let quote = quotes[indexPath.row]
         guard let book = quote.book else { return }
-        let vc = ManualQuoteEntryViewController(book: book, quote: quote)
-        vc.modalPresentationStyle = .pageSheet
-        present(vc, animated: true)
+
+        let tags = Array(quote.tags).map(\.name)
+        let vc = CardCustomizationViewController(
+            quoteText: quote.text,
+            book: book,
+            page: quote.pageNumber.map { String($0) },
+            tags: tags
+        )
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .fullScreen
+        present(nav, animated: true)
     }
 
     func tableView(_ tableView: UITableView,
                     trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
         -> UISwipeActionsConfiguration? {
+        let quote = self.quotes[indexPath.row]
+
+        let editAction = UIContextualAction(style: .normal, title: "수정") { [weak self] _, _, completion in
+            guard let self, let book = quote.book else { return completion(false) }
+            let vc = ManualQuoteEntryViewController(book: book, quote: quote)
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .pageSheet
+            self.present(nav, animated: true)
+            completion(true)
+        }
+        editAction.backgroundColor = AppColor.accent
+
         let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { [weak self] _, _, completion in
             guard let self else { return completion(false) }
-            let quote = self.quotes[indexPath.row]
             self.confirmDelete(quote, completion: completion)
         }
         deleteAction.backgroundColor = .systemRed
-        return UISwipeActionsConfiguration(actions: [deleteAction])
+
+        return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
     }
 
     private func confirmDelete(_ quote: Quote, completion: @escaping (Bool) -> Void) {
