@@ -10,6 +10,7 @@ final class SentenceSelectionViewController: UIViewController {
     private let sentences: [String]
     private let book: Book
     private let disposeBag = DisposeBag()
+    private let quoteRepository = QuoteRepository()
     private let maxSelection = 3
 
     private var selectionRange: ClosedRange<Int>?
@@ -253,9 +254,20 @@ final class SentenceSelectionViewController: UIViewController {
 
                 let sheet = DetailSheetViewController()
                 sheet.initialPage = self.pageTextField.text
-                sheet.onSave = { page, tags in
-                    // TODO: Navigate to next screen (5 카드 꾸미기)
-                    print("Selected: \(selectedText), Page: \(page ?? ""), Tags: \(tags)")
+                sheet.onSave = { [weak self] page, tags in
+                    guard let self else { return }
+
+                    let quote = Quote()
+                    quote.text = selectedText
+                    quote.book = self.book
+                    quote.pageNumber = page.flatMap { Int($0) }
+
+                    self.quoteRepository.save(quote, tagNames: tags)
+
+                    // Dismiss the detail sheet, then dismiss the entire camera modal flow
+                    sheet.dismiss(animated: true) {
+                        self.navigationController?.presentingViewController?.dismiss(animated: true)
+                    }
                 }
 
                 if let presentationController = sheet.sheetPresentationController {

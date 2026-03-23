@@ -385,7 +385,6 @@ final class DetailSheetViewController: UIViewController {
                 guard let self else { return }
                 let page = self.pageTextField.text?.trimmingCharacters(in: .whitespaces)
                 self.onSave?(page?.isEmpty == true ? nil : page, self.selectedTags)
-                self.dismiss(animated: true)
             })
             .disposed(by: disposeBag)
     }

@@ -1,6 +1,7 @@
 import Foundation
 import RealmSwift
 import RxSwift
+import Realm
 
 final class QuoteRepository {
 
@@ -55,7 +56,7 @@ final class QuoteRepository {
                     observer.onError(error)
                 }
             }
-            return Disposables.create()
+            return Disposables.create { token.invalidate() }
         }
     }
 
@@ -67,6 +68,23 @@ final class QuoteRepository {
 
     func save(_ quote: Quote) {
         try? realm.write { realm.add(quote) }
+    }
+
+    /// Save quote and resolve tag names (reusing existing Tag objects or creating new ones)
+    func save(_ quote: Quote, tagNames: [String]) {
+        try? realm.write {
+            realm.add(quote)
+            for name in tagNames {
+                if let existing = realm.objects(Tag.self).filter("name == %@", name).first {
+                    quote.tags.append(existing)
+                } else {
+                    let newTag = Tag()
+                    newTag.name = name
+                    realm.add(newTag)
+                    quote.tags.append(newTag)
+                }
+            }
+        }
     }
 
     func updateText(_ text: String, for quote: Quote) {
