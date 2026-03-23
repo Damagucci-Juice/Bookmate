@@ -146,7 +146,7 @@ final class SentenceSelectionViewController: UIViewController {
     private func buildSentenceLines() {
         for (index, sentence) in sentences.enumerated() {
             let lineView = SentenceLineView()
-            lineView.configure(text: sentence, selected: false)
+            lineView.configure(text: sentence, state: .unselected)
             lineView.tag = index
             lineView.isUserInteractionEnabled = true
 
@@ -206,9 +206,27 @@ final class SentenceSelectionViewController: UIViewController {
             ? "계속하기(\(count)/\(maxSelection))"
             : "계속"
 
+        var adjacentIndices: Set<Int> = []
+        if let range = selectionRange, range.count < maxSelection {
+            let above = range.lowerBound - 1
+            let below = range.upperBound + 1
+            if above >= 0 { adjacentIndices.insert(above) }
+            if below < sentences.count { adjacentIndices.insert(below) }
+        }
+
         for (i, arrangedView) in contentStack.arrangedSubviews.enumerated() {
             guard let lineView = arrangedView as? SentenceLineView else { continue }
-            lineView.configure(text: sentences[i], selected: selectionRange?.contains(i) == true)
+
+            let state: SentenceLineView.SelectionState
+            if selectionRange?.contains(i) == true {
+                state = .selected
+            } else if adjacentIndices.contains(i) {
+                state = .adjacent
+            } else {
+                state = .unselected
+            }
+
+            lineView.configure(text: sentences[i], state: state)
         }
     }
 
