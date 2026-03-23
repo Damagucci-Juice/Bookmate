@@ -138,4 +138,12 @@ final class BookRepository {
     func markAsRecentlySearched(_ searched: SearchedBook) {
         try? realm.write { searched.searchedAt = Date() }
     }
+
+    /// Book의 ISBN으로 SearchedBook을 찾아 searchedAt 갱신
+    func markAsRecentlyUsed(_ book: Book) {
+        guard let searched = realm.objects(SearchedBook.self)
+            .filter("isbn == %@", book.isbn)
+            .first else { return }
+        try? realm.write { searched.searchedAt = Date() }
+    }
 }

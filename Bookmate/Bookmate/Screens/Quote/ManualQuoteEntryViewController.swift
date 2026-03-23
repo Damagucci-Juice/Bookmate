@@ -11,6 +11,7 @@ final class ManualQuoteEntryViewController: UIViewController {
     private let book: Book
     private let existingQuote: Quote?
     private let quoteRepository = QuoteRepository()
+    private let bookRepository = BookRepository()
     private let disposeBag = DisposeBag()
 
     // MARK: - Init
@@ -414,6 +415,7 @@ final class ManualQuoteEntryViewController: UIViewController {
             } else {
                 quoteRepository.save(quote, tagNames: selectedTags)
             }
+            bookRepository.markAsRecentlyUsed(book)
         }
         dismiss(animated: true)
     }

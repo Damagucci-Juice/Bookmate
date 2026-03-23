@@ -9,6 +9,7 @@ final class CardCustomizationViewController: UIViewController {
 
     private let disposeBag = DisposeBag()
     private let quoteRepository = QuoteRepository()
+    private let bookRepository = BookRepository()
 
     private let quoteText: String
     private let book: Book
@@ -117,16 +118,20 @@ final class CardCustomizationViewController: UIViewController {
     private func setupNavigation() {
         title = "카드 꾸미기"
 
-        let backImage = AppIcon.chevronLeft.image(pointSize: 18, weight: .medium)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: backImage,
-            style: .plain,
-            target: self,
-            action: #selector(backTapped)
-        )
-        navigationItem.leftBarButtonItem?.tintColor = AppColor.textPrimary
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: closeButton)
+        if navigationController?.viewControllers.first == self {
+            // Modal root (인용구 리스트에서 진입): X만 표시
+            navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
+        } else {
+            // Pushed (캡처 flow에서 진입): back만 표시
+            let backImage = AppIcon.chevronLeft.image(pointSize: 18, weight: .medium)
+            navigationItem.leftBarButtonItem = UIBarButtonItem(
+                image: backImage,
+                style: .plain,
+                target: self,
+                action: #selector(backTapped)
+            )
+            navigationItem.leftBarButtonItem?.tintColor = AppColor.textPrimary
+        }
     }
 
     // MARK: - Layout
@@ -277,6 +282,7 @@ final class CardCustomizationViewController: UIViewController {
         quote.cardStyle = style
 
         quoteRepository.save(quote, tagNames: tags)
+        bookRepository.markAsRecentlyUsed(book)
     }
 
     private func saveAndDismiss() {
