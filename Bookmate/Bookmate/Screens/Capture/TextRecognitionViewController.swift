@@ -32,23 +32,6 @@ final class TextRecognitionViewController: UIViewController {
 
     // MARK: - UI
 
-    private let backButton: UIButton = {
-        let btn = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .medium)
-        btn.setImage(UIImage(systemName: AppIcon.chevronLeft.sfSymbolName, withConfiguration: config), for: .normal)
-        btn.tintColor = AppColor.textPrimary
-        return btn
-    }()
-
-    private let titleLabel: UILabel = {
-        let l = UILabel()
-        l.text = "텍스트 인식"
-        l.font = .systemFont(ofSize: 17, weight: .semibold)
-        l.textColor = AppColor.textPrimary
-        l.textAlignment = .center
-        return l
-    }()
-
     // Photo Section
     private let photoContainer: UIView = {
         let v = UIView()
@@ -124,10 +107,15 @@ final class TextRecognitionViewController: UIViewController {
 
     // MARK: - Lifecycle
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = AppColor.bg
-        navigationController?.setNavigationBarHidden(true, animated: false)
+        setupNavigation()
 
         photoImageView.image = UIImage(data: imageData)
         supportedLanguages = imageOCR.request.supportedRecognitionLanguages
@@ -136,6 +124,23 @@ final class TextRecognitionViewController: UIViewController {
         bindActions()
         updateLanguageButtonTitle()
         runOCR()
+    }
+
+    private func setupNavigation() {
+        title = "텍스트 인식"
+
+        let backImage = AppIcon.chevronLeft.image(pointSize: 18, weight: .medium)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: backImage,
+            style: .plain,
+            target: self,
+            action: #selector(navBackTapped)
+        )
+        navigationItem.leftBarButtonItem?.tintColor = AppColor.textPrimary
+    }
+
+    @objc private func navBackTapped() {
+        navigationController?.popViewController(animated: true)
     }
 
     override func viewDidLayoutSubviews() {
@@ -148,33 +153,13 @@ final class TextRecognitionViewController: UIViewController {
     // MARK: - Layout
 
     private func setupLayout() {
-        // Header
-        let headerView = UIView()
-        view.addSubview(headerView)
-        headerView.addSubview(backButton)
-        headerView.addSubview(titleLabel)
-
-        headerView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide)
-            $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(48)
-        }
-        backButton.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(16)
-            $0.centerY.equalToSuperview()
-            $0.size.equalTo(32)
-        }
-        titleLabel.snp.makeConstraints {
-            $0.center.equalToSuperview()
-        }
-
         // Photo Section
         view.addSubview(photoContainer)
         photoContainer.addSubview(photoImageView)
         photoContainer.addSubview(boxOverlayView)
 
         photoContainer.snp.makeConstraints {
-            $0.top.equalTo(headerView.snp.bottom).offset(8)
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
             $0.leading.trailing.equalToSuperview().inset(16)
             $0.height.equalTo(300)
         }
@@ -342,12 +327,6 @@ final class TextRecognitionViewController: UIViewController {
     // MARK: - Actions
 
     private func bindActions() {
-        backButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.navigationController?.popViewController(animated: true)
-            })
-            .disposed(by: disposeBag)
-
         accuracySegmentedControl.rx.selectedSegmentIndex
             .skip(1)
             .subscribe(onNext: { [weak self] index in

@@ -86,6 +86,12 @@ enum AppColor {
         static let coralBg = UIColor(hex: "#D89575")
         static let darkBg  = UIColor(hex: "#1A1918")
         static let whiteBg = UIColor(hex: "#FFFFFF")
+        static let blueBg  = UIColor(hex: "#5B7FA6")
+
+        static let greenGradientEnd = UIColor(hex: "#2A6B42")
+        static let coralGradientEnd = UIColor(hex: "#B87355")
+        static let darkGradientEnd  = UIColor(hex: "#2D302D")
+        static let blueGradientEnd  = UIColor(hex: "#3A5A80")
 
         static let lightText = UIColor.white
         static let darkText  = UIColor(hex: "#1A1918")

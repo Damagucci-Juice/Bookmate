@@ -76,11 +76,21 @@ final class SentenceSelectionViewController: UIViewController {
         return l
     }()
 
-    private let continueButton = PrimaryButton(title: "계속")
+    private let continueButton: PrimaryButton = {
+        let btn = PrimaryButton(title: "계속")
+        btn.isEnabled = false
+        btn.alpha = 0.4
+        return btn
+    }()
 
     private var bottomContainerBottom: Constraint?
 
     // MARK: - Lifecycle
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,11 +107,43 @@ final class SentenceSelectionViewController: UIViewController {
     private func setupNavigation() {
         title = "문장 선택"
 
+        let backImage = AppIcon.chevronLeft.image(pointSize: 18, weight: .medium)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: backImage,
+            style: .plain,
+            target: self,
+            action: #selector(backTapped)
+        )
+        navigationItem.leftBarButtonItem?.tintColor = AppColor.textPrimary
+
         let subtitleLabel = UILabel()
         subtitleLabel.text = "최대 3문장"
         subtitleLabel.font = .systemFont(ofSize: 14, weight: .medium)
         subtitleLabel.textColor = AppColor.textTertiary
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: subtitleLabel)
+
+        let closeImage = AppIcon.close.image(pointSize: 18, weight: .medium)
+        let closeItem = UIBarButtonItem(
+            image: closeImage,
+            style: .plain,
+            target: self,
+            action: #selector(closeTapped)
+        )
+        closeItem.tintColor = AppColor.textSecondary
+
+        navigationItem.rightBarButtonItems = [closeItem, UIBarButtonItem(customView: subtitleLabel)]
+    }
+
+    @objc private func backTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+
+    @objc private func closeTapped() {
+        guard let navController = navigationController else { return }
+        if let cameraVC = navController.viewControllers.first(where: { $0 is CameraCaptureViewController }) {
+            navController.popToViewController(cameraVC, animated: true)
+        } else {
+            navController.popToRootViewController(animated: true)
+        }
     }
 
     // MARK: - Layout
@@ -210,6 +252,10 @@ final class SentenceSelectionViewController: UIViewController {
     }
 
     private func updateLineAppearances() {
+        let hasSelection = selectionRange != nil
+        continueButton.isEnabled = hasSelection
+        continueButton.alpha = hasSelection ? 1.0 : 0.4
+
         for (i, arrangedView) in contentStack.arrangedSubviews.enumerated() {
             guard let lineView = arrangedView as? SentenceLineView else { continue }
             lineView.configure(text: sentences[i], selected: selectionRange?.contains(i) == true)
@@ -257,16 +303,14 @@ final class SentenceSelectionViewController: UIViewController {
                 sheet.onSave = { [weak self] page, tags in
                     guard let self else { return }
 
-                    let quote = Quote()
-                    quote.text = selectedText
-                    quote.book = self.book
-                    quote.pageNumber = page.flatMap { Int($0) }
-
-                    self.quoteRepository.save(quote, tagNames: tags)
-
-                    // Dismiss the detail sheet, then dismiss the entire camera modal flow
                     sheet.dismiss(animated: true) {
-                        self.navigationController?.presentingViewController?.dismiss(animated: true)
+                        let cardVC = CardCustomizationViewController(
+                            quoteText: selectedText,
+                            book: self.book,
+                            page: page,
+                            tags: tags
+                        )
+                        self.navigationController?.pushViewController(cardVC, animated: true)
                     }
                 }
 
