@@ -12,7 +12,7 @@
 | 주요 테이블 | Book, SearchedBook, Quote, Tag |
 | 임베디드 객체 | CardStyle |
 | 관계 | Book ↔ Quote (1:N), Quote ↔ Tag (N:N) |
-| 스키마 버전 | 4 |
+| 스키마 버전 | 5 |
 
 ---
 
@@ -29,6 +29,8 @@
 | `author` | `String` | O | — | 저자명 |
 | `isbn` | `String` | O | — | ISBN |
 | `coverImageData` | `Data?` | X | `nil` | 표지 이미지 (로컬 바이너리 PNG) |
+| `coverImageURL` | `String` | O | `""` | 표지 이미지 URL (Naver API, 원격 참조) |
+| `memo` | `String` | O | `""` | 사용자 메모 |
 | `createdAt` | `Date` | O | `Date()` | 생성 일시 |
 
 **역관계 (Inverse Relationship):**
@@ -40,10 +42,12 @@
 ```swift
 class Book: Object {
     @Persisted(primaryKey: true) var id: ObjectId
-    @Persisted var title: String
-    @Persisted var author: String
-    @Persisted var isbn: String
+    @Persisted var title: String = ""
+    @Persisted var author: String = ""
+    @Persisted var isbn: String = ""
     @Persisted var coverImageData: Data?
+    @Persisted var coverImageURL: String = ""
+    @Persisted var memo: String = ""
     @Persisted var createdAt: Date = Date()
 
     // Inverse relationship
@@ -195,11 +199,11 @@ enum CardStyleType: String, CaseIterable {
 │ title    │                 │ text     │                 │ name     │
 │ author   │                 │ memo     │                 └──────────┘
 │ isbn     │                 │ pageNum  │
-│ coverImg │                 │ createdAt│
-│ createdAt│                 │ cardStyle│ ◀── EmbeddedObject
-└──────────┘                 │ book ──▶ │      ┌───────────┐
-                             │ tags ──▶ │      │ CardStyle │
-                             └──────────┘      ├───────────┤
+│ coverData│                 │ createdAt│
+│ coverURL │                 │ cardStyle│ ◀── EmbeddedObject
+│ memo     │                 │ book ──▶ │      ┌───────────┐
+│ createdAt│                 │ tags ──▶ │      │ CardStyle │
+└──────────┘                 └──────────┘      ├───────────┤
                                                │ type      │
                                                └───────────┘
 ```
@@ -300,7 +304,7 @@ realm.objects(Book.self).filter("isbn == %@", isbn).first
 
 ```swift
 let config = Realm.Configuration(
-    schemaVersion: 4,
+    schemaVersion: 5,
     migrationBlock: { migration, oldSchemaVersion in
         if oldSchemaVersion < 2 {
             // v1→v2: Book에 lastSearchedAt 추가
@@ -322,8 +326,13 @@ let config = Realm.Configuration(
                 }
             }
         }
+        if oldSchemaVersion < 5 {
+            // v4→v5: Book에 coverImageURL, memo 추가 — Realm이 자동 처리 (기본값 "")
+        }
     },
     objectTypes: [Book.self, SearchedBook.self, Quote.self, Tag.self, CardStyle.self]
 )
 Realm.Configuration.defaultConfiguration = config
 ```
+
+> **⚠️ 현재 상태**: 코드에서 마이그레이션 블록이 주석 처리되어 있고 `Realm.Configuration.defaultConfiguration`을 그대로 사용 중. 프로덕션 배포 전 반드시 마이그레이션 블록을 활성화해야 함.

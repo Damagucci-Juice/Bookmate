@@ -90,6 +90,58 @@ final class ManualQuoteEntryViewController: UIViewController {
         return tf
     }()
 
+    // Tag Section
+    private let tagSectionLabel = SectionLabelView(text: "태그")
+
+    private let tagInputContainer: UIView = {
+        let v = UIView()
+        v.backgroundColor = AppColor.card
+        v.layer.cornerRadius = 12
+        v.layer.borderWidth = 1
+        v.layer.borderColor = AppColor.border.cgColor
+        return v
+    }()
+
+    private let hashLabel: UILabel = {
+        let l = UILabel()
+        l.text = "#"
+        l.font = .systemFont(ofSize: 15, weight: .semibold)
+        l.textColor = AppColor.accent
+        return l
+    }()
+
+    private let tagTextField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "태그 입력"
+        tf.font = .systemFont(ofSize: 15)
+        tf.textColor = AppColor.textPrimary
+        tf.returnKeyType = .done
+        return tf
+    }()
+
+    private let tagHintLabel: UILabel = {
+        let l = UILabel()
+        l.text = "최대 3개까지 지정할 수 있어요"
+        l.font = .systemFont(ofSize: 11)
+        l.textColor = AppColor.textTertiary
+        return l
+    }()
+
+    private let suggestLabel: UILabel = {
+        let l = UILabel()
+        l.text = "추천 태그"
+        l.font = .systemFont(ofSize: 13, weight: .semibold)
+        l.textColor = AppColor.textSecondary
+        return l
+    }()
+
+    private let suggestRow1 = UIStackView()
+    private let suggestRow2 = UIStackView()
+
+    private let suggestedTags = ["사랑", "위로", "용기", "인생", "지혜", "철학", "감성"]
+    private let maxTags = 3
+    private var selectedTags: [String] = []
+
     // Save
     private let saveButton = SaveButton(title: "저장")
 
@@ -163,6 +215,122 @@ final class ManualQuoteEntryViewController: UIViewController {
         pageTextField.snp.makeConstraints {
             $0.height.equalTo(48)
         }
+
+        // Tag Section
+        tagInputContainer.addSubview(hashLabel)
+        tagInputContainer.addSubview(tagTextField)
+
+        hashLabel.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(16)
+            $0.centerY.equalToSuperview()
+        }
+        tagTextField.snp.makeConstraints {
+            $0.leading.equalTo(hashLabel.snp.trailing).offset(8)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.centerY.equalToSuperview()
+        }
+        tagInputContainer.snp.makeConstraints {
+            $0.height.equalTo(48)
+        }
+
+        [suggestRow1, suggestRow2].forEach {
+            $0.axis = .horizontal
+            $0.spacing = 8
+        }
+
+        let tagSection = UIStackView(arrangedSubviews: [
+            tagSectionLabel, tagInputContainer, tagHintLabel,
+            suggestLabel, suggestRow1, suggestRow2
+        ])
+        tagSection.axis = .vertical
+        tagSection.spacing = 8
+        tagSection.setCustomSpacing(12, after: tagHintLabel)
+        tagSection.setCustomSpacing(12, after: suggestLabel)
+        contentStack.addArrangedSubview(tagSection)
+
+        setupSuggestedTags()
+    }
+
+    // MARK: - Suggested Tags
+
+    private func setupSuggestedTags() {
+        let row1Tags = Array(suggestedTags.prefix(4))
+        let row2Tags = Array(suggestedTags.dropFirst(4))
+
+        for tag in row1Tags {
+            suggestRow1.addArrangedSubview(makeSuggestChip(tag))
+        }
+        for tag in row2Tags {
+            suggestRow2.addArrangedSubview(makeSuggestChip(tag))
+        }
+    }
+
+    private func makeSuggestChip(_ tag: String) -> UIButton {
+        let btn = UIButton(type: .system)
+        btn.setTitle("# \(tag)", for: .normal)
+        btn.titleLabel?.font = .systemFont(ofSize: 12, weight: .medium)
+        btn.setTitleColor(AppColor.textSecondary, for: .normal)
+        btn.layer.cornerRadius = 100
+        btn.layer.borderWidth = 1
+        btn.layer.borderColor = AppColor.border.cgColor
+        btn.contentEdgeInsets = UIEdgeInsets(top: 8, left: 14, bottom: 8, right: 14)
+
+        btn.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.toggleTag(tag, fromChip: btn)
+            })
+            .disposed(by: disposeBag)
+
+        return btn
+    }
+
+    private func toggleTag(_ tag: String, fromChip chip: UIButton) {
+        if selectedTags.contains(tag) {
+            selectedTags.removeAll { $0 == tag }
+            applyChipStyle(chip, selected: false)
+        } else {
+            guard selectedTags.count < maxTags else { return }
+            selectedTags.append(tag)
+            applyChipStyle(chip, selected: true)
+        }
+        updateTagHint()
+    }
+
+    private func applyChipStyle(_ chip: UIButton, selected: Bool) {
+        if selected {
+            chip.setTitleColor(AppColor.accent, for: .normal)
+            chip.backgroundColor = AppColor.accentLight
+            chip.layer.borderWidth = 0
+        } else {
+            chip.setTitleColor(AppColor.textSecondary, for: .normal)
+            chip.backgroundColor = .clear
+            chip.layer.borderWidth = 1
+            chip.layer.borderColor = AppColor.border.cgColor
+        }
+    }
+
+    private func addTagFromInput() {
+        guard let text = tagTextField.text?.trimmingCharacters(in: .whitespaces),
+              !text.isEmpty,
+              selectedTags.count < maxTags,
+              !selectedTags.contains(text) else { return }
+        selectedTags.append(text)
+        tagTextField.text = ""
+
+        let allChips = (suggestRow1.arrangedSubviews + suggestRow2.arrangedSubviews).compactMap { $0 as? UIButton }
+        for chip in allChips {
+            let chipTag = chip.title(for: .normal)?.replacingOccurrences(of: "# ", with: "") ?? ""
+            if chipTag == text {
+                applyChipStyle(chip, selected: true)
+            }
+        }
+        updateTagHint()
+    }
+
+    private func updateTagHint() {
+        tagHintLabel.text = selectedTags.isEmpty
+            ? "최대 3개까지 지정할 수 있어요"
+            : "선택됨: \(selectedTags.map { "#\($0)" }.joined(separator: " ")) (\(selectedTags.count)/\(maxTags))"
     }
 
     // MARK: - Bindings
@@ -193,6 +361,12 @@ final class ManualQuoteEntryViewController: UIViewController {
                 self?.saveQuote()
             })
             .disposed(by: disposeBag)
+
+        tagTextField.rx.controlEvent(.editingDidEndOnExit)
+            .subscribe(onNext: { [weak self] in
+                self?.addTagFromInput()
+            })
+            .disposed(by: disposeBag)
     }
 
     // MARK: - Save
@@ -209,7 +383,11 @@ final class ManualQuoteEntryViewController: UIViewController {
             quote.pageNumber = page
         }
 
-        quoteRepository.save(quote)
+        if selectedTags.isEmpty {
+            quoteRepository.save(quote)
+        } else {
+            quoteRepository.save(quote, tagNames: selectedTags)
+        }
         dismiss(animated: true)
     }
 }

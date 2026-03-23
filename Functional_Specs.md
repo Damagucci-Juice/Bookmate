@@ -373,7 +373,7 @@
 |---|---|---|
 | 셔터 버튼 탭 | 사진 촬영 | → 3-2 사진 확인 |
 | 갤러리 버튼 탭 | 포토 라이브러리 열기 | UIImagePickerController → 3-2 사진 확인 |
-| T 버튼 탭 | 텍스트 직접 입력 모드 | → 6 문장 수집 (직접 입력) |
+| T 버튼 탭 | 텍스트 직접 입력 모드 | → ManualQuoteEntryViewController (직접 입력 전용 화면) |
 | 플래시 아이콘 탭 | 플래시 on/off 토글 | 현재 화면 내 |
 | X (닫기) 탭 | 플로우 중단 | ← dismiss |
 
@@ -512,7 +512,7 @@
 | 영역 | 노드 ID | 구조 |
 |---|---|---|
 | Status Bar | `xwqKp` | H: 62, padding: [22,20,0,20] |
-| Header | `CdTR9` | H: 52, padding: [0,20], space_between — chevron-left + "문장 선택" / "최대 5줄" subtitle |
+| Header | `CdTR9` | H: 52, padding: [0,20], space_between — chevron-left + "문장 선택" / "최대 3줄" subtitle |
 | Content | `RFIwJ` | fill_container, vertical, gap: 8, padding: [24,20], center 정렬 |
 | Bottom | `IW9y4` | padding: [16,20,32,20], vertical, center 정렬 — "계속" 버튼 |
 
@@ -541,8 +541,8 @@
 
 #### 비즈니스 룰
 
-- **최대 5줄** 선택 제한
-- 5줄 초과 선택 시 → 선택 불가 + 안내 표시 ("최대 5줄까지 선택 가능합니다")
+- **최대 3줄** 선택 제한 (연속 선택만 가능)
+- 3줄 초과 선택 시 → 선택 불가 + 안내 표시 ("최대 3줄까지 선택 가능합니다")
 - 최소 1줄 선택 필수 → 0줄 선택 시 "계속" 버튼 비활성화
 
 ---
@@ -867,6 +867,8 @@
 | author | String | O | 저자명 |
 | isbn | String | O | ISBN |
 | coverImageData | Data? | X | 표지 이미지 (로컬 바이너리 PNG) |
+| coverImageURL | String | O | 표지 이미지 URL (Naver API, 원격 참조) |
+| memo | String | O | 사용자 메모 (기본값 "") |
 | createdAt | Date | O | 생성 일시 |
 | quotes | LinkingObjects\<Quote\> | — | 역관계 (이 책에 연결된 문장 목록) |
 
@@ -939,16 +941,19 @@ UITabBarController (커스텀 Pill TabBar)
 
 ```
 UINavigationController (Modal, fullScreen)
-└── BookSelectViewController (2 도서 선택)
-    └── CameraViewController (3-1 사진 촬영)
-        └── PhotoReviewViewController (3-2 사진 확인)
-            └── OCRResultViewController (3-3 텍스트 인식)
-                └── SentenceSelectViewController (4 문장 선택)
-                    └── CardCustomizeViewController (5 카드 꾸미기)
-                        └── ShareSheetViewController (5-2 공유 시트)
-                            └── QuoteCollectViewController (6 문장 수집)
-                                └── TagAddViewController (6-2 태그 추가, Bottom Sheet)
+└── BookSelectionViewController (2 도서 선택)
+    └── BookDetailViewController (도서 상세 — 메모, 수집된 문장 목록)
+        └── AddQuoteSheetViewController (문장 추가 방식 선택 Bottom Sheet)
+            ├── CameraCaptureViewController (3-1 사진 촬영)
+            │   └── PhotoReviewViewController (3-2 사진 확인)
+            │       └── TextRecognitionViewController (3-3 텍스트 인식/OCR)
+            │           └── SentenceSelectionViewController (4 문장 선택)
+            │               └── DetailSheetViewController (페이지/태그 입력 Bottom Sheet)
+            └── ManualQuoteEntryViewController (텍스트 직접 입력)
+                └── DetailSheetViewController (페이지/태그 입력 Bottom Sheet)
 ```
+
+> **현재 상태**: SceneDelegate에서 BookDetailViewController가 루트로 하드코딩되어 있음 (개발 stub). 탭바 네비게이션 미구현.
 
 ### 6.3 전환 방식
 
@@ -999,5 +1004,32 @@ UINavigationController (Modal, fullScreen)
 | 검색 결과 | 내 문장 화면의 검색 기능 상세 |
 | 온보딩 / 권한 요청 | 최초 실행 시 카메라/사진 권한 안내 |
 | 설정 화면 | 테마 변경, 계정 정보 등 |
-| 책 상세 / 책별 목록 | 특정 도서의 수집 문장 모아보기 |
+| 홈 화면 데이터 바인딩 | 레이아웃만 완성, 오늘의 문장/큐레이션 데이터 미연결 |
+| 탭바 네비게이션 | TabBarView 컴포넌트 존재, UITabBarController 연결 미구현 |
+| 내 문장 목록 화면 | MyQuotesViewController 미구현 |
+| 카드 꾸미기 / 공유 시트 | UI 스펙만 존재, ViewController 미구현 |
 | ~~도서 검색 API~~ | ~~구현 완료~~ — Naver Books API 연동 (NaverBookService, BookSearchModels), Secrets.xcconfig으로 크레덴셜 관리 |
+| ~~책 상세 / 책별 목록~~ | ~~구현 완료~~ — BookDetailViewController (메모 입력, 수집 문장 목록, AddQuoteSheet 진입) |
+| ~~텍스트 직접 입력~~ | ~~구현 완료~~ — ManualQuoteEntryViewController (카메라 없이 문장 직접 입력) |
+
+### 8.1 구현 완료 화면 (스펙 신규 반영)
+
+| 화면 | ViewController | 설명 |
+|---|---|---|
+| 도서 선택 | BookSelectionViewController | Naver API 검색, 페이지네이션, 최근 검색 도서 |
+| 도서 상세 | BookDetailViewController | 책 정보, 메모 입력, 수집 문장 목록, 문장 추가 진입 |
+| 문장 추가 방식 선택 | AddQuoteSheetViewController | Bottom Sheet — 카메라 촬영 / 직접 입력 선택 |
+| 사진 촬영 | CameraCaptureViewController | AVFoundation 카메라, 셔터, 플래시 토글 |
+| 사진 확인 | PhotoReviewViewController | 촬영 이미지 확인, 다시 촬영 / 텍스트 인식 선택 |
+| 텍스트 인식 | TextRecognitionViewController | Vision OCR, 언어/정확도 설정 |
+| 문장 선택 | SentenceSelectionViewController | OCR 결과에서 최대 3줄 연속 선택 |
+| 텍스트 직접 입력 | ManualQuoteEntryViewController | 카메라 없이 문장 수동 입력 |
+| 페이지/태그 입력 | DetailSheetViewController | Bottom Sheet — 페이지 번호, 태그 추가 (추천 태그: 사랑, 위로, 용기, 인생, 지혜, 철학, 감성) |
+
+### 8.2 Info.plist 권한 현황
+
+| Key | 스펙 | 코드 (Info.plist) | 상태 |
+|---|---|---|---|
+| `NSCameraUsageDescription` | 필요 | 등록됨 | ✅ |
+| `NSPhotoLibraryUsageDescription` | 필요 | **미등록** | ⚠️ 추가 필요 |
+| `NSPhotoLibraryAddUsageDescription` | 필요 | **미등록** | ⚠️ 추가 필요 |
