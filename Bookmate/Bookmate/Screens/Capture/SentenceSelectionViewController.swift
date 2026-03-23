@@ -83,11 +83,6 @@ final class SentenceSelectionViewController: UIViewController {
         )
         navigationItem.leftBarButtonItem?.tintColor = AppColor.textPrimary
 
-        let subtitleLabel = UILabel()
-        subtitleLabel.text = "최대 3문장"
-        subtitleLabel.font = .systemFont(ofSize: 14, weight: .medium)
-        subtitleLabel.textColor = AppColor.textTertiary
-
         let closeImage = AppIcon.close.image(pointSize: 18, weight: .medium)
         let closeItem = UIBarButtonItem(
             image: closeImage,
@@ -97,7 +92,7 @@ final class SentenceSelectionViewController: UIViewController {
         )
         closeItem.tintColor = AppColor.textSecondary
 
-        navigationItem.rightBarButtonItems = [closeItem, UIBarButtonItem(customView: subtitleLabel)]
+        navigationItem.rightBarButtonItem = closeItem
     }
 
     @objc private func backTapped() {
@@ -143,6 +138,7 @@ final class SentenceSelectionViewController: UIViewController {
             $0.edges.equalToSuperview().inset(UIEdgeInsets(top: 24, left: 20, bottom: 24, right: 20))
             $0.width.equalTo(scrollView).offset(-40)
         }
+
     }
 
     // MARK: - Sentence Lines
@@ -202,9 +198,13 @@ final class SentenceSelectionViewController: UIViewController {
     }
 
     private func updateLineAppearances() {
-        let hasSelection = selectionRange != nil
+        let count = selectionRange?.count ?? 0
+        let hasSelection = count > 0
         continueButton.isEnabled = hasSelection
         continueButton.alpha = hasSelection ? 1.0 : 0.4
+        continueButton.configuration?.title = hasSelection
+            ? "계속하기(\(count)/\(maxSelection))"
+            : "계속"
 
         for (i, arrangedView) in contentStack.arrangedSubviews.enumerated() {
             guard let lineView = arrangedView as? SentenceLineView else { continue }
