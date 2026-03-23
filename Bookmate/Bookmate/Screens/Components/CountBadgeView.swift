@@ -24,6 +24,10 @@ final class CountBadgeView: UIView {
         clipsToBounds = true
 
         addSubview(countLabel)
+        snp.makeConstraints {
+            $0.width.greaterThanOrEqualTo(60)
+        }
+
         countLabel.snp.makeConstraints {
             $0.top.bottom.equalToSuperview().inset(9.5)
             $0.leading.trailing.equalToSuperview().inset(10)
