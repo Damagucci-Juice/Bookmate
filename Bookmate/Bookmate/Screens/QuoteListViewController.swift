@@ -33,7 +33,7 @@ final class QuoteListViewController: UIViewController {
     private let filterScrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.showsHorizontalScrollIndicator = false
-        sv.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        sv.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 20)
         return sv
     }()
 
@@ -101,14 +101,22 @@ final class QuoteListViewController: UIViewController {
     private var isAllBooksMode: Bool { book == nil }
 
     private func setupLayout() {
+        view.addSubview(countBadge)
         view.addSubview(filterScrollView)
         filterScrollView.addSubview(filterStack)
         view.addSubview(tableView)
         view.addSubview(emptyLabel)
 
+        countBadge.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
+            $0.leading.equalToSuperview().offset(20)
+            $0.centerY.equalTo(filterScrollView)
+        }
+
         filterScrollView.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.equalTo(countBadge.snp.trailing).offset(10)
+            $0.trailing.equalToSuperview()
             $0.height.equalTo(40)
         }
 

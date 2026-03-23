@@ -94,7 +94,7 @@ final class BookDetailViewController: UIViewController {
     }()
 
     // Save Button
-    private let saveButton = SaveButton(title: "문장 저장하기")
+    private let saveButton = SaveButton(title: "문장 담기")
 
     // MARK: - Lifecycle
 

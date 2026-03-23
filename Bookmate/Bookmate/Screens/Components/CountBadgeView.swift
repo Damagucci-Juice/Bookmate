@@ -21,13 +21,18 @@ final class CountBadgeView: UIView {
 
     private func setupUI() {
         backgroundColor = AppColor.accent
-        layer.cornerRadius = 100
+        clipsToBounds = true
 
         addSubview(countLabel)
         countLabel.snp.makeConstraints {
             $0.top.bottom.equalToSuperview().inset(9.5)
             $0.leading.trailing.equalToSuperview().inset(10)
         }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = bounds.height / 2
     }
 
     func update(count: Int) {
