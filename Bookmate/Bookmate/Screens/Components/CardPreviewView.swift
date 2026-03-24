@@ -7,6 +7,7 @@ final class CardPreviewView: UIView {
 
     private var gradientLayer = CAGradientLayer()
     private var styleType: CardStyleType = .green
+    private var backgroundImage: UIImage?
 
     var quoteText: String = "" {
         didSet { quoteLabel.text = quoteText }
@@ -58,6 +59,14 @@ final class CardPreviewView: UIView {
         return l
     }()
 
+    private let backgroundImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        iv.isHidden = true
+        return iv
+    }()
+
     // MARK: - Init
 
     override init(frame: CGRect) {
@@ -73,9 +82,12 @@ final class CardPreviewView: UIView {
         layer.cornerRadius = 24
         clipsToBounds = true
 
+        addSubview(backgroundImageView)
+        backgroundImageView.snp.makeConstraints { $0.edges.equalToSuperview() }
+
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
-        layer.insertSublayer(gradientLayer, at: 0)
+        layer.insertSublayer(gradientLayer, above: backgroundImageView.layer)
 
         let topSection = UIView()
         topSection.addSubview(quoteMarkLabel)
@@ -107,12 +119,21 @@ final class CardPreviewView: UIView {
 
     // MARK: - Configure
 
-    func configure(styleType: CardStyleType) {
+    func configure(styleType: CardStyleType, backgroundImage: UIImage? = nil) {
         self.styleType = styleType
+        if let img = backgroundImage { self.backgroundImage = img }
+
+        let isPhoto = styleType == .photo
+        backgroundImageView.isHidden = !isPhoto
+        backgroundImageView.image = isPhoto ? self.backgroundImage : nil
 
         let (bgColors, textColor, needsBorder) = colorsForStyle(styleType)
-
         gradientLayer.colors = bgColors.map { $0.cgColor }
+        if isPhoto {
+            gradientLayer.locations = [0.0, 0.4, 1.0]
+        } else {
+            gradientLayer.locations = nil
+        }
 
         quoteMarkLabel.textColor = textColor.withAlphaComponent(0.3)
         quoteLabel.textColor = textColor
@@ -143,8 +164,9 @@ final class CardPreviewView: UIView {
             return ([AppColor.CardStyle.blueBg, AppColor.CardStyle.blueGradientEnd],
                     AppColor.CardStyle.lightText, false)
         case .photo:
-            // Placeholder: dark style for now
-            return ([AppColor.CardStyle.darkBg, AppColor.CardStyle.darkGradientEnd],
+            return ([UIColor.black.withAlphaComponent(0.87),
+                     UIColor.black.withAlphaComponent(0.44),
+                     UIColor.black.withAlphaComponent(0.93)],
                     AppColor.CardStyle.lightText, false)
         }
     }

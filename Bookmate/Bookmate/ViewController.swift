@@ -259,32 +259,48 @@ class ViewController: UIViewController {
                 guard let self else { return }
                 self.recentBooksGrid.arrangedSubviews.forEach { $0.removeFromSuperview() }
                 let display = Array(books.prefix(4))
-                if display.isEmpty {
-                    self.recentBooksSection.isHidden = true
-                } else {
-                    self.recentBooksSection.isHidden = false
-                    for rowStart in stride(from: 0, to: display.count, by: 2) {
-                        let row = UIStackView()
-                        row.axis = .horizontal
-                        row.spacing = 10
-                        row.distribution = .fillEqually
+                let isMock = display.isEmpty
+                let booksToShow = isMock ? ViewController.mockRecentBooks() : display
+                self.recentBooksLabel.text = isMock ? "이런 책은 어때요?" : "최근 검색한 책"
+                self.recentBooksSection.isHidden = false
 
-                        let first = display[rowStart]
-                        row.addArrangedSubview(self.makeBookCard(from: first))
+                for rowStart in stride(from: 0, to: booksToShow.count, by: 2) {
+                    let row = UIStackView()
+                    row.axis = .horizontal
+                    row.spacing = 10
+                    row.distribution = .fillEqually
 
-                        if rowStart + 1 < display.count {
-                            let second = display[rowStart + 1]
-                            row.addArrangedSubview(self.makeBookCard(from: second))
-                        } else {
-                            let spacer = UIView()
-                            row.addArrangedSubview(spacer)
-                        }
+                    let first = booksToShow[rowStart]
+                    row.addArrangedSubview(self.makeBookCard(from: first, isMock: isMock))
 
-                        self.recentBooksGrid.addArrangedSubview(row)
+                    if rowStart + 1 < booksToShow.count {
+                        let second = booksToShow[rowStart + 1]
+                        row.addArrangedSubview(self.makeBookCard(from: second, isMock: isMock))
+                    } else {
+                        let spacer = UIView()
+                        row.addArrangedSubview(spacer)
                     }
+
+                    self.recentBooksGrid.addArrangedSubview(row)
                 }
             })
             .disposed(by: disposeBag)
+    }
+
+    private static func mockRecentBooks() -> [SearchedBook] {
+        let data: [(String, String, String)] = [
+            ("데미안", "헤르만 헤세", "9788937460449"),
+            ("어린 왕자", "앙투안 드 생텍쥐페리", "9788932917245"),
+            ("참을 수 없는 존재의 가벼움", "밀란 쿤데라", "9788937460616"),
+            ("나미야 잡화점의 기적", "히가시노 게이고", "9788950973858"),
+        ]
+        return data.map { (title, author, isbn) in
+            let book = SearchedBook()
+            book.title = title
+            book.author = author
+            book.isbn = isbn
+            return book
+        }
     }
 
     private func navigateToBookDetail(isbn: String) {
@@ -305,7 +321,7 @@ class ViewController: UIViewController {
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
-    private func makeBookCard(from searched: SearchedBook) -> UIView {
+    private func makeBookCard(from searched: SearchedBook, isMock: Bool = false) -> UIView {
         let card = UIView()
         card.backgroundColor = AppColor.card
         card.layer.cornerRadius = 20
@@ -320,7 +336,11 @@ class ViewController: UIViewController {
         card.isUserInteractionEnabled = true
         tap.rx.event
             .subscribe(onNext: { [weak self] _ in
-                self?.navigateToBookDetail(isbn: isbn)
+                if isMock {
+                    self?.tabBarController?.selectedIndex = 1
+                } else {
+                    self?.navigateToBookDetail(isbn: isbn)
+                }
             })
             .disposed(by: disposeBag)
 

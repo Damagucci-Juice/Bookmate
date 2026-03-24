@@ -1,7 +1,9 @@
 import UIKit
+import PhotosUI
 import SnapKit
 import RxSwift
 import RxCocoa
+import Realm
 
 final class CardCustomizationViewController: UIViewController {
 
@@ -17,6 +19,7 @@ final class CardCustomizationViewController: UIViewController {
     private let tags: [String]
     private let isExistingQuote: Bool
     private var selectedStyle: CardStyleType = .green
+    private var backgroundImage: UIImage?
 
     // MARK: - Init
 
@@ -97,6 +100,7 @@ final class CardCustomizationViewController: UIViewController {
     }()
 
     private var styleCircles: [(CardStyleType, CardStyleCircleView)] = []
+    private var photoCircle: CardStyleCircleView?
 
     // MARK: - Lifecycle
 
@@ -224,6 +228,37 @@ final class CardCustomizationViewController: UIViewController {
             styleCircles.append((type, circle))
             styleRow.addArrangedSubview(circle)
         }
+
+        // Photo style circle
+        let photoColors = [AppColor.CardStyle.darkBg, AppColor.CardStyle.darkGradientEnd]
+        let circle = CardStyleCircleView(colors: photoColors)
+        photoCircle = circle
+
+        let iconView = UIImageView()
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)
+        iconView.image = UIImage(systemName: "photo", withConfiguration: config)
+        iconView.tintColor = .white
+        iconView.contentMode = .scaleAspectFit
+        circle.addSubview(iconView)
+        iconView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.size.equalTo(22)
+        }
+
+        circle.isSelectedStyle = (selectedStyle == .photo)
+
+        let tap = UITapGestureRecognizer()
+        circle.addGestureRecognizer(tap)
+        circle.isUserInteractionEnabled = true
+
+        tap.rx.event
+            .subscribe(onNext: { [weak self] _ in
+                self?.photoCircleTapped()
+            })
+            .disposed(by: disposeBag)
+
+        styleCircles.append((.photo, circle))
+        styleRow.addArrangedSubview(circle)
     }
 
     private func selectStyle(_ type: CardStyleType) {
@@ -239,7 +274,28 @@ final class CardCustomizationViewController: UIViewController {
             }
         }
 
-        cardPreviewView.configure(styleType: type)
+        if type == .photo {
+            cardPreviewView.configure(styleType: type, backgroundImage: backgroundImage)
+        } else {
+            cardPreviewView.configure(styleType: type)
+        }
+    }
+
+    private func photoCircleTapped() {
+        if backgroundImage != nil {
+            selectStyle(.photo)
+        } else {
+            presentPhotoPicker()
+        }
+    }
+
+    private func presentPhotoPicker() {
+        var config = PHPickerConfiguration()
+        config.filter = .images
+        config.selectionLimit = 1
+        let picker = PHPickerViewController(configuration: config)
+        picker.delegate = self
+        present(picker, animated: true)
     }
 
     // MARK: - Card Preview
@@ -285,6 +341,14 @@ final class CardCustomizationViewController: UIViewController {
 
         let style = CardStyle()
         style.type = selectedStyle.rawValue
+
+        if selectedStyle == .photo, let image = backgroundImage {
+            let filename = "\(quote.id.stringValue).jpg"
+            if CardBackgroundStorage.save(image, filename: filename) {
+                style.backgroundImageFilename = filename
+            }
+        }
+
         quote.cardStyle = style
 
         quoteRepository.save(quote, tagNames: tags)
@@ -306,5 +370,37 @@ final class CardCustomizationViewController: UIViewController {
         }
 
         present(activityVC, animated: true)
+    }
+}
+
+// MARK: - PHPickerViewControllerDelegate
+
+extension CardCustomizationViewController: PHPickerViewControllerDelegate {
+
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+
+        guard let provider = results.first?.itemProvider,
+              provider.canLoadObject(ofClass: UIImage.self) else { return }
+
+        provider.loadObject(ofClass: UIImage.self) { [weak self] object, _ in
+            guard let image = object as? UIImage else { return }
+            DispatchQueue.main.async {
+                self?.backgroundImage = image
+                self?.updatePhotoCircleThumbnail(image)
+                self?.selectStyle(.photo)
+            }
+        }
+    }
+
+    private func updatePhotoCircleThumbnail(_ image: UIImage) {
+        guard let circle = photoCircle else { return }
+        // Remove the icon and show thumbnail instead
+        circle.subviews.forEach { $0.removeFromSuperview() }
+        let thumbView = UIImageView(image: image)
+        thumbView.contentMode = .scaleAspectFill
+        thumbView.clipsToBounds = true
+        circle.addSubview(thumbView)
+        thumbView.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
 }

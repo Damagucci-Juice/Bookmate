@@ -99,12 +99,13 @@ final class QuoteRepository {
         try? realm.write { quote.pageNumber = page }
     }
 
-    func updateCardStyle(_ type: CardStyleType, for quote: Quote) {
+    func updateCardStyle(_ type: CardStyleType, for quote: Quote, backgroundImageFilename: String? = nil) {
         try? realm.write {
             if quote.cardStyle == nil {
                 quote.cardStyle = CardStyle()
             }
             quote.cardStyle?.type = type.rawValue
+            quote.cardStyle?.backgroundImageFilename = backgroundImageFilename
         }
     }
 

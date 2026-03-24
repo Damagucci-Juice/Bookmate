@@ -54,6 +54,7 @@ class Tag: Object {
 
 class CardStyle: EmbeddedObject {
     @Persisted var type: String = CardStyleType.green.rawValue
+    @Persisted var backgroundImageFilename: String?
 }
 
 enum CardStyleType: String, CaseIterable {
