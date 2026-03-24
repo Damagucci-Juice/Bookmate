@@ -106,6 +106,14 @@ final class BookDetailViewController: UIViewController {
         configureBookInfo()
         bindActions()
         loadQuotes()
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
 
     // MARK: - Navigation Bar

@@ -251,8 +251,9 @@ final class QuoteListViewController: UIViewController {
             .disposed(by: disposeBag)
     }
 
+    private lazy var realm = try! Realm(configuration: .defaultConfiguration)
+
     private func collectTags() {
-        let realm = try! Realm(configuration: .defaultConfiguration)
         let tags = realm.objects(Tag.self)
             .filter("quotes.@count > 0")
             .map(\.name)
@@ -390,7 +391,8 @@ extension QuoteListViewController: UITableViewDataSource, UITableViewDelegate {
             quoteText: quote.text,
             book: book,
             page: quote.pageNumber.map { String($0) },
-            tags: tags
+            tags: tags,
+            isExistingQuote: true
         )
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .fullScreen

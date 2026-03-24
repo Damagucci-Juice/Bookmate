@@ -15,6 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Kingfisher 메모리 캐시: 50MB 제한, 이미지 150개 제한
         ImageCache.default.memoryStorage.config.totalCostLimit = 50 * 1024 * 1024
         ImageCache.default.memoryStorage.config.countLimit = 150
+        // 디스크 캐시: 200MB 제한, 7일 만료
+        ImageCache.default.diskStorage.config.sizeLimit = 200 * 1024 * 1024
+        ImageCache.default.diskStorage.config.expiration = .days(7)
         return true
     }
 

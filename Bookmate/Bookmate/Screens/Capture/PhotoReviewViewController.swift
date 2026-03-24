@@ -7,7 +7,7 @@ final class PhotoReviewViewController: UIViewController {
 
     // MARK: - Properties
 
-    private let imageData: Data
+    private var imageData: Data?
     private let book: Book
     private let disposeBag = DisposeBag()
 
@@ -65,7 +65,9 @@ final class PhotoReviewViewController: UIViewController {
         view.backgroundColor = .black
         setupLayout()
         bindActions()
-        photoImageView.image = UIImage(data: imageData)
+        if let data = imageData {
+            photoImageView.image = UIImage(data: data)
+        }
     }
 
     override var prefersStatusBarHidden: Bool { true }
@@ -113,8 +115,8 @@ final class PhotoReviewViewController: UIViewController {
 
         recognizeButton.rx.tap
             .subscribe(onNext: { [weak self] in
-                guard let self else { return }
-                let vc = TextRecognitionViewController(imageData: self.imageData, book: self.book)
+                guard let self, let data = self.imageData else { return }
+                let vc = TextRecognitionViewController(imageData: data, book: self.book)
                 self.navigationController?.pushViewController(vc, animated: true)
             })
             .disposed(by: disposeBag)

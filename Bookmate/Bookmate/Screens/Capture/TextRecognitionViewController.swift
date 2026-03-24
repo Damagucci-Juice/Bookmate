@@ -8,7 +8,7 @@ final class TextRecognitionViewController: UIViewController {
 
     // MARK: - Properties
 
-    private let imageData: Data
+    private var imageData: Data?
     private let book: Book
     private let disposeBag = DisposeBag()
 
@@ -18,6 +18,7 @@ final class TextRecognitionViewController: UIViewController {
     private var selectedLanguage = Locale.Language(identifier: "ko")
     private let recognitionLevels = ["Fast", "Accurate"]
     private var supportedLanguages: [Locale.Language] = []
+    private var lastOverlaySize: CGSize = .zero
 
     // MARK: - Init
 
@@ -116,7 +117,9 @@ final class TextRecognitionViewController: UIViewController {
         view.backgroundColor = AppColor.bg
         setupNavigation()
 
-        photoImageView.image = UIImage(data: imageData)
+        if let data = imageData {
+            photoImageView.image = Self.downsampledImage(data: data, maxPixelSize: 1200)
+        }
         supportedLanguages = imageOCR.request.supportedRecognitionLanguages
 
         setupLayout()
@@ -144,7 +147,9 @@ final class TextRecognitionViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if !imageOCR.observations.isEmpty {
+        let currentSize = boxOverlayView.bounds.size
+        if !imageOCR.observations.isEmpty && currentSize != lastOverlaySize {
+            lastOverlaySize = currentSize
             drawBoundingBoxes()
         }
     }
@@ -242,11 +247,13 @@ final class TextRecognitionViewController: UIViewController {
     }
 
     private func runOCR() {
+        guard let imageData else { return }
         updateRequestSettings()
         Task {
             do {
                 try await imageOCR.performOCR(imageData: imageData)
                 await MainActor.run {
+                    lastOverlaySize = .zero
                     drawBoundingBoxes()
                 }
             } catch {
@@ -365,10 +372,30 @@ final class TextRecognitionViewController: UIViewController {
                             .filter { !$0.isEmpty && $0.count >= 2 }
                     }
                 guard !lines.isEmpty else { return }
+                // 다음 화면으로 이동 전 메모리 해제
+                self.imageData = nil
+                self.imageOCR.observations.removeAll()
                 let vc = SentenceSelectionViewController(sentences: lines, book: self.book)
                 self.navigationController?.pushViewController(vc, animated: true)
             })
             .disposed(by: disposeBag)
+    }
+
+    // MARK: - Image Downsampling
+
+    /// ImageIO 기반 메모리 효율적 다운샘플링 (전체 이미지를 디코딩하지 않음)
+    private static func downsampledImage(data: Data, maxPixelSize: CGFloat) -> UIImage? {
+        let options: [CFString: Any] = [kCGImageSourceShouldCache: false]
+        guard let source = CGImageSourceCreateWithData(data as CFData, options as CFDictionary) else { return nil }
+
+        let downsampleOptions: [CFString: Any] = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: maxPixelSize
+        ]
+        guard let cgImage = CGImageSourceCreateThumbnailAtIndex(source, 0, downsampleOptions as CFDictionary) else { return nil }
+        return UIImage(cgImage: cgImage)
     }
 
 }

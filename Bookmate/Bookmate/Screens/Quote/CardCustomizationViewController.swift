@@ -15,15 +15,17 @@ final class CardCustomizationViewController: UIViewController {
     private let book: Book
     private let page: String?
     private let tags: [String]
+    private let isExistingQuote: Bool
     private var selectedStyle: CardStyleType = .green
 
     // MARK: - Init
 
-    init(quoteText: String, book: Book, page: String?, tags: [String]) {
+    init(quoteText: String, book: Book, page: String?, tags: [String], isExistingQuote: Bool = false) {
         self.quoteText = quoteText
         self.book = book
         self.page = page
         self.tags = tags
+        self.isExistingQuote = isExistingQuote
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -111,6 +113,10 @@ final class CardCustomizationViewController: UIViewController {
         setupStyleCircles()
         configureCardPreview()
         bindActions()
+
+        if isExistingQuote {
+            saveButton.isHidden = true
+        }
     }
 
     // MARK: - Navigation
