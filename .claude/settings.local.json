@@ -23,7 +23,10 @@
       "Bash(ls -la /Users/will/Desktop/Bookmate/Bookmate/Bookmate/*.swift)",
       "Bash(find /Users/will/Desktop/Bookmate -name \"*.swift\" -exec grep -H \"RecognizeTextRequest\\\\|RecognizedTextObservation\" {})",
       "Bash(find /Users/will/Library/Developer/Xcode/DerivedData/Bookmate* -name *.swift)",
-      "Bash(find /Users/will/Library/Developer/Xcode/DerivedData -name *Vision* -o -name *RecognizeText*)"
+      "Bash(find /Users/will/Library/Developer/Xcode/DerivedData -name *Vision* -o -name *RecognizeText*)",
+      "Bash(find /Users/will/Desktop/Bookmate/StructuringRecognizedTextOnADocument -name \"*.swift\" -exec wc -l {} +)",
+      "Bash(xargs ls:*)",
+      "Bash(grep -r \"RecognizeTextRequest\\\\|RecognizedTextObservation\" /Users/will/Desktop/Bookmate/Bookmate --include=*.pbxproj)"
     ]
   }
 }
