@@ -4,7 +4,7 @@
     {
       "type": "frame",
       "id": "a3p4g",
-      "x": -1006,
+      "x": -1007,
       "y": -46,
       "name": "1 홈",
       "width": 390,
@@ -178,10 +178,7 @@
               },
               "layout": "vertical",
               "gap": 20,
-              "padding": [
-                32,
-                28
-              ],
+              "padding": 24,
               "children": [
                 {
                   "type": "text",
@@ -259,138 +256,352 @@
                       "id": "LPLH8",
                       "name": "curationTitle",
                       "fill": "$text-primary",
-                      "content": "최근 검색한 책",
+                      "content": "수집한 문장 (5)",
                       "fontFamily": "Pretendard",
                       "fontSize": 18,
                       "fontWeight": "600",
                       "letterSpacing": -0.2
+                    },
+                    {
+                      "type": "text",
+                      "id": "QMbai",
+                      "name": "seeAll",
+                      "fill": "$accent",
+                      "content": "전체보기",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 13,
+                      "fontWeight": "500"
                     }
                   ]
                 },
                 {
                   "type": "frame",
-                  "id": "GOB2t",
-                  "name": "Card Row",
+                  "id": "AzsBs",
+                  "name": "Book Stack",
+                  "clip": true,
                   "width": "fill_container",
-                  "gap": 12,
+                  "height": 340,
+                  "cornerRadius": 20,
+                  "layout": "none",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "3dm9G",
-                      "name": "book1",
-                      "width": "fill_container",
-                      "fill": "$card",
-                      "cornerRadius": 16,
-                      "effect": {
-                        "type": "shadow",
-                        "shadowType": "outer",
-                        "color": "#1A191808",
-                        "offset": {
-                          "x": 0,
-                          "y": 1
-                        },
-                        "blur": 6
-                      },
+                      "id": "KLeC2",
+                      "x": 0,
+                      "y": 0,
+                      "name": "Tab 변신",
+                      "width": 350,
+                      "height": 340,
+                      "fill": "#D4C0A0",
+                      "cornerRadius": [
+                        20,
+                        20,
+                        0,
+                        0
+                      ],
                       "layout": "vertical",
-                      "gap": 10,
-                      "padding": 14,
+                      "padding": [
+                        0,
+                        20,
+                        16,
+                        20
+                      ],
+                      "justifyContent": "end",
                       "children": [
                         {
                           "type": "frame",
-                          "id": "Y0m8U",
-                          "name": "cover1",
+                          "id": "abFqF",
+                          "name": "textGroup1",
                           "width": "fill_container",
-                          "height": 120,
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "./images/generated-1773967847276.png",
-                            "mode": "fill"
-                          },
-                          "cornerRadius": 10
-                        },
-                        {
-                          "type": "text",
-                          "id": "YpzJb",
-                          "name": "title1",
-                          "fill": "$text-primary",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "나는 나를 파괴할\n권리가 있다",
-                          "lineHeight": 1.4,
-                          "fontFamily": "Pretendard",
-                          "fontSize": 13,
-                          "fontWeight": "600"
-                        },
-                        {
-                          "type": "text",
-                          "id": "iqjon",
-                          "name": "author1",
-                          "fill": "$text-tertiary",
-                          "content": "영영이",
-                          "fontFamily": "Pretendard",
-                          "fontSize": 11,
-                          "fontWeight": "500"
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "zMHhk",
+                              "name": "title1",
+                              "fill": "#1A1918",
+                              "content": "어느 날 아침 불안한 꿈에서 깨어났을 때...",
+                              "lineHeight": 1.3,
+                              "fontFamily": "SF Pro",
+                              "fontSize": 14,
+                              "fontWeight": "600",
+                              "letterSpacing": -0.2
+                            },
+                            {
+                              "type": "text",
+                              "id": "kaGnW",
+                              "name": "author1",
+                              "fill": "#6D6C6A",
+                              "content": "변신 · 프란츠 카프카",
+                              "fontFamily": "SF Pro",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
                         }
                       ]
                     },
                     {
                       "type": "frame",
-                      "id": "GweD7",
-                      "name": "book2",
-                      "width": "fill_container",
-                      "fill": "$card",
-                      "cornerRadius": 16,
-                      "effect": {
-                        "type": "shadow",
-                        "shadowType": "outer",
-                        "color": "#1A191808",
-                        "offset": {
-                          "x": 0,
-                          "y": 1
-                        },
-                        "blur": 6
-                      },
+                      "id": "TQSLR",
+                      "x": 0,
+                      "y": 0,
+                      "name": "Tab 어린왕자",
+                      "width": 350,
+                      "height": 300,
+                      "fill": "#8A9B7A",
+                      "cornerRadius": [
+                        20,
+                        20,
+                        0,
+                        0
+                      ],
                       "layout": "vertical",
-                      "gap": 10,
-                      "padding": 14,
+                      "padding": [
+                        0,
+                        20,
+                        16,
+                        20
+                      ],
+                      "justifyContent": "end",
                       "children": [
                         {
                           "type": "frame",
-                          "id": "jNrTw",
-                          "name": "cover2",
+                          "id": "zzMsq",
+                          "name": "textGroup2",
                           "width": "fill_container",
-                          "height": 120,
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "./images/generated-1773967862791.png",
-                            "mode": "fill"
-                          },
-                          "cornerRadius": 10
-                        },
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "S3UTU",
+                              "name": "title2",
+                              "fill": "#FFFFFF",
+                              "content": "사막이 아름다운 것은 어딘가에...",
+                              "lineHeight": 1.3,
+                              "fontFamily": "SF Pro",
+                              "fontSize": 14,
+                              "fontWeight": "600",
+                              "letterSpacing": -0.2
+                            },
+                            {
+                              "type": "text",
+                              "id": "2Nmcd",
+                              "name": "author2",
+                              "fill": "#FFFFFFCC",
+                              "content": "어린 왕자 · 생텍쥐페리",
+                              "fontFamily": "SF Pro",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "CJa4p",
+                      "x": 0,
+                      "y": 0,
+                      "name": "Tab 데미안",
+                      "width": 350,
+                      "height": 260,
+                      "fill": "#C8A882",
+                      "cornerRadius": [
+                        20,
+                        20,
+                        0,
+                        0
+                      ],
+                      "layout": "vertical",
+                      "padding": [
+                        0,
+                        20,
+                        16,
+                        20
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "5BJnH",
+                          "name": "titleWrap1",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "m9hpI",
+                              "name": "t1",
+                              "fill": "#1A1918",
+                              "content": "새는 알에서 나오려고 투쟁한다...",
+                              "lineHeight": 1.3,
+                              "fontFamily": "SF Pro",
+                              "fontSize": 14,
+                              "fontWeight": "600",
+                              "letterSpacing": -0.2
+                            },
+                            {
+                              "type": "text",
+                              "id": "fSYcK",
+                              "name": "a1",
+                              "fill": "#6D6C6A",
+                              "content": "데미안 · 헤르만 헤세",
+                              "fontFamily": "SF Pro",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "vvPxq",
+                      "x": 0,
+                      "y": 0,
+                      "name": "Tab 잃어버린시간",
+                      "width": 350,
+                      "height": 225,
+                      "fill": "#B5BFA1",
+                      "cornerRadius": [
+                        20,
+                        20,
+                        0,
+                        0
+                      ],
+                      "layout": "vertical",
+                      "padding": [
+                        0,
+                        20,
+                        16,
+                        20
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "mkezA",
+                          "name": "titleWrap2",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "JxSv0",
+                              "name": "t2",
+                              "fill": "#1A1918",
+                              "content": "진정한 발견의 여행은...",
+                              "lineHeight": 1.3,
+                              "fontFamily": "SF Pro",
+                              "fontSize": 14,
+                              "fontWeight": "600",
+                              "letterSpacing": -0.2
+                            },
+                            {
+                              "type": "text",
+                              "id": "Znw13",
+                              "name": "a2",
+                              "fill": "#6D6C6A",
+                              "content": "잃어버린 시간을 찾아서 · 프루스트",
+                              "fontFamily": "SF Pro",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "qmlEw",
+                      "x": 0,
+                      "y": 0,
+                      "name": "Front Card",
+                      "width": 350,
+                      "height": 190,
+                      "fill": "#F0E6D8",
+                      "cornerRadius": [
+                        20,
+                        20,
+                        0,
+                        0
+                      ],
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": [
+                        24,
+                        20
+                      ],
+                      "children": [
                         {
                           "type": "text",
-                          "id": "ItD4H",
-                          "name": "title2",
-                          "fill": "$text-primary",
+                          "id": "5AwwJ",
+                          "name": "titleTxt",
+                          "fill": "#1A1918",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "잃어버린 시간을\n찾아서",
-                          "lineHeight": 1.4,
+                          "content": "\"인생이란 자전거를 타는 것과 같다. 균형을 잡으려면 계속 움직여야 한다.\"",
+                          "lineHeight": 1.5,
                           "fontFamily": "Pretendard",
-                          "fontSize": 13,
-                          "fontWeight": "600"
+                          "fontSize": 17,
+                          "fontWeight": "500",
+                          "letterSpacing": -0.2
                         },
                         {
                           "type": "text",
-                          "id": "dRhlY",
-                          "name": "author2",
-                          "fill": "$text-tertiary",
-                          "content": "마르셀 프루스트",
+                          "id": "TFy6L",
+                          "name": "authorTxt",
+                          "fill": "#6D6C6A",
+                          "content": "아인슈타인 · 명언집",
                           "fontFamily": "Pretendard",
-                          "fontSize": 11,
-                          "fontWeight": "500"
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "lle69",
+                          "name": "spacer",
+                          "width": 1,
+                          "height": "fill_container"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "J7VpU",
+                          "name": "btnRow",
+                          "width": "fill_container",
+                          "justifyContent": "end",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "VZAOc",
+                              "name": "discBtn",
+                              "fill": "$accent",
+                              "cornerRadius": 20,
+                              "gap": 4,
+                              "padding": [
+                                8,
+                                16
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "H8jAD",
+                                  "name": "discTxt",
+                                  "fill": "#FFFFFF",
+                                  "content": "카드 보기 →",
+                                  "fontFamily": "Pretendard",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     }
@@ -9105,7 +9316,8 @@
                       "fill": "$text-tertiary",
                       "content": "p.",
                       "fontFamily": "Pretendard",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -9116,7 +9328,8 @@
                   "fill": "$text-tertiary",
                   "content": "(선택)",
                   "fontFamily": "Pretendard",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             },

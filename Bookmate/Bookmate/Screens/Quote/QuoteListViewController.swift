@@ -392,7 +392,8 @@ extension QuoteListViewController: UITableViewDataSource, UITableViewDelegate {
             book: book,
             page: quote.pageNumber.map { String($0) },
             tags: tags,
-            isExistingQuote: true
+            isExistingQuote: true,
+            cardStyle: quote.cardStyle
         )
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .fullScreen

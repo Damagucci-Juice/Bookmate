@@ -18,17 +18,19 @@ final class CardCustomizationViewController: UIViewController {
     private let page: String?
     private let tags: [String]
     private let isExistingQuote: Bool
+    private let initialCardStyle: CardStyle?
     private var selectedStyle: CardStyleType = .green
     private var backgroundImage: UIImage?
 
     // MARK: - Init
 
-    init(quoteText: String, book: Book, page: String?, tags: [String], isExistingQuote: Bool = false) {
+    init(quoteText: String, book: Book, page: String?, tags: [String], isExistingQuote: Bool = false, cardStyle: CardStyle? = nil) {
         self.quoteText = quoteText
         self.book = book
         self.page = page
         self.tags = tags
         self.isExistingQuote = isExistingQuote
+        self.initialCardStyle = cardStyle
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -114,7 +116,11 @@ final class CardCustomizationViewController: UIViewController {
         view.backgroundColor = AppColor.bg
         setupNavigation()
         setupLayout()
+        restoreCardStyle()
         setupStyleCircles()
+        if selectedStyle == .photo, let image = backgroundImage {
+            updatePhotoCircleThumbnail(image)
+        }
         configureCardPreview()
         bindActions()
 
@@ -298,13 +304,24 @@ final class CardCustomizationViewController: UIViewController {
         present(picker, animated: true)
     }
 
+    // MARK: - Style Restore
+
+    private func restoreCardStyle() {
+        guard let cardStyle = initialCardStyle,
+              let type = CardStyleType(rawValue: cardStyle.type) else { return }
+        selectedStyle = type
+        if type == .photo, let filename = cardStyle.backgroundImageFilename {
+            backgroundImage = CardBackgroundStorage.load(filename: filename)
+        }
+    }
+
     // MARK: - Card Preview
 
     private func configureCardPreview() {
         cardPreviewView.quoteText = quoteText
         cardPreviewView.bookTitle = book.title
         cardPreviewView.bookAuthor = book.author
-        cardPreviewView.configure(styleType: selectedStyle)
+        cardPreviewView.configure(styleType: selectedStyle, backgroundImage: backgroundImage)
     }
 
     // MARK: - Actions
