@@ -4,7 +4,7 @@
     {
       "type": "frame",
       "id": "a3p4g",
-      "x": -1007,
+      "x": -904,
       "y": -46,
       "name": "1 홈",
       "width": 390,
@@ -149,7 +149,7 @@
                       "id": "LPLH8",
                       "name": "curationTitle",
                       "fill": "$text-primary",
-                      "content": "수집한 문장 (5)",
+                      "content": "수집한 문장",
                       "fontFamily": "Pretendard",
                       "fontSize": 18,
                       "fontWeight": "600",
@@ -169,330 +169,337 @@
                 },
                 {
                   "type": "frame",
-                  "id": "AzsBs",
-                  "name": "Book Stack",
+                  "id": "CFdi7",
+                  "name": "Vertical Wheel",
                   "clip": true,
                   "width": "fill_container",
-                  "height": 340,
-                  "cornerRadius": 20,
+                  "height": 420,
+                  "cornerRadius": 16,
                   "layout": "none",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "KLeC2",
-                      "x": 0,
-                      "y": 0,
-                      "name": "Tab 변신",
-                      "width": 350,
-                      "height": 340,
-                      "fill": "#D4C0A0",
-                      "cornerRadius": [
-                        20,
-                        20,
-                        0,
-                        0
-                      ],
-                      "layout": "vertical",
-                      "padding": [
-                        0,
-                        20,
-                        16,
-                        20
-                      ],
-                      "justifyContent": "end",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "abFqF",
-                          "name": "textGroup1",
-                          "width": "fill_container",
-                          "layout": "vertical",
-                          "gap": 2,
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "zMHhk",
-                              "name": "title1",
-                              "fill": "#1A1918",
-                              "content": "어느 날 아침 불안한 꿈에서 깨어났을 때...",
-                              "lineHeight": 1.3,
-                              "fontFamily": "SF Pro",
-                              "fontSize": 14,
-                              "fontWeight": "600",
-                              "letterSpacing": -0.2
-                            },
-                            {
-                              "type": "text",
-                              "id": "kaGnW",
-                              "name": "author1",
-                              "fill": "#6D6C6A",
-                              "content": "변신 · 프란츠 카프카",
-                              "fontFamily": "SF Pro",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        }
-                      ]
+                      "id": "XUhxF",
+                      "x": 17,
+                      "y": 36,
+                      "name": "Card -5",
+                      "opacity": 0.03,
+                      "width": 320,
+                      "height": 22,
+                      "fill": "#E0D5C5",
+                      "cornerRadius": 8
                     },
                     {
                       "type": "frame",
-                      "id": "TQSLR",
-                      "x": 0,
-                      "y": 0,
-                      "name": "Tab 어린왕자",
-                      "width": 350,
-                      "height": 300,
-                      "fill": "#8A9B7A",
-                      "cornerRadius": [
-                        20,
-                        20,
-                        0,
-                        0
-                      ],
-                      "layout": "vertical",
-                      "padding": [
-                        0,
-                        20,
-                        16,
-                        20
-                      ],
-                      "justifyContent": "end",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "zzMsq",
-                          "name": "textGroup2",
-                          "width": "fill_container",
-                          "layout": "vertical",
-                          "gap": 2,
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "S3UTU",
-                              "name": "title2",
-                              "fill": "#FFFFFF",
-                              "content": "사막이 아름다운 것은 어딘가에...",
-                              "lineHeight": 1.3,
-                              "fontFamily": "SF Pro",
-                              "fontSize": 14,
-                              "fontWeight": "600",
-                              "letterSpacing": -0.2
-                            },
-                            {
-                              "type": "text",
-                              "id": "2Nmcd",
-                              "name": "author2",
-                              "fill": "#FFFFFFCC",
-                              "content": "어린 왕자 · 생텍쥐페리",
-                              "fontFamily": "SF Pro",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        }
-                      ]
+                      "id": "s8y3A",
+                      "x": 17,
+                      "y": 42,
+                      "name": "Card -4",
+                      "opacity": 0.06,
+                      "width": 320,
+                      "height": 30,
+                      "fill": "#D8C4B0",
+                      "cornerRadius": 10
                     },
                     {
                       "type": "frame",
-                      "id": "CJa4p",
-                      "x": 0,
-                      "y": 0,
-                      "name": "Tab 데미안",
-                      "width": 350,
-                      "height": 260,
-                      "fill": "#C8A882",
-                      "cornerRadius": [
-                        20,
-                        20,
-                        0,
-                        0
-                      ],
-                      "layout": "vertical",
-                      "padding": [
-                        0,
-                        20,
-                        16,
-                        20
-                      ],
-                      "justifyContent": "end",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "5BJnH",
-                          "name": "titleWrap1",
-                          "width": "fill_container",
-                          "layout": "vertical",
-                          "gap": 2,
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "m9hpI",
-                              "name": "t1",
-                              "fill": "#1A1918",
-                              "content": "새는 알에서 나오려고 투쟁한다...",
-                              "lineHeight": 1.3,
-                              "fontFamily": "SF Pro",
-                              "fontSize": 14,
-                              "fontWeight": "600",
-                              "letterSpacing": -0.2
-                            },
-                            {
-                              "type": "text",
-                              "id": "fSYcK",
-                              "name": "a1",
-                              "fill": "#6D6C6A",
-                              "content": "데미안 · 헤르만 헤세",
-                              "fontFamily": "SF Pro",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        }
-                      ]
+                      "id": "TT83j",
+                      "x": 17,
+                      "y": 415,
+                      "name": "Card +4",
+                      "opacity": 0.06,
+                      "width": 320,
+                      "height": 30,
+                      "fill": "#C0B5A5",
+                      "cornerRadius": 10
                     },
                     {
                       "type": "frame",
-                      "id": "vvPxq",
-                      "x": 0,
-                      "y": 0,
-                      "name": "Tab 잃어버린시간",
-                      "width": 350,
-                      "height": 225,
-                      "fill": "#B5BFA1",
-                      "cornerRadius": [
-                        20,
-                        20,
-                        0,
-                        0
-                      ],
+                      "id": "Be575",
+                      "x": 17,
+                      "y": 54,
+                      "name": "Card -3",
+                      "opacity": 0.13,
+                      "width": 320,
+                      "fill": "#9BA8A0",
+                      "cornerRadius": 12,
                       "layout": "vertical",
+                      "gap": 2,
                       "padding": [
-                        0,
-                        20,
-                        16,
-                        20
+                        12,
+                        18
                       ],
                       "justifyContent": "end",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "mkezA",
-                          "name": "titleWrap2",
-                          "width": "fill_container",
-                          "layout": "vertical",
-                          "gap": 2,
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "JxSv0",
-                              "name": "t2",
-                              "fill": "#1A1918",
-                              "content": "진정한 발견의 여행은...",
-                              "lineHeight": 1.3,
-                              "fontFamily": "SF Pro",
-                              "fontSize": 14,
-                              "fontWeight": "600",
-                              "letterSpacing": -0.2
-                            },
-                            {
-                              "type": "text",
-                              "id": "Znw13",
-                              "name": "a2",
-                              "fill": "#6D6C6A",
-                              "content": "잃어버린 시간을 찾아서 · 프루스트",
-                              "fontFamily": "SF Pro",
-                              "fontSize": 11,
-                              "fontWeight": "normal"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "qmlEw",
-                      "x": 0,
-                      "y": 0,
-                      "name": "Front Card",
-                      "width": 350,
-                      "height": 190,
-                      "fill": "#F0E6D8",
-                      "cornerRadius": [
-                        20,
-                        20,
-                        0,
-                        0
-                      ],
-                      "layout": "vertical",
-                      "gap": 8,
-                      "padding": [
-                        24,
-                        20
-                      ],
                       "children": [
                         {
                           "type": "text",
-                          "id": "5AwwJ",
-                          "name": "titleTxt",
+                          "id": "jisd2",
+                          "name": "tn3",
+                          "fill": "#FFFFFF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "\"삶이 있는 한 희망은 있다. 그리고 희망이 있는 곳에 반드시 길이 있다. 절망의 끝에서도 한 줄기 빛은 반드시 찾아온다. 포기하지 않는 한 우리는 언제나 다시 시작할 수 있다.\"",
+                          "lineHeight": 1.3,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jnuTe",
+                      "x": 17,
+                      "y": 410,
+                      "name": "Card +3",
+                      "opacity": 0.13,
+                      "width": 320,
+                      "fill": "#A3B5A0",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        12,
+                        18
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "DAPfW",
+                          "name": "tp3",
                           "fill": "#1A1918",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "\"인생이란 자전거를 타는 것과 같다. 균형을 잡으려면 계속 움직여야 한다.\"",
-                          "lineHeight": 1.5,
+                          "content": "\"나는 생각한다, 고로 존재한다. 의심할 수 없는 것은 의심하고 있는 나 자신의 존재뿐이다. 모든 확실한 지식의 출발점은 바로 여기 생각하는 나 자신에게 있다. 이성의 빛으로 세상을 밝혀야 한다.\"",
+                          "lineHeight": 1.3,
                           "fontFamily": "Pretendard",
-                          "fontSize": 17,
-                          "fontWeight": "500",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Hzjq2",
+                      "x": 17,
+                      "y": 76,
+                      "name": "Card -2",
+                      "opacity": 0.28,
+                      "width": 320,
+                      "fill": "#D4C0A0",
+                      "cornerRadius": 14,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": [
+                        14,
+                        20
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "JU4Re",
+                          "name": "tn2",
+                          "fill": "#1A1918",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "\"진정한 발견의 여행은 새로운 풍경을 찾는 것이 아니라 새로운 눈을 갖는 것이다. 과거는 우리 안에 고스란히 살아 있으며 기억의 조각들은 한 잔의 차 향기 속에서도 다시 피어오른다. 우리가 사랑했던 장소와 사람들은 시간이 흘러도 마음속에 영원히 머무른다.\"",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "D2GHx",
+                          "name": "an2",
+                          "fill": "#6D6C6A",
+                          "content": "프루스트 · 잃어버린 시간을 찾아서",
+                          "fontFamily": "Pretendard",
+                          "fontSize": 9,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "JmJ9K",
+                      "x": 17,
+                      "y": 400,
+                      "name": "Card +2",
+                      "opacity": 0.28,
+                      "width": 320,
+                      "fill": "#B5BFA1",
+                      "cornerRadius": 14,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": [
+                        14,
+                        20
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "2xIEg",
+                          "name": "tp2",
+                          "fill": "#1A1918",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "\"모든 행복한 가정은 서로 닮았고 불행한 가정은 제각각의 이유로 불행하다. 사랑이란 상대방의 행복을 나의 행복과 동일시하는 것이다. 진정한 사랑은 끝이 없으며 우리의 마음을 더 넓고 깊게 만들어 준다.\"",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "5ntel",
+                          "name": "ap2",
+                          "fill": "#6D6C6A",
+                          "content": "톨스토이 · 안나 카레니나",
+                          "fontFamily": "Pretendard",
+                          "fontSize": 9,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "4pzFw",
+                      "x": 17,
+                      "y": 111,
+                      "name": "Card -1",
+                      "opacity": 0.55,
+                      "width": 320,
+                      "fill": "#8A9B7A",
+                      "cornerRadius": 14,
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": [
+                        16,
+                        20
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "S4XQf",
+                          "name": "tn1",
+                          "fill": "#FFFFFF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "\"사막이 아름다운 것은 어딘가에 우물을 숨기고 있기 때문이야. 중요한 것은 눈에 보이지 않아. 오직 마음으로만 잘 볼 수 있지. 어른들은 언제나 숫자를 좋아하지. 새로운 친구가 생겼다고 말하면 어른들은 정말 중요한 것에 대해서는 절대로 묻지 않거든. 네가 무언가를 길들였다면 그것에 대해 너는 영원히 책임을 져야만 해.\"",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 13,
+                          "fontWeight": "600",
                           "letterSpacing": -0.2
                         },
                         {
                           "type": "text",
-                          "id": "TFy6L",
-                          "name": "authorTxt",
+                          "id": "rvgBi",
+                          "name": "an1",
+                          "fill": "#FFFFFFCC",
+                          "content": "어린 왕자 · 생텍쥐페리",
+                          "fontFamily": "Pretendard",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "SoxVx",
+                      "x": 17,
+                      "y": 395,
+                      "name": "Card +1",
+                      "opacity": 0.55,
+                      "width": 320,
+                      "fill": "#C8A882",
+                      "cornerRadius": 14,
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": [
+                        16,
+                        20
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "AjrRC",
+                          "name": "tp1",
+                          "fill": "#1A1918",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "\"인생이란 자전거를 타는 것과 같다. 균형을 잡으려면 계속 움직여야 한다. 상상력은 지식보다 중요하다. 지식에는 한계가 있지만 상상력은 세상의 모든 것을 끌어안을 수 있기 때문이다. 과거에서 배우고 오늘을 위해 살며 미래에 대한 희망을 결코 버리지 마라.\"",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 13,
+                          "fontWeight": "600",
+                          "letterSpacing": -0.2
+                        },
+                        {
+                          "type": "text",
+                          "id": "rhuld",
+                          "name": "ap1",
                           "fill": "#6D6C6A",
                           "content": "아인슈타인 · 명언집",
                           "fontFamily": "Pretendard",
-                          "fontSize": 12,
+                          "fontSize": 10,
                           "fontWeight": "normal"
-                        },
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "uimXF",
+                      "x": 17,
+                      "y": 166,
+                      "name": "Center Card",
+                      "width": 320,
+                      "fill": "#F0E6D8",
+                      "cornerRadius": 16,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": [
+                        20,
+                        24
+                      ],
+                      "children": [
                         {
-                          "type": "frame",
-                          "id": "lle69",
-                          "name": "spacer",
-                          "width": 1,
-                          "height": "fill_container"
-                        },
-                        {
-                          "type": "frame",
-                          "id": "J7VpU",
-                          "name": "btnRow",
+                          "type": "text",
+                          "id": "g1TAM",
+                          "name": "qtx",
+                          "fill": "#1A1918",
+                          "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "justifyContent": "end",
+                          "content": "\"우리가 두려워해야 할 유일한 것은 두려움 그 자체이다. 용기란 두려움이 없는 것이 아니라 두려움보다 중요한 것이 있다고 판단하는 것이다. 자유를 향한 긴 여정에서 나는 수없이 넘어졌지만 매번 다시 일어나는 법을 배웠다. 어둠 속에서도 빛을 찾아가는 여정이 바로 인생이 우리에게 주는 가장 큰 선물이다.\"",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 15,
+                          "fontWeight": "500",
+                          "letterSpacing": -0.2
+                        },
+                        {
+                          "type": "frame",
+                          "id": "CPQk7",
+                          "name": "brow",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
                           "children": [
                             {
-                              "type": "frame",
-                              "id": "VZAOc",
-                              "name": "discBtn",
-                              "fill": "$accent",
-                              "cornerRadius": 20,
-                              "gap": 4,
-                              "padding": [
-                                8,
-                                16
-                              ],
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "H8jAD",
-                                  "name": "discTxt",
-                                  "fill": "#FFFFFF",
-                                  "content": "카드 보기 →",
-                                  "fontFamily": "Pretendard",
-                                  "fontSize": 12,
-                                  "fontWeight": "600"
-                                }
-                              ]
+                              "type": "text",
+                              "id": "iIFBA",
+                              "name": "autx",
+                              "fill": "#6D6C6A",
+                              "content": "넬슨 만델라 · 자유를 향한 긴 여정",
+                              "fontFamily": "Pretendard",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -9441,15 +9448,34 @@
                       ]
                     },
                     {
-                      "type": "text",
-                      "id": "x4vdl",
-                      "name": "logo",
-                      "fill": "#FFFFFF50",
-                      "content": "Bookmate",
-                      "fontFamily": "Outfit",
-                      "fontSize": 13,
-                      "fontWeight": "700",
-                      "letterSpacing": -0.3
+                      "type": "frame",
+                      "id": "QEQji",
+                      "name": "pageInfo",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "5aEzj",
+                          "name": "pgIcon3",
+                          "width": 14,
+                          "height": 14,
+                          "iconFontName": "book-open",
+                          "iconFontFamily": "lucide",
+                          "fill": "#FFFFFF50"
+                        },
+                        {
+                          "type": "text",
+                          "id": "dNATG",
+                          "name": "pgText3",
+                          "fill": "#FFFFFF50",
+                          "content": "p. 42",
+                          "fontFamily": "Outfit",
+                          "fontSize": 13,
+                          "fontWeight": "600",
+                          "letterSpacing": -0.3
+                        }
+                      ]
                     }
                   ]
                 }
@@ -9963,15 +9989,34 @@
                       ]
                     },
                     {
-                      "type": "text",
-                      "id": "2efah",
-                      "name": "bmLogo",
-                      "fill": "#FFFFFF50",
-                      "content": "Bookmate",
-                      "fontFamily": "Outfit",
-                      "fontSize": 12,
-                      "fontWeight": "700",
-                      "letterSpacing": -0.3
+                      "type": "frame",
+                      "id": "fKSxo",
+                      "name": "pageInfo",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "fD61U",
+                          "name": "pgIcon2",
+                          "width": 13,
+                          "height": 13,
+                          "iconFontName": "book-open",
+                          "iconFontFamily": "lucide",
+                          "fill": "#FFFFFF50"
+                        },
+                        {
+                          "type": "text",
+                          "id": "f4bAj",
+                          "name": "pgText2",
+                          "fill": "#FFFFFF50",
+                          "content": "p. 42",
+                          "fontFamily": "Outfit",
+                          "fontSize": 12,
+                          "fontWeight": "600",
+                          "letterSpacing": -0.3
+                        }
+                      ]
                     }
                   ]
                 }
@@ -10590,15 +10635,34 @@
                       ]
                     },
                     {
-                      "type": "text",
-                      "id": "74m67",
-                      "name": "logo",
-                      "fill": "#FFFFFF50",
-                      "content": "Bookmate",
-                      "fontFamily": "Outfit",
-                      "fontSize": 13,
-                      "fontWeight": "700",
-                      "letterSpacing": -0.3
+                      "type": "frame",
+                      "id": "5ZsD7",
+                      "name": "pageInfo",
+                      "gap": 6,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "eTnzO",
+                          "name": "pgIcon1",
+                          "width": 14,
+                          "height": 14,
+                          "iconFontName": "book-open",
+                          "iconFontFamily": "lucide",
+                          "fill": "#FFFFFF50"
+                        },
+                        {
+                          "type": "text",
+                          "id": "uTn9p",
+                          "name": "pgText1",
+                          "fill": "#FFFFFF50",
+                          "content": "p. 42",
+                          "fontFamily": "Outfit",
+                          "fontSize": 13,
+                          "fontWeight": "600",
+                          "letterSpacing": -0.3
+                        }
+                      ]
                     }
                   ]
                 }
@@ -10873,7 +10937,7 @@
     {
       "type": "frame",
       "id": "KjHwV",
-      "x": -478,
+      "x": -423,
       "y": -46,
       "name": "2 도서 선택",
       "width": 390,
@@ -11038,6 +11102,250 @@
                   "fontWeight": "normal"
                 }
               ]
+            },
+            {
+              "type": "frame",
+              "id": "x4gfd",
+              "name": "RecommendSection",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "vkTJn",
+                  "name": "recHeader",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "gy4tt",
+                      "name": "recTitle",
+                      "fill": "$text-primary",
+                      "content": "이런 책은 어때요?",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 16,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.2
+                    },
+                    {
+                      "type": "text",
+                      "id": "VZcVP",
+                      "name": "recMore",
+                      "fill": "$accent",
+                      "content": "더보기",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 13,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JqTdF",
+                  "name": "recGrid",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Lx5fs",
+                      "name": "recBook1",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "877sb",
+                          "name": "cover1",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "elin_mel",
+                            "link": "https://unsplash.com/@elin_mel",
+                            "author": "Elin Melaas"
+                          },
+                          "clip": true,
+                          "width": "fill_container",
+                          "height": 160,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1730451309552-44e5690629dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzQ1MTI2NDd8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 12
+                        },
+                        {
+                          "type": "frame",
+                          "id": "0UNkt",
+                          "name": "info1",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "MoD1t",
+                              "name": "title1",
+                              "fill": "$text-primary",
+                              "content": "아몬드",
+                              "fontFamily": "SF Pro",
+                              "fontSize": 13,
+                              "fontWeight": "600",
+                              "letterSpacing": -0.2
+                            },
+                            {
+                              "type": "text",
+                              "id": "6uoQd",
+                              "name": "author1",
+                              "fill": "$text-secondary",
+                              "content": "손원평",
+                              "fontFamily": "SF Pro",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "798eK",
+                      "name": "recBook2",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "wunFr",
+                          "name": "cover2",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "rruprrup",
+                            "link": "https://unsplash.com/@rruprrup",
+                            "author": "Aleksandra Sapozhnikova"
+                          },
+                          "clip": true,
+                          "width": "fill_container",
+                          "height": 160,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1721918432459-17a6a998667d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzQ1MTI2NDh8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 12
+                        },
+                        {
+                          "type": "frame",
+                          "id": "z6xIP",
+                          "name": "info2",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Unqxl",
+                              "name": "title2",
+                              "fill": "$text-primary",
+                              "content": "불편한 편의점",
+                              "fontFamily": "SF Pro",
+                              "fontSize": 13,
+                              "fontWeight": "600",
+                              "letterSpacing": -0.2
+                            },
+                            {
+                              "type": "text",
+                              "id": "ragjN",
+                              "name": "author2",
+                              "fill": "$text-secondary",
+                              "content": "김호연",
+                              "fontFamily": "SF Pro",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "ZTLys",
+                      "name": "recBook3",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 10,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "fzxUH",
+                          "name": "cover3",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "luisalemanmx",
+                            "link": "https://unsplash.com/@luisalemanmx",
+                            "author": "Luis Aleman"
+                          },
+                          "clip": true,
+                          "width": "fill_container",
+                          "height": 160,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "https://images.unsplash.com/photo-1611285652786-00fa6a93ce1b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NzQ1MTI2NDh8&ixlib=rb-4.1.0&q=80&w=1080",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 12
+                        },
+                        {
+                          "type": "frame",
+                          "id": "KGKqt",
+                          "name": "info3",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "w57P1",
+                              "name": "title3",
+                              "fill": "$text-primary",
+                              "content": "달러구트 꿈 백화점",
+                              "fontFamily": "SF Pro",
+                              "fontSize": 13,
+                              "fontWeight": "600",
+                              "letterSpacing": -0.2
+                            },
+                            {
+                              "type": "text",
+                              "id": "6Q81Y",
+                              "name": "author3",
+                              "fill": "$text-secondary",
+                              "content": "이미예",
+                              "fontFamily": "SF Pro",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "rectangle",
+              "id": "u7Tu9",
+              "name": "sectionDivider",
+              "fill": "$border",
+              "width": "fill_container",
+              "height": 1
             },
             {
               "type": "frame",
@@ -15518,98 +15826,23 @@
     },
     {
       "type": "rectangle",
-      "id": "46X0R",
-      "x": 1584,
-      "y": -1291,
-      "fill": {
-        "type": "image",
-        "enabled": true,
-        "url": "image.png",
-        "mode": "fill"
-      },
-      "width": 221,
-      "height": 383
-    },
-    {
-      "type": "rectangle",
-      "id": "oV6yJ",
-      "x": 1817,
-      "y": -1291,
-      "fill": {
-        "type": "image",
-        "enabled": true,
-        "url": "image-1.png",
-        "mode": "fill"
-      },
-      "width": 197,
-      "height": 383
-    },
-    {
-      "type": "rectangle",
-      "id": "oCfIK",
-      "x": 1332,
-      "y": -1291,
-      "fill": {
-        "type": "image",
-        "enabled": true,
-        "url": "image-2.png",
-        "mode": "fill"
-      },
-      "width": 228,
-      "height": 449
+      "id": "68ft8",
+      "x": -1801,
+      "y": -46,
+      "fill": "#CCCCCC",
+      "width": 735,
+      "height": 451
     },
     {
       "type": "text",
-      "id": "JEqZd",
-      "x": 1367,
-      "y": -1342,
-      "fill": "#ffffffff",
-      "content": "https://pin.it/6WwJAxLE9",
+      "id": "xxUFV",
+      "x": -1749,
+      "y": 6,
+      "fill": "#000000",
+      "content": "기술적 구현 사항\n\n- 수집한 카드를 core bluetooth를 이용해서 넘긴다던가 하는 방법,\n이거를…앱에 추가할거야? 아니면, 이미지를 공유할거야?\n- 문장에서 즐겨찾기(하트, 좋아요) 상태를 수집해서, 위젯으로 보여준다.\n- 배민 검색 처럼 꽉찬 느낌으로 주고 서버가 없으면 JSON을 몇가지 저장을 하면 된다.\n책 마다 정확한 높이와 비율이 다를 수 있으므로, 그들 사이에 차별을 정확히 두는 것을 추천한다.\n- 문구 돌아가는 물레방아 뷰를 구현\n- 사후 70년 지난 작가의 문구나 이런거를 넣기, 저작권 문제가 없다고 함\n- 장르별 스택을 몇개 쌓아 놓고 랜덤으로 보여주기\n- 위젯 구현 \n\n\n\n\n\n\n",
       "fontFamily": "Inter",
-      "fontSize": 12,
+      "fontSize": 16,
       "fontWeight": "normal"
-    },
-    {
-      "type": "rectangle",
-      "id": "t9FpU",
-      "x": 1332,
-      "y": -810,
-      "fill": {
-        "type": "image",
-        "enabled": true,
-        "url": "image-3.png",
-        "mode": "fill"
-      },
-      "width": 676,
-      "height": 421
-    },
-    {
-      "type": "rectangle",
-      "id": "gsKLR",
-      "x": 2058,
-      "y": -1291,
-      "fill": {
-        "type": "image",
-        "enabled": true,
-        "url": "image-4.png",
-        "mode": "fill"
-      },
-      "width": 401,
-      "height": 734
-    },
-    {
-      "type": "rectangle",
-      "id": "DpiyA",
-      "x": 564,
-      "y": -1292,
-      "fill": {
-        "type": "image",
-        "enabled": true,
-        "url": "image-5.png",
-        "mode": "fill"
-      },
-      "width": 723,
-      "height": 368
     }
   ],
   "variables": {

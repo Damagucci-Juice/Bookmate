@@ -22,7 +22,6 @@ final class QuoteWheelView: UIView {
     private var scrollOffset: CGFloat = 0
     private var maxCardHeight: CGFloat = 200
 
-    private let maxVisibleSlots = 5
     private let cardWidth: CGFloat = 320
     private let cardHeight: CGFloat = 200
     private let rowHeight: CGFloat = 70
@@ -115,8 +114,10 @@ final class QuoteWheelView: UIView {
         let count = items.count
 
         let centerSlot = Int(scrollOffset.rounded())
-        // Render cards above current + 1 buffer below for swipe animation
-        let slotRange = (centerSlot - maxVisibleSlots)...(centerSlot + 1)
+        // Dynamically compute how many stacked cards fit above the front card
+        let availableAbove = containerH - maxCardHeight
+        let visibleSlots = max(1, min(count - 1, Int(availableAbove / rowHeight)))
+        let slotRange = (centerSlot - visibleSlots)...(centerSlot + 1)
 
         // Recycle cards outside visible range
         let neededSlots = Set(slotRange)
