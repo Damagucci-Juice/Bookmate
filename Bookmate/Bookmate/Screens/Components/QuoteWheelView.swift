@@ -5,7 +5,9 @@ import SnapKit
 
 struct WheelQuoteItem {
     let text: String
-    let source: String
+    let bookTitle: String
+    let author: String
+    let page: Int?
     let backgroundColor: UIColor
     let textColor: UIColor
 }
@@ -18,10 +20,11 @@ final class QuoteWheelView: UIView {
 
     private var items: [WheelQuoteItem] = []
     private var scrollOffset: CGFloat = 0
+    private var maxCardHeight: CGFloat = 200
 
     private let maxVisibleSlots = 5
     private let cardWidth: CGFloat = 320
-    private let cardHeight: CGFloat = 150
+    private let cardHeight: CGFloat = 200
     private let rowHeight: CGFloat = 70
 
     private let container = UIView()
@@ -56,7 +59,20 @@ final class QuoteWheelView: UIView {
     func configure(with items: [WheelQuoteItem]) {
         self.items = items
         self.scrollOffset = 0
+        self.maxCardHeight = computeMaxHeight(items: items)
         rebuildCards()
+    }
+
+    private func computeMaxHeight(items: [WheelQuoteItem]) -> CGFloat {
+        let measuringCard = WheelCardView()
+        measuringCard.setExpanded(true)
+        var tallest: CGFloat = cardHeight
+        for item in items {
+            measuringCard.configureContent(item: item)
+            let h = measuringCard.preferredHeight(forWidth: cardWidth)
+            if h > tallest { tallest = h }
+        }
+        return tallest
     }
 
     // MARK: - Card Pool
@@ -94,7 +110,7 @@ final class QuoteWheelView: UIView {
         guard containerH > 0, containerW > 0 else { return }
 
         // Anchor at bottom: current card (offset 0) sits fully visible at container bottom
-        let centerY = containerH - cardHeight / 2
+        let centerY = containerH - maxCardHeight / 2
         let cardX = (containerW - cardWidth) / 2
         let count = items.count
 
@@ -116,6 +132,7 @@ final class QuoteWheelView: UIView {
         for slot in slotRange {
             let dataIndex = ((slot % count) + count) % count
             let visualOffset = CGFloat(slot) - scrollOffset
+            let isFront = (slot == centerSlot)
 
             // Get or create card
             let card: WheelCardView
@@ -127,8 +144,24 @@ final class QuoteWheelView: UIView {
                 activeCards[slot] = card
             }
 
-            let yPos = centerY - cardHeight / 2 + visualOffset * rowHeight
-            card.frame = CGRect(x: cardX, y: yPos, width: cardWidth, height: cardHeight)
+            card.setExpanded(isFront)
+
+            let h: CGFloat
+            let yPos: CGFloat
+
+            if isFront {
+                h = maxCardHeight
+                yPos = containerH - h  // bottom-anchored
+            } else if slot > centerSlot {
+                // Buffer card: hide below container (clipped by clipsToBounds)
+                h = maxCardHeight
+                yPos = containerH
+            } else {
+                h = maxCardHeight
+                yPos = centerY - maxCardHeight / 2 + visualOffset * rowHeight
+            }
+
+            card.frame = CGRect(x: cardX, y: yPos, width: cardWidth, height: h)
             card.layer.cornerRadius = 16
 
             cardsByY.append((yPos: yPos, slot: slot, card: card))
@@ -148,27 +181,31 @@ final class QuoteWheelView: UIView {
 
     // MARK: - Pan Gesture
 
+    private var panStartOffset: CGFloat = 0
+
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
         guard !items.isEmpty else { return }
 
         switch gesture.state {
+        case .began:
+            panStartOffset = scrollOffset
+
         case .changed:
             let translation = gesture.translation(in: container)
-            gesture.setTranslation(.zero, in: container)
-            scrollOffset += -translation.y / rowHeight
+            let rawDelta = -translation.y / rowHeight
+            // Clamp dragging to at most 1 card in either direction
+            let clampedDelta = max(-1, min(1, rawDelta))
+            scrollOffset = panStartOffset + clampedDelta
             layoutVisibleCards()
 
         case .ended, .cancelled:
-            let velocity = gesture.velocity(in: container).y
-            let velocityCards = -velocity / rowHeight
-
-            let snapTarget = (scrollOffset + velocityCards * 0.15).rounded()
+            let snapTarget = scrollOffset.rounded()
 
             UIView.animate(
                 withDuration: 0.4,
                 delay: 0,
                 usingSpringWithDamping: 0.78,
-                initialSpringVelocity: abs(velocityCards) * 0.05,
+                initialSpringVelocity: 0,
                 options: [.curveEaseOut, .allowUserInteraction]
             ) {
                 self.scrollOffset = snapTarget
@@ -199,9 +236,25 @@ final class WheelCardView: UIView {
         return label
     }()
 
-    private let sourceLabel: UILabel = {
+    private let bookTitleLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 1
+        label.lineBreakMode = .byTruncatingTail
         return label
+    }()
+
+    private let authorPageLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 1
+        return label
+    }()
+
+    private let infoStack: UIStackView = {
+        let sv = UIStackView()
+        sv.axis = .horizontal
+        sv.spacing = 4
+        sv.alignment = .center
+        return sv
     }()
 
     private let stack: UIStackView = {
@@ -215,8 +268,13 @@ final class WheelCardView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = true
+        bookTitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        authorPageLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        authorPageLabel.setContentHuggingPriority(.required, for: .horizontal)
+        infoStack.addArrangedSubview(bookTitleLabel)
+        infoStack.addArrangedSubview(authorPageLabel)
         stack.addArrangedSubview(quoteLabel)
-        stack.addArrangedSubview(sourceLabel)
+        stack.addArrangedSubview(infoStack)
         addSubview(stack)
         stack.snp.makeConstraints {
             $0.top.equalToSuperview().inset(20)
@@ -228,6 +286,22 @@ final class WheelCardView: UIView {
 
     required init?(coder: NSCoder) { fatalError() }
 
+    func setExpanded(_ expanded: Bool) {
+//        quoteLabel.numberOfLines = expanded ? 0 : 5
+        quoteLabel.numberOfLines = 0
+    }
+
+    func preferredHeight(forWidth width: CGFloat) -> CGFloat {
+        let insetWidth = width - 24 * 2  // leading + trailing insets
+        let fittingSize = CGSize(width: insetWidth, height: .greatestFiniteMagnitude)
+        let size = stack.systemLayoutSizeFitting(
+            fittingSize,
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
+        return size.height + 20 + 20  // top + bottom insets
+    }
+
     func configureContent(item: WheelQuoteItem) {
         backgroundColor = item.backgroundColor
 
@@ -236,20 +310,36 @@ final class WheelCardView: UIView {
         quoteLabel.attributedText = NSAttributedString(
             string: item.text,
             attributes: [
-                .font: UIFont.systemFont(ofSize: 15, weight: .medium),
+                .font: AppFont.quoteText.font,
                 .foregroundColor: item.textColor,
                 .paragraphStyle: paragraphStyle,
                 .kern: -0.2
             ]
         )
 
-        if item.source.isEmpty {
-            sourceLabel.isHidden = true
+        // Book title (left side, truncates if needed)
+        if item.bookTitle.isEmpty {
+            bookTitleLabel.isHidden = true
         } else {
-            sourceLabel.isHidden = false
-            sourceLabel.text = item.source
-            sourceLabel.font = .systemFont(ofSize: 11, weight: .regular)
-            sourceLabel.textColor = AppColor.textSecondary
+            bookTitleLabel.isHidden = false
+            bookTitleLabel.text = item.bookTitle
+            bookTitleLabel.font = .systemFont(ofSize: 11, weight: .regular)
+            bookTitleLabel.textColor = AppColor.textSecondary
+        }
+
+        // Author · page (right side, never truncates)
+        var parts: [String] = []
+        if !item.author.isEmpty { parts.append(item.author) }
+        if let page = item.page { parts.append("p.\(page)") }
+
+        if parts.isEmpty {
+            authorPageLabel.isHidden = true
+        } else {
+            authorPageLabel.isHidden = false
+            let separator = item.bookTitle.isEmpty ? "" : " · "
+            authorPageLabel.text = separator + parts.joined(separator: " · ")
+            authorPageLabel.font = .systemFont(ofSize: 11, weight: .regular)
+            authorPageLabel.textColor = AppColor.textSecondary
         }
     }
 }

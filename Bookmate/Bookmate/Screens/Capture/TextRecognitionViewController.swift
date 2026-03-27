@@ -90,7 +90,10 @@ final class TextRecognitionViewController: UIViewController {
         btn.setTitleColor(AppColor.textPrimary, for: .normal)
         btn.backgroundColor = UIColor(hex: "#F0EFEC")
         btn.layer.cornerRadius = 8
-        btn.contentEdgeInsets = UIEdgeInsets(top: 6, left: 12, bottom: 6, right: 12)
+        btn.contentEdgeInsets = UIEdgeInsets(
+            top: 6, left: 12,
+            bottom: 6, right: 12
+        )
         return btn
     }()
 
