@@ -17,6 +17,7 @@ class ViewController: UIViewController {
 
     private let quoteRepository = QuoteRepository()
     private let disposeBag = DisposeBag()
+    private var loadedQuotes: [Quote] = []
 
     // MARK: - Content
 
@@ -80,6 +81,28 @@ class ViewController: UIViewController {
         setupConstraints()
         loadQuotes()
         seeAllButton.addTarget(self, action: #selector(seeAllQuotesTapped), for: .touchUpInside)
+        quoteWheelView.onQuoteTapped = { [weak self] index in
+            self?.openCardCustomization(at: index)
+        }
+    }
+
+    private func openCardCustomization(at index: Int) {
+        guard index < loadedQuotes.count else { return }
+        let quote = loadedQuotes[index]
+        guard let book = quote.book else { return }
+        let tags = Array(quote.tags.map { $0.name })
+        let page = quote.pageNumber.map { String($0) }
+        let vc = CardCustomizationViewController(
+            quoteText: quote.text,
+            book: book,
+            page: page,
+            tags: tags,
+            isExistingQuote: true,
+            cardStyle: quote.cardStyle
+        )
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .fullScreen
+        present(nav, animated: true)
     }
 
     @objc private func seeAllQuotesTapped() {
@@ -150,6 +173,7 @@ class ViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] quotes in
                 guard let self = self else { return }
+                self.loadedQuotes = quotes
                 let palette = AppColor.WheelCard.palette
                 let items = quotes.enumerated().map { (index, quote) in
                     let bg = palette[index % palette.count]

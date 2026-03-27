@@ -22,6 +22,8 @@ final class QuoteWheelView: UIView {
     private var scrollOffset: CGFloat = 0
     private var maxCardHeight: CGFloat = 200
 
+    var onQuoteTapped: ((Int) -> Void)?
+
     private let cardWidth: CGFloat = 320
     private let cardHeight: CGFloat = 200
     private let rowHeight: CGFloat = 70
@@ -51,6 +53,10 @@ final class QuoteWheelView: UIView {
     private func setupGesture() {
         let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         container.addGestureRecognizer(pan)
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        tap.require(toFail: pan)
+        container.addGestureRecognizer(tap)
     }
 
     // MARK: - Public
@@ -216,6 +222,17 @@ final class QuoteWheelView: UIView {
         default:
             break
         }
+    }
+
+    @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
+        guard !items.isEmpty else { return }
+        let centerSlot = Int(scrollOffset.rounded())
+        guard let frontCard = activeCards[centerSlot] else { return }
+        let location = gesture.location(in: container)
+        guard frontCard.frame.contains(location) else { return }
+        let count = items.count
+        let dataIndex = ((centerSlot % count) + count) % count
+        onQuoteTapped?(dataIndex)
     }
 
     // MARK: - Layout Cycle
