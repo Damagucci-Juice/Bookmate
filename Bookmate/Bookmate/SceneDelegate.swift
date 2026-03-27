@@ -41,20 +41,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             selectedImage: AppIcon.house.image(pointSize: 22, weight: .semibold)
         )
 
-        // Tab 2: 책찾기
+        // Tab 2: 수집
         let bookVC = BookSelectionViewController()
         let bookNav = UINavigationController(rootViewController: bookVC)
         bookNav.tabBarItem = UITabBarItem(
-            title: "책찾기",
-            image: AppIcon.search.image(pointSize: 22, weight: .regular),
-            selectedImage: AppIcon.search.image(pointSize: 22, weight: .semibold)
+            title: "수집",
+            image: AppIcon.circlePlus.image(pointSize: 22, weight: .regular),
+            selectedImage: AppIcon.circlePlus.image(pointSize: 22, weight: .semibold)
+        )
+
+        // Tab 3: 설정
+        let settingsVC = SettingsViewController()
+        let settingsNav = UINavigationController(rootViewController: settingsVC)
+        settingsNav.tabBarItem = UITabBarItem(
+            title: "설정",
+            image: AppIcon.user.image(pointSize: 22, weight: .regular),
+            selectedImage: AppIcon.user.image(pointSize: 22, weight: .semibold)
         )
 
         let tabBar = UITabBarController()
-        tabBar.viewControllers = [homeNav, bookNav]
+        tabBar.viewControllers = [homeNav, bookNav, settingsNav]
         tabBar.tabBar.tintColor = AppColor.accent
         tabBar.tabBar.unselectedItemTintColor = AppColor.tabInactive
-        tabBar.tabBar.backgroundColor = AppColor.bg
+        tabBar.tabBar.backgroundColor = AppColor.card
+        tabBar.tabBar.layer.cornerRadius = 36
+        tabBar.tabBar.layer.masksToBounds = true
+        tabBar.tabBar.layer.borderWidth = 1
+        tabBar.tabBar.layer.borderColor = AppColor.border.cgColor
 
         window.rootViewController = tabBar
         window.makeKeyAndVisible()

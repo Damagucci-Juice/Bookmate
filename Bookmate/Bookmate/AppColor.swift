@@ -97,6 +97,20 @@ enum AppColor {
         static let darkText  = UIColor(hex: "#1A1918")
     }
 
+    // MARK: Wheel Card Colors
+
+    enum WheelCard {
+        static let beige      = UIColor(hex: "#F0E6D8")
+        static let mutedGreen = UIColor(hex: "#8A9B7A")
+        static let warmBrown  = UIColor(hex: "#C8A882")
+        static let tan        = UIColor(hex: "#D4C0A0")
+        static let sage       = UIColor(hex: "#B5BFA1")
+        static let dustyTeal  = UIColor(hex: "#9BA8A0")
+        static let softGreen  = UIColor(hex: "#A3B5A0")
+
+        static let palette: [UIColor] = [beige, mutedGreen, warmBrown, tan, sage, dustyTeal, softGreen]
+    }
+
     // MARK: Shadows
 
     static let cardShadow = UIColor(hex: "#1A191808")  // rgba(26,25,24,0.03)
