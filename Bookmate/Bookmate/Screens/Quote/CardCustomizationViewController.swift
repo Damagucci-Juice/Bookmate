@@ -4,6 +4,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 import Realm
+import RealmSwift
 
 final class CardCustomizationViewController: UIViewController {
 
@@ -19,18 +20,20 @@ final class CardCustomizationViewController: UIViewController {
     private let tags: [String]
     private let isExistingQuote: Bool
     private let initialCardStyle: CardStyle?
+    private let quoteId: ObjectId?
     private var selectedStyle: CardStyleType = .green
     private var backgroundImage: UIImage?
 
     // MARK: - Init
 
-    init(quoteText: String, book: Book, page: String?, tags: [String], isExistingQuote: Bool = false, cardStyle: CardStyle? = nil) {
+    init(quoteText: String, book: Book, page: String?, tags: [String], isExistingQuote: Bool = false, cardStyle: CardStyle? = nil, quoteId: ObjectId? = nil) {
         self.quoteText = quoteText
         self.book = book
         self.page = page
         self.tags = tags
         self.isExistingQuote = isExistingQuote
         self.initialCardStyle = cardStyle
+        self.quoteId = quoteId
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -101,6 +104,14 @@ final class CardCustomizationViewController: UIViewController {
         return btn
     }()
 
+    private let favoriteButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.tintColor = AppColor.textTertiary
+        let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .medium)
+        btn.setImage(UIImage(systemName: "heart", withConfiguration: config), for: .normal)
+        return btn
+    }()
+
     private var styleCircles: [(CardStyleType, CardStyleCircleView)] = []
     private var photoCircle: CardStyleCircleView?
 
@@ -135,10 +146,8 @@ final class CardCustomizationViewController: UIViewController {
         title = "카드 꾸미기"
 
         if navigationController?.viewControllers.first == self {
-            // Modal root (인용구 리스트에서 진입): X만 표시
             navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
         } else {
-            // Pushed (캡처 flow에서 진입): back만 표시
             let backImage = AppIcon.chevronLeft.image(pointSize: 18, weight: .medium)
             navigationItem.leftBarButtonItem = UIBarButtonItem(
                 image: backImage,
@@ -148,6 +157,20 @@ final class CardCustomizationViewController: UIViewController {
             )
             navigationItem.leftBarButtonItem?.tintColor = AppColor.textPrimary
         }
+
+        if isExistingQuote, quoteId != nil {
+            updateFavoriteButton()
+            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: favoriteButton)
+        }
+    }
+
+    private func updateFavoriteButton() {
+        guard let quoteId, let quote = quoteRepository.fetch(id: quoteId) else { return }
+        let isFavorite = quote.isFavorite
+        let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .medium)
+        let name = isFavorite ? "heart.fill" : "heart"
+        favoriteButton.setImage(UIImage(systemName: name, withConfiguration: config), for: .normal)
+        favoriteButton.tintColor = isFavorite ? AppColor.coral : AppColor.textTertiary
     }
 
     // MARK: - Layout
@@ -345,6 +368,18 @@ final class CardCustomizationViewController: UIViewController {
                 self?.saveAndDismiss()
             })
             .disposed(by: disposeBag)
+
+        favoriteButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                self?.toggleFavorite()
+            })
+            .disposed(by: disposeBag)
+    }
+
+    private func toggleFavorite() {
+        guard let quoteId, let quote = quoteRepository.fetch(id: quoteId) else { return }
+        quoteRepository.toggleFavorite(quote)
+        updateFavoriteButton()
     }
 
     @objc private func backTapped() {

@@ -23,10 +23,12 @@ enum AppIcon: String, CaseIterable {
     case download
     case share
     case bookmark
+    case heart
+    case heartFill
 
     var defaultSize: CGFloat {
         switch self {
-        case .bell, .search, .scan, .ellipsis, .link, .messageCircle, .moreHorizontal, .download, .share, .bookmark:
+        case .bell, .search, .scan, .ellipsis, .link, .messageCircle, .moreHorizontal, .download, .share, .bookmark, .heart, .heartFill:
             return 24
         case .chevronLeft, .chevronRight, .close, .zap:
             return 22
@@ -64,6 +66,8 @@ enum AppIcon: String, CaseIterable {
         case .download:        return "arrow.down.circle"
         case .share:           return "square.and.arrow.up"
         case .bookmark:        return "bookmark"
+        case .heart:           return "heart"
+        case .heartFill:       return "heart.fill"
         }
     }
 

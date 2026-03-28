@@ -376,9 +376,20 @@ extension QuoteListViewController: UITableViewDataSource, UITableViewDelegate {
             tags: tags,
             highlightText: searchQuery.isEmpty ? nil : searchQuery
         )
+        cell.itemView.updateFavorite(quote.isFavorite)
+
+        cell.itemView.favoriteButton.tag = indexPath.row
+        cell.itemView.favoriteButton.removeTarget(self, action: #selector(favoriteTapped(_:)), for: .touchUpInside)
+        cell.itemView.favoriteButton.addTarget(self, action: #selector(favoriteTapped(_:)), for: .touchUpInside)
 
         cell.showDivider = indexPath.row < quotes.count - 1
         return cell
+    }
+
+    @objc private func favoriteTapped(_ sender: UIButton) {
+        let index = sender.tag
+        guard index < quotes.count else { return }
+        quoteRepository.toggleFavorite(quotes[index])
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -393,7 +404,8 @@ extension QuoteListViewController: UITableViewDataSource, UITableViewDelegate {
             page: quote.pageNumber.map { String($0) },
             tags: tags,
             isExistingQuote: true,
-            cardStyle: quote.cardStyle
+            cardStyle: quote.cardStyle,
+            quoteId: quote.id
         )
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .fullScreen

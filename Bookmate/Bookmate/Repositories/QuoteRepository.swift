@@ -99,6 +99,10 @@ final class QuoteRepository {
         try? realm.write { quote.pageNumber = page }
     }
 
+    func toggleFavorite(_ quote: Quote) {
+        try? realm.write { quote.isFavorite = !quote.isFavorite }
+    }
+
     func updateCardStyle(_ type: CardStyleType, for quote: Quote, backgroundImageFilename: String? = nil) {
         try? realm.write {
             if quote.cardStyle == nil {

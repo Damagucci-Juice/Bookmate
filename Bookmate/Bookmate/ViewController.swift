@@ -98,7 +98,8 @@ class ViewController: UIViewController {
             page: page,
             tags: tags,
             isExistingQuote: true,
-            cardStyle: quote.cardStyle
+            cardStyle: quote.cardStyle,
+            quoteId: quote.id
         )
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .fullScreen

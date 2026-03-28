@@ -36,6 +36,7 @@ class Quote: Object {
     @Persisted var memo: String?
     @Persisted var pageNumber: Int?
     @Persisted var createdAt: Date = Date()
+    @Persisted var isFavorite: Bool = false
     @Persisted var cardStyle: CardStyle?
     @Persisted var book: Book?
     @Persisted var tags: List<Tag>
