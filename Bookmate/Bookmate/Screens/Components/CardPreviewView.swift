@@ -21,12 +21,23 @@ final class CardPreviewView: UIView {
         didSet { updateAttribution() }
     }
 
+    var pageNumber: String = "" {
+        didSet { updatePageLabel() }
+    }
+
     // MARK: - UI
 
     private let quoteMarkLabel: UILabel = {
         let l = UILabel()
-        l.text = "\u{201C}"
-        l.font = AppFont.quoteIcon.font
+        let style = NSMutableParagraphStyle()
+        style.lineHeightMultiple = AppFont.Spacing.quoteIconLineHeight
+        l.attributedText = NSAttributedString(
+            string: "\u{201C}",
+            attributes: [
+                .font: AppFont.quoteIcon.font,
+                .paragraphStyle: style
+            ]
+        )
         l.textAlignment = .left
         return l
     }()
@@ -47,6 +58,14 @@ final class CardPreviewView: UIView {
         let l = UILabel()
         l.font = AppFont.shareCardAuthor.font
         l.textAlignment = .left
+        return l
+    }()
+
+    private let pageLabel: UILabel = {
+        let l = UILabel()
+        l.font = AppFont.shareCardAuthor.font
+        l.textAlignment = .left
+        l.isHidden = true
         return l
     }()
 
@@ -101,17 +120,30 @@ final class CardPreviewView: UIView {
             $0.leading.trailing.bottom.equalToSuperview()
         }
 
-        let bottomRow = UIStackView(arrangedSubviews: [attributionLabel, watermarkLabel])
+        let leftStack = UIStackView(
+            arrangedSubviews: [attributionLabel, pageLabel]
+        )
+        leftStack.axis = .vertical
+        leftStack.spacing = 2
+
+        let bottomRow = UIStackView(arrangedSubviews: [leftStack, watermarkLabel])
         bottomRow.axis = .horizontal
         bottomRow.distribution = .equalSpacing
+        bottomRow.alignment = .bottom
 
-        let contentStack = UIStackView(arrangedSubviews: [topSection, bottomRow])
-        contentStack.axis = .vertical
-        contentStack.distribution = .equalSpacing
+        addSubview(topSection)
+        addSubview(bottomRow)
 
-        addSubview(contentStack)
-        contentStack.snp.makeConstraints {
-            $0.edges.equalToSuperview().inset(UIEdgeInsets(top: 40, left: 32, bottom: 40, right: 32))
+        bottomRow.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(32)
+            $0.bottom.equalToSuperview().inset(40)
+        }
+
+        topSection.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(32)
+            $0.top.greaterThanOrEqualToSuperview().inset(40)
+            $0.bottom.lessThanOrEqualTo(bottomRow.snp.top).offset(-20)
+            $0.centerY.equalToSuperview().offset(-20).priority(.medium)
         }
 
         configure(styleType: .green)
@@ -135,9 +167,19 @@ final class CardPreviewView: UIView {
             gradientLayer.locations = nil
         }
 
-        quoteMarkLabel.textColor = textColor.withAlphaComponent(0.3)
+        let quoteMarkStyle = NSMutableParagraphStyle()
+        quoteMarkStyle.lineHeightMultiple = AppFont.Spacing.quoteIconLineHeight
+        quoteMarkLabel.attributedText = NSAttributedString(
+            string: "\u{201C}",
+            attributes: [
+                .font: AppFont.quoteIcon.font,
+                .foregroundColor: textColor.withAlphaComponent(0.3),
+                .paragraphStyle: quoteMarkStyle
+            ]
+        )
         quoteLabel.textColor = textColor
         attributionLabel.textColor = textColor.withAlphaComponent(0.7)
+        pageLabel.textColor = textColor.withAlphaComponent(0.7)
         watermarkLabel.textColor = textColor.withAlphaComponent(0.4)
 
         layer.borderWidth = needsBorder ? 1 : 0
@@ -178,6 +220,15 @@ final class CardPreviewView: UIView {
             attributionLabel.text = bookTitle
         } else {
             attributionLabel.text = "\(bookTitle) · \(bookAuthor)"
+        }
+    }
+
+    private func updatePageLabel() {
+        if pageNumber.isEmpty {
+            pageLabel.isHidden = true
+        } else {
+            pageLabel.text = "p.\(pageNumber)"
+            pageLabel.isHidden = false
         }
     }
 

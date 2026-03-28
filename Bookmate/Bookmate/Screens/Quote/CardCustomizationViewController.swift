@@ -321,6 +321,7 @@ final class CardCustomizationViewController: UIViewController {
         cardPreviewView.quoteText = quoteText
         cardPreviewView.bookTitle = book.title
         cardPreviewView.bookAuthor = book.author
+        cardPreviewView.pageNumber = page ?? ""
         cardPreviewView.configure(styleType: selectedStyle, backgroundImage: backgroundImage)
     }
 

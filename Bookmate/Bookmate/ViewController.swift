@@ -187,11 +187,13 @@ class ViewController: UIViewController {
                         textColor: textColor
                     )
                 }
+                let previousIndex = self.quoteWheelView.currentIndex
                 if items.isEmpty {
                     self.quoteWheelView.configure(with: Self.mockQuotes())
                 } else {
                     self.quoteWheelView.configure(with: items)
                 }
+                self.quoteWheelView.currentIndex = previousIndex
             })
             .disposed(by: disposeBag)
     }

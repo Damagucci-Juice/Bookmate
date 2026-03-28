@@ -31,6 +31,53 @@ final class BookSelectionViewController: UIViewController {
     private var totalResults: Int = 0
     private var isLoadingMore: Bool = false
 
+    // MARK: - Recommended Books
+
+    private enum BookGenre: String, CaseIterable {
+        case fiction = "소설"
+        case essay = "에세이"
+        case poetry = "시"
+    }
+
+    private struct BookSeed {
+        let isbn: String
+        let genre: BookGenre
+    }
+
+    private let bookSeeds: [BookSeed] = [
+        // 소설
+        BookSeed(isbn: "9791141602468", genre: .fiction),
+        BookSeed(isbn: "9791191369663", genre: .fiction),
+        BookSeed(isbn: "9788961708531", genre: .fiction),
+        // 에세이
+        BookSeed(isbn: "9791170613688", genre: .essay),
+        BookSeed(isbn: "9791198020345", genre: .essay),
+        BookSeed(isbn: "9791198023346", genre: .essay),
+        // 시
+        BookSeed(isbn: "9791141064242", genre: .poetry),
+        BookSeed(isbn: "9791192625225", genre: .poetry),
+        BookSeed(isbn: "9791190933179", genre: .poetry),
+    ]
+
+    private struct RecommendedBookInfo {
+        var title: String
+        var author: String
+        let isbn: String
+        var coverURL: String?
+    }
+
+    private var recommendedBooks: [RecommendedBookInfo] = []
+
+    /// 서로 다른 장르에서 랜덤으로 3권 선택
+    private func selectRandomRecommendations() {
+        let grouped = Dictionary(grouping: bookSeeds, by: { $0.genre })
+        let shuffledGenres = Array(grouped.keys.shuffled().prefix(3))
+        recommendedBooks = shuffledGenres.compactMap { genre in
+            guard let seed = grouped[genre]?.randomElement() else { return nil }
+            return RecommendedBookInfo(title: "", author: "", isbn: seed.isbn)
+        }
+    }
+
     // MARK: - UI
 
     private let searchContainer: UIView = {
@@ -77,12 +124,38 @@ final class BookSelectionViewController: UIViewController {
         return label
     }()
 
-    private let clearButton: UIButton = {
+    // MARK: - Recommend Section UI
+
+    private let recommendSectionView = UIView()
+
+    private let recommendTitleLabel: UILabel = {
+        let l = UILabel()
+        l.text = "이런 책은 어때요?"
+        l.font = .systemFont(ofSize: 16, weight: .semibold)
+        l.textColor = AppColor.textPrimary
+        return l
+    }()
+
+    private let recommendMoreButton: UIButton = {
         let btn = UIButton(type: .system)
-        btn.setTitle("지우기", for: .normal)
-        btn.titleLabel?.font = AppFont.caption.font
-        btn.setTitleColor(AppColor.textTertiary, for: .normal)
+        btn.setTitle("더보기", for: .normal)
+        btn.titleLabel?.font = .systemFont(ofSize: 13, weight: .medium)
+        btn.setTitleColor(AppColor.accent, for: .normal)
         return btn
+    }()
+
+    private let recommendGrid: UIStackView = {
+        let sv = UIStackView()
+        sv.axis = .horizontal
+        sv.spacing = 12
+        sv.distribution = .fillEqually
+        return sv
+    }()
+
+    private let sectionDivider: UIView = {
+        let v = UIView()
+        v.backgroundColor = AppColor.border
+        return v
     }()
 
     private let tableView: UITableView = {
@@ -102,9 +175,12 @@ final class BookSelectionViewController: UIViewController {
         navigationItem.title = "책찾기"
         view.backgroundColor = AppColor.bg
         setupLayout()
+        selectRandomRecommendations()
+        setupRecommendCards()
         setupTableView()
         bindSearch()
         loadRecentBooks()
+        loadRecommendedCovers()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -116,18 +192,53 @@ final class BookSelectionViewController: UIViewController {
 
     // MARK: - Layout
 
+    /// 추천 섹션 + 구분선을 감싸는 스택 (검색 시 숨김용)
+    private let contentStack = UIStackView()
+
     private func setupLayout() {
+        // Search bar
         view.addSubview(searchContainer)
         searchContainer.addSubview(searchIconView)
         searchContainer.addSubview(searchTextField)
         searchContainer.addSubview(searchClearButton)
 
-        let headerStack = UIStackView(arrangedSubviews: [sectionTitleLabel, clearButton])
+        // Recommend section 내부 레이아웃
+        let recommendHeader = UIStackView(arrangedSubviews: [recommendTitleLabel, recommendMoreButton])
+        recommendHeader.axis = .horizontal
+        recommendHeader.alignment = .center
+
+        recommendSectionView.addSubview(recommendHeader)
+        recommendSectionView.addSubview(recommendGrid)
+
+        recommendHeader.snp.makeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+        }
+        recommendGrid.snp.makeConstraints {
+            $0.top.equalTo(recommendHeader.snp.bottom).offset(16)
+            $0.leading.trailing.bottom.equalToSuperview()
+        }
+
+        // 구분선
+        sectionDivider.snp.makeConstraints { make in
+            make.height.equalTo(1)
+        }
+
+        // 최근 검색 / 검색 결과 헤더
+        let headerStack = UIStackView(arrangedSubviews: [sectionTitleLabel])
         headerStack.axis = .horizontal
         headerStack.alignment = .center
-        view.addSubview(headerStack)
+
+        // contentStack: 추천 섹션 + 구분선 + 헤더를 묶음
+        contentStack.axis = .vertical
+        contentStack.spacing = 24
+        contentStack.addArrangedSubview(recommendSectionView)
+        contentStack.addArrangedSubview(sectionDivider)
+        contentStack.addArrangedSubview(headerStack)
+
+        view.addSubview(contentStack)
         view.addSubview(tableView)
 
+        // Constraints
         searchContainer.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(8)
             $0.leading.trailing.equalToSuperview().inset(20)
@@ -148,12 +259,12 @@ final class BookSelectionViewController: UIViewController {
             $0.centerY.equalToSuperview()
             $0.size.equalTo(28)
         }
-        headerStack.snp.makeConstraints {
+        contentStack.snp.makeConstraints {
             $0.top.equalTo(searchContainer.snp.bottom).offset(24)
             $0.leading.trailing.equalToSuperview().inset(20)
         }
         tableView.snp.makeConstraints {
-            $0.top.equalTo(headerStack.snp.bottom).offset(12)
+            $0.top.equalTo(contentStack.snp.bottom).offset(12)
             $0.leading.trailing.bottom.equalToSuperview()
         }
     }
@@ -195,12 +306,50 @@ final class BookSelectionViewController: UIViewController {
             })
             .disposed(by: disposeBag)
 
-        clearButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                guard let self else { return }
-                self.bookRepository.clearRecentSearches()
-                ImageCache.default.clearMemoryCache()
-                ImageCache.default.clearDiskCache()
+    }
+
+    // MARK: - Recommend
+
+    private func setupRecommendCards() {
+        for (index, info) in recommendedBooks.enumerated() {
+            let card = RecommendBookCard()
+            card.configure(title: info.title, author: info.author, coverURL: info.coverURL)
+            card.onTap = { [weak self] in
+                self?.handleRecommendedBookTapped(at: index)
+            }
+            recommendGrid.addArrangedSubview(card)
+        }
+    }
+
+    private func loadRecommendedCovers() {
+        for (index, info) in recommendedBooks.enumerated() {
+            bookService.search(query: info.isbn, display: 1, start: 1)
+                .observe(on: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] response in
+                    guard let self,
+                          let item = response.items.first else { return }
+                    let title = item.cleanTitle
+                    let author = item.authors.joined(separator: ", ")
+                    self.recommendedBooks[index].title = title
+                    self.recommendedBooks[index].author = author
+                    self.recommendedBooks[index].coverURL = item.image
+                    if let card = self.recommendGrid.arrangedSubviews[index] as? RecommendBookCard {
+                        card.configure(title: title, author: author, coverURL: item.image)
+                    }
+                })
+                .disposed(by: disposeBag)
+        }
+    }
+
+    private func handleRecommendedBookTapped(at index: Int) {
+        let info = recommendedBooks[index]
+        bookService.search(query: info.isbn, display: 1, start: 1)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] response in
+                guard let self, let item = response.items.first else { return }
+                self.bookRepository.addToSearchHistory(from: item)
+                let book = self.bookRepository.findOrCreate(from: item)
+                self.handleBookSelected(book)
             })
             .disposed(by: disposeBag)
     }
@@ -213,7 +362,7 @@ final class BookSelectionViewController: UIViewController {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] books in
                 guard let self, self.state == .recent else { return }
-                self.recentBooks = books
+                self.recentBooks = Array(books.prefix(4))
                 self.tableView.reloadData()
             })
     }
@@ -223,14 +372,16 @@ final class BookSelectionViewController: UIViewController {
         searchResults = []
         tableView.reloadData()
         sectionTitleLabel.text = "최근 검색한 책"
-        clearButton.isHidden = false
+        recommendSectionView.isHidden = false
+        sectionDivider.isHidden = false
         loadRecentBooks()
     }
 
     private func performSearch(query: String) {
         state = .searching
         sectionTitleLabel.text = "검색 결과"
-        clearButton.isHidden = true
+        recommendSectionView.isHidden = true
+        sectionDivider.isHidden = true
 
         // Reset pagination state for new search
         currentQuery = query

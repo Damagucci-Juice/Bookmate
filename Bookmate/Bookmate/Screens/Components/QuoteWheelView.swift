@@ -61,6 +61,21 @@ final class QuoteWheelView: UIView {
 
     // MARK: - Public
 
+    /// 현재 보이는 카드의 data index
+    var currentIndex: Int {
+        get {
+            guard !items.isEmpty else { return 0 }
+            let count = items.count
+            let slot = Int(scrollOffset.rounded())
+            return ((slot % count) + count) % count
+        }
+        set {
+            guard !items.isEmpty else { return }
+            scrollOffset = CGFloat(newValue)
+            layoutVisibleCards()
+        }
+    }
+
     func configure(with items: [WheelQuoteItem]) {
         self.items = items
         self.scrollOffset = 0
@@ -305,7 +320,6 @@ final class WheelCardView: UIView {
     required init?(coder: NSCoder) { fatalError() }
 
     func setExpanded(_ expanded: Bool) {
-//        quoteLabel.numberOfLines = expanded ? 0 : 5
         quoteLabel.numberOfLines = 0
     }
 
