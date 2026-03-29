@@ -16,6 +16,7 @@ final class QuoteListViewController: UIViewController {
     private var allTags: [String] = []
     private var selectedFilter: String? = nil  // nil = 전체
     private var searchQuery: String = ""
+    private var dataDisposeBag = DisposeBag()
 
     // MARK: - Init
 
@@ -194,6 +195,8 @@ final class QuoteListViewController: UIViewController {
     // MARK: - Data
 
     private func loadQuotes() {
+        dataDisposeBag = DisposeBag()
+
         let base: Observable<[Quote]>
 
         if let book = book {
@@ -248,7 +251,7 @@ final class QuoteListViewController: UIViewController {
                     self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
                 }
             })
-            .disposed(by: disposeBag)
+            .disposed(by: dataDisposeBag)
     }
 
     private lazy var realm = try! Realm(configuration: .defaultConfiguration)
