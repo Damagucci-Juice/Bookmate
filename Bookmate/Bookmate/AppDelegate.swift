@@ -12,6 +12,9 @@ import Kingfisher
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // 기존 Realm DB를 App Group 공유 컨테이너로 마이그레이션
+        SharedRealmConfig.migrateToSharedContainerIfNeeded()
+
         // Kingfisher 메모리 캐시: 50MB 제한, 이미지 150개 제한
         ImageCache.default.memoryStorage.config.totalCostLimit = 50 * 1024 * 1024
         ImageCache.default.memoryStorage.config.countLimit = 150

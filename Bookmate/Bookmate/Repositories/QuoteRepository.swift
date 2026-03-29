@@ -2,6 +2,7 @@ import Foundation
 import RealmSwift
 import RxSwift
 import Realm
+import WidgetKit
 
 final class QuoteRepository {
 
@@ -101,6 +102,8 @@ final class QuoteRepository {
 
     func toggleFavorite(_ quote: Quote) {
         try? realm.write { quote.isFavorite = !quote.isFavorite }
+        WidgetDataStore.syncFavorites(from: realm)
+        WidgetCenter.shared.reloadTimelines(ofKind: "com.gucci.Bookmate.QuoteWidget")
     }
 
     func updateCardStyle(_ type: CardStyleType, for quote: Quote, backgroundImageFilename: String? = nil) {

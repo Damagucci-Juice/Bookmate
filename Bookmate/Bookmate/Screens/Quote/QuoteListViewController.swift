@@ -254,7 +254,7 @@ final class QuoteListViewController: UIViewController {
             .disposed(by: dataDisposeBag)
     }
 
-    private lazy var realm = try! Realm(configuration: .defaultConfiguration)
+    private lazy var realm = Realm.configured()
 
     private func collectTags() {
         let tags = realm.objects(Tag.self)
