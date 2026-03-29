@@ -6,7 +6,10 @@ enum SharedRealmConfig {
     static let appGroupID = "group.com.gucci.Bookmate"
 
     static var sharedContainerURL: URL {
-        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID)!
+        guard let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupID) else {
+            fatalError("App Group '\(appGroupID)' 컨테이너를 찾을 수 없습니다. Entitlements 설정을 확인하세요.")
+        }
+        return url
     }
 
     static var configuration: Realm.Configuration {

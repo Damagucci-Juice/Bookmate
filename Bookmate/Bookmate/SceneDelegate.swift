@@ -26,18 +26,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         seedDefaultTagsIfNeeded(realm: realm)
         WidgetDataStore.syncFavorites(from: realm)
 
-        // Find or create a stub Book for testing
-        let stubBook: Book
-        if let existing = realm.objects(Book.self).filter("isbn == %@", "stub-demian").first {
-            stubBook = existing
-        } else {
-            stubBook = Book()
-            stubBook.title = "데미안"
-            stubBook.author = "헤르만 헤세"
-            stubBook.isbn = "stub-demian"
-            try? realm.write { realm.add(stubBook) }
-        }
-
         let window = UIWindow(windowScene: windowScene)
 
         // Tab 1: 홈

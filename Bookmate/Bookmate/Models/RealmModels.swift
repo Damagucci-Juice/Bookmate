@@ -71,7 +71,11 @@ enum CardStyleType: String, CaseIterable {
 
 extension Realm {
     static func configured() -> Realm {
-        return try! Realm(configuration: SharedRealmConfig.configuration)
+        do {
+            return try Realm(configuration: SharedRealmConfig.configuration)
+        } catch {
+            fatalError("Realm 초기화 실패: \(error.localizedDescription)")
+        }
     }
 }
 

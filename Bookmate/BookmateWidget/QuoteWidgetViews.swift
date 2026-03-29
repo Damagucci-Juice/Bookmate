@@ -20,37 +20,29 @@ private enum WidgetColor {
 struct QuoteWidgetEntryView: View {
     var entry: QuoteEntry
     @Environment(\.widgetFamily) var family
-    @Environment(\.colorScheme) var colorScheme
-
-    private var isDark: Bool { colorScheme == .dark }
-
     var body: some View {
         Group {
             if let quote = entry.quote {
                 switch family {
                 case .systemSmall:
-                    SmallWidgetView(quote: quote, isDark: isDark)
+                    SmallWidgetView(quote: quote)
                 case .systemMedium:
-                    MediumWidgetView(quote: quote, isDark: isDark)
+                    MediumWidgetView(quote: quote)
                 case .systemLarge:
-                    LargeWidgetView(quote: quote, isDark: isDark)
+                    LargeWidgetView(quote: quote)
                 default:
-                    SmallWidgetView(quote: quote, isDark: isDark)
+                    SmallWidgetView(quote: quote)
                 }
             } else {
-                EmptyWidgetView(isDark: isDark)
+                EmptyWidgetView()
             }
         }
         .containerBackground(for: .widget) {
-            if isDark {
-                LinearGradient(
-                    colors: [WidgetColor.greenTop, WidgetColor.greenBottom],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            } else {
-                WidgetColor.card
-            }
+            LinearGradient(
+                colors: [WidgetColor.greenTop, WidgetColor.greenBottom],
+                startPoint: .top,
+                endPoint: .bottom
+            )
         }
     }
 }
@@ -59,16 +51,15 @@ struct QuoteWidgetEntryView: View {
 
 private struct SmallWidgetView: View {
     let quote: WidgetQuote
-    let isDark: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Quote text
             Text(quote.text)
-                .font(.custom("Outfit", size: 13).weight(.semibold))
+                .font(.custom("NanumMyeongjo", size: 13))
                 .tracking(-0.2)
                 .lineSpacing(13 * 0.5)
-                .foregroundColor(isDark ? .white : WidgetColor.textPrimary)
+                .foregroundColor(.white)
                 .lineLimit(3...5)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -78,14 +69,14 @@ private struct SmallWidgetView: View {
             HStack {
                 Text(quote.author.isEmpty ? quote.bookTitle : quote.author)
                     .font(.custom("Outfit", size: 10).weight(.medium))
-                    .foregroundColor(isDark ? .white.opacity(0.5) : WidgetColor.textTertiary)
+                    .foregroundColor(.white.opacity(0.5))
                     .lineLimit(1)
 
                 Spacer()
 
                 Text("Bookmate")
                     .font(.custom("Outfit", size: 10).weight(.semibold))
-                    .foregroundColor(isDark ? .white.opacity(0.4) : WidgetColor.accent.opacity(0.5))
+                    .foregroundColor(.white.opacity(0.4))
             }
         }
         .padding(16)
@@ -96,7 +87,6 @@ private struct SmallWidgetView: View {
 
 private struct MediumWidgetView: View {
     let quote: WidgetQuote
-    let isDark: Bool
 
     var body: some View {
         VStack(spacing: 0) {
@@ -105,10 +95,10 @@ private struct MediumWidgetView: View {
                 // Quote section
                 VStack(alignment: .leading, spacing: 6) {
                     Text(quote.text)
-                        .font(.custom("Outfit", size: 15).weight(.semibold))
+                        .font(.custom("NanumMyeongjo", size: 15))
                         .tracking(-0.2)
                         .lineSpacing(15 * 0.5)
-                        .foregroundColor(isDark ? .white : WidgetColor.textPrimary)
+                        .foregroundColor(.white)
                         .lineLimit(3...4)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -129,14 +119,14 @@ private struct MediumWidgetView: View {
             HStack {
                 Text(bookInfoText)
                     .font(.custom("Outfit", size: 10).weight(.medium))
-                    .foregroundColor(isDark ? .white.opacity(0.5) : WidgetColor.textTertiary)
+                    .foregroundColor(.white.opacity(0.5))
                     .lineLimit(1)
 
                 Spacer()
 
                 Text("Bookmate")
                     .font(.custom("Outfit", size: 10).weight(.semibold))
-                    .foregroundColor(isDark ? .white.opacity(0.4) : WidgetColor.accent.opacity(0.5))
+                    .foregroundColor(.white.opacity(0.4))
             }
         }
         .padding(.vertical, 16)
@@ -155,23 +145,22 @@ private struct MediumWidgetView: View {
 
 private struct LargeWidgetView: View {
     let quote: WidgetQuote
-    let isDark: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Quote icon
             Text("\u{201C}")
-                .font(.custom("Outfit", size: 40).weight(.bold))
-                .foregroundColor(isDark ? .white.opacity(0.3) : WidgetColor.accent)
+                .font(.custom("NanumMyeongjoExtraBold", size: 40))
+                .foregroundColor(.white.opacity(0.3))
 
             Spacer()
 
             // Quote text
             Text("\u{201C}\(quote.text)\u{201D}")
-                .font(.custom("Outfit", size: 20).weight(.semibold))
+                .font(.custom("NanumMyeongjo", size: 20))
                 .tracking(-0.3)
                 .lineSpacing(20 * 0.5)
-                .foregroundColor(isDark ? .white : WidgetColor.textPrimary)
+                .foregroundColor(.white)
                 .lineLimit(3...8)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -180,7 +169,7 @@ private struct LargeWidgetView: View {
             // Author
             Text(quote.author.isEmpty ? quote.bookTitle : quote.author)
                 .font(.custom("Outfit", size: 11).weight(.medium))
-                .foregroundColor(isDark ? .white.opacity(0.5) : WidgetColor.textTertiary)
+                .foregroundColor(.white.opacity(0.5))
 
             Spacer()
 
@@ -189,7 +178,7 @@ private struct LargeWidgetView: View {
                 Spacer()
                 Text("Bookmate")
                     .font(.custom("Outfit", size: 10).weight(.semibold))
-                    .foregroundColor(isDark ? .white.opacity(0.4) : WidgetColor.accent.opacity(0.5))
+                    .foregroundColor(.white.opacity(0.4))
             }
         }
         .padding(24)
@@ -199,17 +188,15 @@ private struct LargeWidgetView: View {
 // MARK: - Empty State
 
 private struct EmptyWidgetView: View {
-    let isDark: Bool
-
     var body: some View {
         VStack(spacing: 8) {
             Text("\u{201C}")
-                .font(.custom("Outfit", size: 28).weight(.bold))
-                .foregroundColor(isDark ? .white.opacity(0.3) : WidgetColor.accent)
+                .font(.custom("NanumMyeongjoExtraBold", size: 28))
+                .foregroundColor(.white.opacity(0.3))
 
             Text("즐겨찾기한 문장이 없어요")
                 .font(.system(size: 13, weight: .medium))
-                .foregroundColor(isDark ? .white.opacity(0.6) : WidgetColor.textTertiary)
+                .foregroundColor(.white.opacity(0.6))
                 .multilineTextAlignment(.center)
         }
         .padding(16)
