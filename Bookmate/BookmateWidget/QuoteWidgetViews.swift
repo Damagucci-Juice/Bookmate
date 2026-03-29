@@ -63,21 +63,16 @@ private struct SmallWidgetView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Quote icon
-            Text("\u{201C}")
-                .font(.custom("Outfit", size: 28).weight(.bold))
-                .foregroundColor(isDark ? .white.opacity(0.3) : WidgetColor.accent)
-
-            Spacer()
-
             // Quote text
             Text(quote.text)
-                .font(.system(size: 13, weight: .semibold))
+                .font(.custom("Outfit", size: 13).weight(.semibold))
                 .tracking(-0.2)
-                .lineSpacing(13 * 0.5) // lineHeight 1.5
+                .lineSpacing(13 * 0.5)
                 .foregroundColor(isDark ? .white : WidgetColor.textPrimary)
                 .lineLimit(3...5)
                 .frame(maxWidth: .infinity, alignment: .leading)
+
+            Spacer()
 
             // Bottom row
             HStack {
@@ -109,12 +104,8 @@ private struct MediumWidgetView: View {
             HStack(alignment: .top, spacing: 12) {
                 // Quote section
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("\u{201C}")
-                        .font(.custom("Outfit", size: 32).weight(.bold))
-                        .foregroundColor(isDark ? .white.opacity(0.3) : WidgetColor.accent)
-
                     Text(quote.text)
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.custom("Outfit", size: 15).weight(.semibold))
                         .tracking(-0.2)
                         .lineSpacing(15 * 0.5)
                         .foregroundColor(isDark ? .white : WidgetColor.textPrimary)
@@ -177,7 +168,7 @@ private struct LargeWidgetView: View {
 
             // Quote text
             Text("\u{201C}\(quote.text)\u{201D}")
-                .font(.system(size: 20, weight: .semibold))
+                .font(.custom("Outfit", size: 20).weight(.semibold))
                 .tracking(-0.3)
                 .lineSpacing(20 * 0.5)
                 .foregroundColor(isDark ? .white : WidgetColor.textPrimary)

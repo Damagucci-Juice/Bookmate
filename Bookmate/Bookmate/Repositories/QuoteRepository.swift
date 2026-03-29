@@ -158,6 +158,11 @@ final class QuoteRepository {
     // MARK: - Delete
 
     func delete(_ quote: Quote) {
+        let wasFavorite = quote.isFavorite
         try? realm.write { realm.delete(quote) }
+        if wasFavorite {
+            WidgetDataStore.syncFavorites(from: realm)
+            WidgetCenter.shared.reloadTimelines(ofKind: "com.gucci.Bookmate.QuoteWidget")
+        }
     }
 }
