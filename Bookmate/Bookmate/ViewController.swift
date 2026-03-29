@@ -72,6 +72,63 @@ class ViewController: UIViewController {
 
     private let quoteWheelView = QuoteWheelView()
 
+    // MARK: - Empty State
+
+    private let emptyStateView: UIView = {
+        let v = UIView()
+        v.isHidden = true
+        return v
+    }()
+
+    private let emptyImageView: UIImageView = {
+        let iv = UIImageView(image: UIImage(named: "home_empty_state"))
+        iv.contentMode = .scaleAspectFit
+        iv.layer.cornerRadius = 20
+        iv.clipsToBounds = true
+        return iv
+    }()
+
+    private let emptyTitleLabel: UILabel = {
+        let l = UILabel()
+        l.text = "아직 수집한 문구가 없어요."
+        l.font = .systemFont(ofSize: 17, weight: .semibold)
+        l.textColor = AppColor.textPrimary
+        l.textAlignment = .center
+        return l
+    }()
+
+    private let emptySubtitleLabel: UILabel = {
+        let l = UILabel()
+        l.text = "첫 번째 문구를 채워볼까요?"
+        l.font = .systemFont(ofSize: 15, weight: .regular)
+        l.textColor = AppColor.textSecondary
+        l.textAlignment = .center
+        return l
+    }()
+
+    private let emptyCtaButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.backgroundColor = AppColor.accent
+        btn.layer.cornerRadius = 22
+
+        var config = UIButton.Configuration.plain()
+        config.title = "문구 수집 시작하기"
+        config.baseForegroundColor = .white
+        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { incoming in
+            var out = incoming
+            out.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+            return out
+        }
+        let iconConfig = UIImage.SymbolConfiguration(pointSize: 14, weight: .semibold)
+        config.image = UIImage(systemName: "plus", withConfiguration: iconConfig)
+        config.imagePadding = 6
+        config.imagePlacement = .leading
+        config.contentInsets = NSDirectionalEdgeInsets(top: 12, leading: 24, bottom: 12, trailing: 24)
+        btn.configuration = config
+        btn.tintColor = .white
+        return btn
+    }()
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -81,6 +138,7 @@ class ViewController: UIViewController {
         setupConstraints()
         loadQuotes()
         seeAllButton.addTarget(self, action: #selector(seeAllQuotesTapped), for: .touchUpInside)
+        emptyCtaButton.addTarget(self, action: #selector(emptyCtaTapped), for: .touchUpInside)
         quoteWheelView.onQuoteTapped = { [weak self] index in
             self?.openCardCustomization(at: index)
         }
@@ -104,6 +162,44 @@ class ViewController: UIViewController {
         let nav = UINavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .fullScreen
         present(nav, animated: true)
+    }
+
+    @objc private func emptyCtaTapped() {
+        let bookSelection = BookSelectionViewController()
+        bookSelection.onBookSelected = { [weak self] book in
+            self?.presentAddQuoteSheet(for: book)
+        }
+        let nav = UINavigationController(rootViewController: bookSelection)
+        present(nav, animated: true)
+    }
+
+    private func presentAddQuoteSheet(for book: Book) {
+        let sheet = AddQuoteSheetViewController()
+
+        sheet.onCameraScanTapped = { [weak self] in
+            guard let self else { return }
+            let vc = CameraCaptureViewController(book: book)
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            nav.setNavigationBarHidden(true, animated: false)
+            self.present(nav, animated: true)
+        }
+
+        sheet.onManualEntryTapped = { [weak self] in
+            guard let self else { return }
+            let vc = ManualQuoteEntryViewController(book: book)
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .pageSheet
+            self.present(nav, animated: true)
+        }
+
+        if let presentationController = sheet.sheetPresentationController {
+            presentationController.detents = [.custom { _ in 250 }]
+            presentationController.prefersGrabberVisible = true
+            presentationController.preferredCornerRadius = 24
+        }
+
+        present(sheet, animated: true)
     }
 
     @objc private func seeAllQuotesTapped() {
@@ -135,6 +231,24 @@ class ViewController: UIViewController {
         curationHeaderStack.addArrangedSubview(seeAllButton)
         view.addSubview(curationHeaderStack)
         view.addSubview(quoteWheelView)
+
+        // Empty state
+        let textStack = UIStackView(arrangedSubviews: [emptyTitleLabel, emptySubtitleLabel])
+        textStack.axis = .vertical
+        textStack.spacing = 8
+        textStack.alignment = .center
+
+        let emptyStack = UIStackView(arrangedSubviews: [emptyImageView, textStack, emptyCtaButton])
+        emptyStack.axis = .vertical
+        emptyStack.spacing = 24
+        emptyStack.alignment = .center
+
+        emptyStateView.addSubview(emptyStack)
+        emptyStack.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(20)
+        }
+        view.addSubview(emptyStateView)
     }
 
     private func setupConstraints() {
@@ -165,6 +279,16 @@ class ViewController: UIViewController {
             $0.leading.trailing.equalToSuperview().inset(sideInset)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(32)
         }
+
+        // MARK: Empty State — same area as wheel
+        emptyStateView.snp.makeConstraints {
+            $0.top.equalTo(greetingSection.snp.bottom)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(view.safeAreaLayoutGuide).inset(80)
+        }
+        emptyImageView.snp.makeConstraints {
+            $0.size.equalTo(240)
+        }
     }
 
     // MARK: - Data
@@ -188,13 +312,16 @@ class ViewController: UIViewController {
                         textColor: textColor
                     )
                 }
-                let previousIndex = self.quoteWheelView.currentIndex
-                if items.isEmpty {
-                    self.quoteWheelView.configure(with: Self.mockQuotes())
-                } else {
+                let isEmpty = items.isEmpty
+                self.emptyStateView.isHidden = !isEmpty
+                self.quoteWheelView.isHidden = isEmpty
+                self.curationHeaderStack.isHidden = isEmpty
+
+                if !isEmpty {
+                    let previousIndex = self.quoteWheelView.currentIndex
                     self.quoteWheelView.configure(with: items)
+                    self.quoteWheelView.currentIndex = previousIndex
                 }
-                self.quoteWheelView.currentIndex = previousIndex
             })
             .disposed(by: disposeBag)
     }

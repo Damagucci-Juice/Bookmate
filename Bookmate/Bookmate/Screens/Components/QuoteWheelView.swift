@@ -137,7 +137,7 @@ final class QuoteWheelView: UIView {
         let centerSlot = Int(scrollOffset.rounded())
         // Dynamically compute how many stacked cards fit above the front card
         let availableAbove = containerH - maxCardHeight
-        let visibleSlots = max(1, min(count - 1, Int(availableAbove / rowHeight)))
+        let visibleSlots = max(0, min(count - 1, Int(availableAbove / rowHeight)))
         let slotRange = (centerSlot - visibleSlots)...(centerSlot + 1)
 
         // Recycle cards outside visible range
@@ -213,6 +213,7 @@ final class QuoteWheelView: UIView {
             panStartOffset = scrollOffset
 
         case .changed:
+            guard items.count > 1 else { return }
             let translation = gesture.translation(in: container)
             let rawDelta = -translation.y / rowHeight
             // Clamp dragging to at most 1 card in either direction
