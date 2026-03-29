@@ -409,12 +409,12 @@ final class CardCustomizationViewController: UIViewController {
     }
 
     private func saveAndDismiss() {
-        saveQuote()
+        if !isExistingQuote { saveQuote() }
         navigationController?.presentingViewController?.dismiss(animated: true)
     }
 
     private func shareCard() {
-        saveQuote()
+        if !isExistingQuote { saveQuote() }
         let image = cardPreviewView.renderToImage()
         let activityVC = UIActivityViewController(activityItems: [image], applicationActivities: nil)
 
