@@ -21,6 +21,7 @@
 		BE77E0FD2F79056A0058F143 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = BE77E0FC2F79056A0058F143 /* FirebaseAnalytics */; };
 		BE77E0FF2F79056A0058F143 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = BE77E0FE2F79056A0058F143 /* FirebaseCrashlytics */; };
 		BE77E1012F79056A0058F143 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = BE77E1002F79056A0058F143 /* FirebaseMessaging */; };
+		BE77E1032F7907470058F143 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BE77E1022F7907470058F143 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +76,7 @@
 		BE77E0CE2F78E9420058F143 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		BE77E0D02F78E9430058F143 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		BE77E0ED2F78EBCB0058F143 /* BookmateWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BookmateWidgetExtension.entitlements; sourceTree = "<group>"; };
+		BE77E1022F7907470058F143 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -146,6 +148,7 @@
 		BE01DE5C2F6D10E30027755F = {
 			isa = PBXGroup;
 			children = (
+				BE77E1022F7907470058F143 /* GoogleService-Info.plist */,
 				BE77E0ED2F78EBCB0058F143 /* BookmateWidgetExtension.entitlements */,
 				BE01DF5A2F6D40000027755F /* Secrets.xcconfig */,
 				BE01DE672F6D10E30027755F /* Bookmate */,
@@ -185,6 +188,7 @@
 				BE01DE632F6D10E30027755F /* Resources */,
 				BE01E0492F6F9D030027755F /* Embed Frameworks */,
 				BE77E0E52F78E9440058F143 /* Embed Foundation Extensions */,
+				BE77E1042F79096A0058F143 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -285,6 +289,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE77E1032F7907470058F143 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,6 +301,29 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		BE77E1042F79096A0058F143 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${EXECUTABLE_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+				"$(SRCROOT)/Bookmate/GoogleService-Info.plist",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# SPM 경로를 사용하는 표준 스크립트 (경로에 맞게 -gsp 옵션 추가)\n\"${BUILD_DIR%Build/*}SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\" -gsp \"${SRCROOT}/GoogleService-Info.plist\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BE01DE612F6D10E30027755F /* Sources */ = {
@@ -332,7 +360,9 @@
 				CODE_SIGN_ENTITLEMENTS = Bookmate/Bookmate.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = D7F6ZDDCV9;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Bookmate/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -371,6 +401,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = D7F6ZDDCV9;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Bookmate/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
