@@ -28,3 +28,7 @@ Podfile.lock
 
 # Realm
 *.realm.lock
+
+# Firebase
+GoogleService-Info.plist
+firebase_app_id_file.json

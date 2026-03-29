@@ -7,11 +7,16 @@
 
 import UIKit
 import Kingfisher
+import FirebaseCore
+import FirebaseCrashlytics
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Firebase 초기화
+        FirebaseApp.configure()
+
         // 기존 Realm DB를 App Group 공유 컨테이너로 마이그레이션
         SharedRealmConfig.migrateToSharedContainerIfNeeded()
 

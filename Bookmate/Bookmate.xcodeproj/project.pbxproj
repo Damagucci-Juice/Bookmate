@@ -18,6 +18,9 @@
 		BE77E0CF2F78E9430058F143 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE77E0CE2F78E9420058F143 /* WidgetKit.framework */; };
 		BE77E0D12F78E9430058F143 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE77E0D02F78E9430058F143 /* SwiftUI.framework */; };
 		BE77E0E02F78E9440058F143 /* BookmateWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BE77E0CD2F78E9420058F143 /* BookmateWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		BE77E0FD2F79056A0058F143 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = BE77E0FC2F79056A0058F143 /* FirebaseAnalytics */; };
+		BE77E0FF2F79056A0058F143 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = BE77E0FE2F79056A0058F143 /* FirebaseCrashlytics */; };
+		BE77E1012F79056A0058F143 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = BE77E1002F79056A0058F143 /* FirebaseMessaging */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,9 +120,12 @@
 			files = (
 				BE01DF472F6D31BE0027755F /* RxCocoa in Frameworks */,
 				BE01DF442F6D31A10027755F /* Kingfisher in Frameworks */,
+				BE77E1012F79056A0058F143 /* FirebaseMessaging in Frameworks */,
+				BE77E0FD2F79056A0058F143 /* FirebaseAnalytics in Frameworks */,
 				BE01DF512F6D32000027755F /* RealmSwift in Frameworks */,
 				BE01DF4B2F6D31BE0027755F /* RxSwift in Frameworks */,
 				BE01DF4E2F6D31D10027755F /* Alamofire in Frameworks */,
+				BE77E0FF2F79056A0058F143 /* FirebaseCrashlytics in Frameworks */,
 				BE01DF492F6D31BE0027755F /* RxRelay in Frameworks */,
 				BE01DE852F6D25650027755F /* SnapKit in Frameworks */,
 			);
@@ -197,6 +203,9 @@
 				BE01DF4A2F6D31BE0027755F /* RxSwift */,
 				BE01DF4D2F6D31D10027755F /* Alamofire */,
 				BE01DF502F6D32000027755F /* RealmSwift */,
+				BE77E0FC2F79056A0058F143 /* FirebaseAnalytics */,
+				BE77E0FE2F79056A0058F143 /* FirebaseCrashlytics */,
+				BE77E1002F79056A0058F143 /* FirebaseMessaging */,
 			);
 			productName = Bookmate;
 			productReference = BE01DE652F6D10E30027755F /* Bookmate.app */;
@@ -258,6 +267,7 @@
 				BE01DF452F6D31BE0027755F /* XCRemoteSwiftPackageReference "RxSwift" */,
 				BE01DF4C2F6D31D10027755F /* XCRemoteSwiftPackageReference "Alamofire" */,
 				BE01DF4F2F6D32000027755F /* XCRemoteSwiftPackageReference "realm-swift" */,
+				BE77E0FB2F79056A0058F143 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BE01DE662F6D10E30027755F /* Products */;
@@ -645,6 +655,14 @@
 				minimumVersion = 20.0.0;
 			};
 		};
+		BE77E0FB2F79056A0058F143 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.11.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -682,6 +700,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = BE01DF4F2F6D32000027755F /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
+		};
+		BE77E0FC2F79056A0058F143 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE77E0FB2F79056A0058F143 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		BE77E0FE2F79056A0058F143 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE77E0FB2F79056A0058F143 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		BE77E1002F79056A0058F143 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BE77E0FB2F79056A0058F143 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
