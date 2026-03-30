@@ -38,11 +38,11 @@ class ViewController: UIViewController {
         return label
     }()
 
-    private let notificationButton: UIButton = {
+    private let headerSeeAllButton: UIButton = {
         let btn = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: 22, weight: .medium)
-        btn.setImage(UIImage(systemName: AppIcon.bell.sfSymbolName, withConfiguration: config), for: .normal)
-        btn.tintColor = AppColor.textSecondary
+        btn.setTitle("전체보기", for: .normal)
+        btn.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .medium)
+        btn.setTitleColor(AppColor.accent, for: .normal)
         return btn
     }()
 
@@ -61,13 +61,6 @@ class ViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         label.textColor = AppColor.textPrimary
         return label
-    }()
-    private let seeAllButton: UIButton = {
-        let btn = UIButton(type: .system)
-        btn.setTitle("전체보기", for: .normal)
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .medium)
-        btn.setTitleColor(AppColor.accent, for: .normal)
-        return btn
     }()
 
     private let quoteWheelView = QuoteWheelView()
@@ -137,7 +130,7 @@ class ViewController: UIViewController {
         setupHierarchy()
         setupConstraints()
         loadQuotes()
-        seeAllButton.addTarget(self, action: #selector(seeAllQuotesTapped), for: .touchUpInside)
+        headerSeeAllButton.addTarget(self, action: #selector(seeAllQuotesTapped), for: .touchUpInside)
         emptyCtaButton.addTarget(self, action: #selector(emptyCtaTapped), for: .touchUpInside)
         quoteWheelView.onQuoteTapped = { [weak self] index in
             self?.openCardCustomization(at: index)
@@ -223,12 +216,11 @@ class ViewController: UIViewController {
     private func setupHierarchy() {
         // Greeting
         greetingSection.addSubview(logoLabel)
-        greetingSection.addSubview(notificationButton)
+        greetingSection.addSubview(headerSeeAllButton)
         view.addSubview(greetingSection)
 
         // Curation (수집한 문장)
         curationHeaderStack.addArrangedSubview(curationTitleLabel)
-        curationHeaderStack.addArrangedSubview(seeAllButton)
         view.addSubview(curationHeaderStack)
         view.addSubview(quoteWheelView)
 
@@ -262,7 +254,7 @@ class ViewController: UIViewController {
         logoLabel.snp.makeConstraints {
             $0.top.leading.bottom.equalToSuperview()
         }
-        notificationButton.snp.makeConstraints {
+        headerSeeAllButton.snp.makeConstraints {
             $0.centerY.equalTo(logoLabel)
             $0.trailing.equalToSuperview()
         }
@@ -316,6 +308,7 @@ class ViewController: UIViewController {
                 self.emptyStateView.isHidden = !isEmpty
                 self.quoteWheelView.isHidden = isEmpty
                 self.curationHeaderStack.isHidden = isEmpty
+                self.headerSeeAllButton.isHidden = isEmpty
 
                 if !isEmpty {
                     let previousIndex = self.quoteWheelView.currentIndex
