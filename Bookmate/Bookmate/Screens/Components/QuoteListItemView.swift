@@ -22,6 +22,19 @@ final class QuoteListItemView: UIView {
         return l
     }()
 
+    private let dateLabel: UILabel = {
+        let l = UILabel()
+        l.font = AppFont.meta.font
+        l.textColor = AppColor.textTertiary
+        return l
+    }()
+
+    private static let dateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "yyyy.MM.dd"
+        return df
+    }()
+
     private let tagStack: UIStackView = {
         let sv = UIStackView()
         sv.axis = .horizontal
@@ -46,7 +59,7 @@ final class QuoteListItemView: UIView {
     required init?(coder: NSCoder) { fatalError() }
 
     private func setupUI() {
-        let textStack = UIStackView(arrangedSubviews: [quoteLabel, bookLabel, tagStack])
+        let textStack = UIStackView(arrangedSubviews: [quoteLabel, bookLabel, dateLabel, tagStack])
         textStack.axis = .vertical
         textStack.spacing = 10
         textStack.alignment = .leading
@@ -66,7 +79,7 @@ final class QuoteListItemView: UIView {
         }
     }
 
-    func configure(quote: String, bookInfo: String, tags: [(name: String, textColor: UIColor, bgColor: UIColor)], highlightText: String? = nil) {
+    func configure(quote: String, bookInfo: String, createdAt: Date?, tags: [(name: String, textColor: UIColor, bgColor: UIColor)], highlightText: String? = nil) {
         let style = NSMutableParagraphStyle()
         style.lineHeightMultiple = AppFont.Spacing.bodyLineHeight
 
@@ -92,6 +105,13 @@ final class QuoteListItemView: UIView {
         quoteLabel.attributedText = attributed
         bookLabel.text = bookInfo
 
+        if let date = createdAt {
+            dateLabel.text = Self.dateFormatter.string(from: date)
+            dateLabel.isHidden = false
+        } else {
+            dateLabel.isHidden = true
+        }
+
         tagStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         for tag in tags.prefix(3) {
@@ -103,6 +123,12 @@ final class QuoteListItemView: UIView {
         }
 
         tagStack.isHidden = tags.isEmpty
+
+        moreButton.snp.remakeConstraints {
+            $0.centerY.equalTo(tags.isEmpty ? bookLabel : tagStack)
+            $0.trailing.equalToSuperview()
+            $0.size.equalTo(CGSize(width: 32, height: 32))
+        }
     }
 
 }

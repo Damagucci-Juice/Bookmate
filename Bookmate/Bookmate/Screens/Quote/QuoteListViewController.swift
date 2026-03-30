@@ -376,6 +376,7 @@ extension QuoteListViewController: UITableViewDataSource, UITableViewDelegate {
         cell.itemView.configure(
             quote: quote.text,
             bookInfo: bookInfo,
+            createdAt: quote.createdAt,
             tags: tags,
             highlightText: searchQuery.isEmpty ? nil : searchQuery
         )
@@ -410,7 +411,9 @@ extension QuoteListViewController: UITableViewDataSource, UITableViewDelegate {
 
     private func makeMenu(for index: Int) -> UIMenu {
         let addAction = UIAction(title: "추가", image: UIImage(systemName: "plus")) { [weak self] _ in
-            self?.presentBookSelectionForAdd()
+            guard let self, index < self.quotes.count,
+                  let book = self.quotes[index].book else { return }
+            self.presentAddQuoteSheet(for: book)
         }
         let editAction = UIAction(title: "수정", image: UIImage(systemName: "pencil")) { [weak self] _ in
             guard let self, index < self.quotes.count else { return }
