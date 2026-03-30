@@ -71,8 +71,6 @@ final class QuoteListViewController: UIViewController {
         return sc
     }()
 
-    private let fab = FABButton()
-
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -82,7 +80,6 @@ final class QuoteListViewController: UIViewController {
         setupLayout()
         setupTableView()
         bindSearch()
-        bindActions()
         loadQuotes()
     }
 
@@ -96,8 +93,6 @@ final class QuoteListViewController: UIViewController {
     }
 
     // MARK: - Layout
-
-    private var isAllBooksMode: Bool { book == nil }
 
     private func setupLayout() {
         view.addSubview(countBadge)
@@ -132,14 +127,6 @@ final class QuoteListViewController: UIViewController {
 
         emptyLabel.snp.makeConstraints {
             $0.center.equalTo(tableView)
-        }
-
-        if isAllBooksMode {
-            view.addSubview(fab)
-            fab.snp.makeConstraints {
-                $0.trailing.equalToSuperview().offset(-20)
-                $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-20)
-            }
         }
     }
 
@@ -286,27 +273,6 @@ final class QuoteListViewController: UIViewController {
                 self?.loadQuotes()
             })
             .disposed(by: disposeBag)
-    }
-
-    // MARK: - Actions
-
-    private func bindActions() {
-        guard isAllBooksMode else { return }
-
-        fab.rx.tap
-            .subscribe(onNext: { [weak self] in
-                self?.presentBookSelectionForAdd()
-            })
-            .disposed(by: disposeBag)
-    }
-
-    private func presentBookSelectionForAdd() {
-        let bookSelection = BookSelectionViewController()
-        bookSelection.onBookSelected = { [weak self] book in
-            self?.presentAddQuoteSheet(for: book)
-        }
-        let nav = UINavigationController(rootViewController: bookSelection)
-        present(nav, animated: true)
     }
 
     private func presentAddQuoteSheet(for book: Book) {

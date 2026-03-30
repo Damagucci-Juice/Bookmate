@@ -46,17 +46,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             selectedImage: AppIcon.circlePlus.image(pointSize: 22, weight: .semibold)
         )
 
-        // Tab 3: 설정
-        let settingsVC = SettingsViewController()
-        let settingsNav = UINavigationController(rootViewController: settingsVC)
-        settingsNav.tabBarItem = UITabBarItem(
-            title: "설정",
-            image: AppIcon.user.image(pointSize: 22, weight: .regular),
-            selectedImage: AppIcon.user.image(pointSize: 22, weight: .semibold)
-        )
-
         let tabBar = UITabBarController()
-        tabBar.viewControllers = [homeNav, bookNav, settingsNav]
+        tabBar.viewControllers = [homeNav, bookNav]
         tabBar.tabBar.tintColor = AppColor.accent
         tabBar.tabBar.unselectedItemTintColor = AppColor.tabInactive
         tabBar.tabBar.backgroundColor = AppColor.card
