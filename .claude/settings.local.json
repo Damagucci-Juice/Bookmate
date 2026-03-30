@@ -31,7 +31,10 @@
       "Bash(grep -r \"entitlements\\\\|appgroup\\\\|sharedContainer\" /Users/will/Desktop/Bookmate/Bookmate --include=*.swift --include=*.plist --include=*.pbxproj)",
       "Bash(grep -r \"isFavorite\\\\|isLiked\\\\|favorite\\\\|liked\" /Users/will/Desktop/Bookmate --include=*.swift --include=*.md)",
       "Bash(find /Users/will/Desktop/Bookmate -type f -name *Tests* -o -path *Tests/* -o -path *Test/*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(grep -r \"import\" /Users/will/Desktop/Bookmate/Bookmate/Bookmate/*.swift)",
+      "Bash(ls -la /Users/will/Desktop/Bookmate/Bookmate/*.lock)",
+      "Bash(grep -r \"tracking\\\\|analytics\\\\|telemetry\\\\|crash\\\\|log\" /Users/will/Desktop/Bookmate/Bookmate/Bookmate/*.swift)"
     ]
   }
 }
