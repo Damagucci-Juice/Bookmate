@@ -136,13 +136,6 @@ final class BookSelectionViewController: UIViewController {
         return l
     }()
 
-    private let recommendMoreButton: UIButton = {
-        let btn = UIButton(type: .system)
-        btn.setTitle("더보기", for: .normal)
-        btn.titleLabel?.font = .systemFont(ofSize: 13, weight: .medium)
-        btn.setTitleColor(AppColor.accent, for: .normal)
-        return btn
-    }()
 
     private let recommendGrid: UIStackView = {
         let sv = UIStackView()
@@ -203,7 +196,7 @@ final class BookSelectionViewController: UIViewController {
         searchContainer.addSubview(searchClearButton)
 
         // Recommend section 내부 레이아웃
-        let recommendHeader = UIStackView(arrangedSubviews: [recommendTitleLabel, recommendMoreButton])
+        let recommendHeader = UIStackView(arrangedSubviews: [recommendTitleLabel])
         recommendHeader.axis = .horizontal
         recommendHeader.alignment = .center
 

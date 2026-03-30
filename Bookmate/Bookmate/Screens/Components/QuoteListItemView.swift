@@ -30,11 +30,11 @@ final class QuoteListItemView: UIView {
         return sv
     }()
 
-    let favoriteButton: UIButton = {
+    let moreButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.tintColor = AppColor.textTertiary
-        let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
-        btn.setImage(UIImage(systemName: "heart", withConfiguration: config), for: .normal)
+        let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .medium)
+        btn.setImage(UIImage(systemName: "ellipsis", withConfiguration: config), for: .normal)
         return btn
     }()
 
@@ -52,17 +52,17 @@ final class QuoteListItemView: UIView {
         textStack.alignment = .leading
 
         addSubview(textStack)
-        addSubview(favoriteButton)
+        addSubview(moreButton)
 
-        favoriteButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
+        moreButton.snp.makeConstraints {
+            $0.centerY.equalTo(bookLabel)
             $0.trailing.equalToSuperview()
             $0.size.equalTo(CGSize(width: 32, height: 32))
         }
 
         textStack.snp.makeConstraints {
             $0.top.leading.bottom.equalToSuperview().inset(UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 0))
-            $0.trailing.equalTo(favoriteButton.snp.leading).offset(-8)
+            $0.trailing.equalTo(moreButton.snp.leading).offset(-8)
         }
     }
 
@@ -105,12 +105,6 @@ final class QuoteListItemView: UIView {
         tagStack.isHidden = tags.isEmpty
     }
 
-    func updateFavorite(_ isFavorite: Bool) {
-        let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
-        let name = isFavorite ? "heart.fill" : "heart"
-        favoriteButton.setImage(UIImage(systemName: name, withConfiguration: config), for: .normal)
-        favoriteButton.tintColor = isFavorite ? AppColor.coral : AppColor.textTertiary
-    }
 }
 
 // MARK: - Capsule Tag Label

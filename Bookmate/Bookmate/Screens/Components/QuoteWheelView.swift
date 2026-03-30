@@ -265,7 +265,7 @@ final class WheelCardView: UIView {
 
     private let quoteLabel: UILabel = {
         let label = UILabel()
-        label.numberOfLines = 5
+        label.numberOfLines = 4
         label.lineBreakMode = .byTruncatingTail
         return label
     }()
@@ -291,14 +291,6 @@ final class WheelCardView: UIView {
         return sv
     }()
 
-    private let stack: UIStackView = {
-        let sv = UIStackView()
-        sv.axis = .vertical
-        sv.spacing = 8
-        sv.alignment = .fill
-        return sv
-    }()
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         clipsToBounds = true
@@ -307,32 +299,37 @@ final class WheelCardView: UIView {
         authorPageLabel.setContentHuggingPriority(.required, for: .horizontal)
         infoStack.addArrangedSubview(bookTitleLabel)
         infoStack.addArrangedSubview(authorPageLabel)
-        stack.addArrangedSubview(quoteLabel)
-        stack.addArrangedSubview(infoStack)
-        addSubview(stack)
-        stack.snp.makeConstraints {
+        addSubview(quoteLabel)
+        addSubview(infoStack)
+        quoteLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(20)
             $0.leading.equalToSuperview().inset(24)
             $0.trailing.equalToSuperview().inset(24)
-            $0.bottom.lessThanOrEqualToSuperview().inset(20)
+            $0.bottom.lessThanOrEqualTo(infoStack.snp.top).offset(-8)
+        }
+        infoStack.snp.makeConstraints {
+            $0.leading.equalToSuperview().inset(24)
+            $0.trailing.equalToSuperview().inset(24)
+            $0.bottom.equalToSuperview().inset(20)
         }
     }
 
     required init?(coder: NSCoder) { fatalError() }
 
     func setExpanded(_ expanded: Bool) {
-        quoteLabel.numberOfLines = 0
+        quoteLabel.numberOfLines = 4
     }
 
     func preferredHeight(forWidth width: CGFloat) -> CGFloat {
         let insetWidth = width - 24 * 2  // leading + trailing insets
         let fittingSize = CGSize(width: insetWidth, height: .greatestFiniteMagnitude)
-        let size = stack.systemLayoutSizeFitting(
+        let quoteSize = quoteLabel.sizeThatFits(fittingSize)
+        let infoSize = infoStack.systemLayoutSizeFitting(
             fittingSize,
             withHorizontalFittingPriority: .required,
             verticalFittingPriority: .fittingSizeLevel
         )
-        return size.height + 20 + 20  // top + bottom insets
+        return 20 + quoteSize.height + 8 + infoSize.height + 20  // top + quote + gap + info + bottom
     }
 
     func configureContent(item: WheelQuoteItem) {

@@ -379,20 +379,12 @@ extension QuoteListViewController: UITableViewDataSource, UITableViewDelegate {
             tags: tags,
             highlightText: searchQuery.isEmpty ? nil : searchQuery
         )
-        cell.itemView.updateFavorite(quote.isFavorite)
 
-        cell.itemView.favoriteButton.tag = indexPath.row
-        cell.itemView.favoriteButton.removeTarget(self, action: #selector(favoriteTapped(_:)), for: .touchUpInside)
-        cell.itemView.favoriteButton.addTarget(self, action: #selector(favoriteTapped(_:)), for: .touchUpInside)
+        cell.itemView.moreButton.menu = makeMenu(for: indexPath.row)
+        cell.itemView.moreButton.showsMenuAsPrimaryAction = true
 
         cell.showDivider = indexPath.row < quotes.count - 1
         return cell
-    }
-
-    @objc private func favoriteTapped(_ sender: UIButton) {
-        let index = sender.tag
-        guard index < quotes.count else { return }
-        quoteRepository.toggleFavorite(quotes[index])
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -415,40 +407,36 @@ extension QuoteListViewController: UITableViewDataSource, UITableViewDelegate {
         present(nav, animated: true)
     }
 
-    func tableView(_ tableView: UITableView,
-                    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
-        -> UISwipeActionsConfiguration? {
-        let quote = self.quotes[indexPath.row]
 
-        let editAction = UIContextualAction(style: .normal, title: "수정") { [weak self] _, _, completion in
-            guard let self, let book = quote.book else { return completion(false) }
+    private func makeMenu(for index: Int) -> UIMenu {
+        let addAction = UIAction(title: "추가", image: UIImage(systemName: "plus")) { [weak self] _ in
+            self?.presentBookSelectionForAdd()
+        }
+        let editAction = UIAction(title: "수정", image: UIImage(systemName: "pencil")) { [weak self] _ in
+            guard let self, index < self.quotes.count else { return }
+            let quote = self.quotes[index]
+            guard let book = quote.book else { return }
             let vc = ManualQuoteEntryViewController(book: book, quote: quote)
             let nav = UINavigationController(rootViewController: vc)
             nav.modalPresentationStyle = .pageSheet
             self.present(nav, animated: true)
-            completion(true)
         }
-        editAction.backgroundColor = AppColor.accent
-
-        let deleteAction = UIContextualAction(style: .destructive, title: "삭제") { [weak self] _, _, completion in
-            guard let self else { return completion(false) }
-            self.confirmDelete(quote, completion: completion)
+        let deleteAction = UIAction(title: "삭제", image: UIImage(systemName: "trash"), attributes: .destructive) { [weak self] _ in
+            guard let self, index < self.quotes.count else { return }
+            self.confirmDelete(self.quotes[index])
         }
-        deleteAction.backgroundColor = .systemRed
-
-        return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
+        return UIMenu(children: [addAction, editAction, deleteAction])
     }
 
-    private func confirmDelete(_ quote: Quote, completion: @escaping (Bool) -> Void) {
+    private func confirmDelete(_ quote: Quote) {
         let alert = UIAlertController(
             title: "문장 삭제",
             message: "이 문장을 삭제하시겠습니까?",
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "취소", style: .cancel) { _ in completion(false) })
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
         alert.addAction(UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
             self?.quoteRepository.delete(quote)
-            completion(true)
         })
         present(alert, animated: true)
     }
