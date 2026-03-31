@@ -34,7 +34,8 @@
       "Bash(find:*)",
       "Bash(grep -r \"import\" /Users/will/Desktop/Bookmate/Bookmate/Bookmate/*.swift)",
       "Bash(ls -la /Users/will/Desktop/Bookmate/Bookmate/*.lock)",
-      "Bash(grep -r \"tracking\\\\|analytics\\\\|telemetry\\\\|crash\\\\|log\" /Users/will/Desktop/Bookmate/Bookmate/Bookmate/*.swift)"
+      "Bash(grep -r \"tracking\\\\|analytics\\\\|telemetry\\\\|crash\\\\|log\" /Users/will/Desktop/Bookmate/Bookmate/Bookmate/*.swift)",
+      "Bash(ls -la /Users/will/Desktop/Bookmate/LICENSE*)"
     ]
   }
 }
