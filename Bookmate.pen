@@ -13753,16 +13753,6 @@
                   "children": [
                     {
                       "type": "text",
-                      "id": "5RPGD",
-                      "name": "quoteIcon",
-                      "fill": "$accent",
-                      "content": "“",
-                      "fontFamily": "Outfit",
-                      "fontSize": 28,
-                      "fontWeight": "700"
-                    },
-                    {
-                      "type": "text",
                       "id": "2brCw",
                       "name": "quoteText",
                       "fill": "$text-primary",
@@ -13840,16 +13830,6 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "YVOjk",
-                              "name": "medIcon",
-                              "fill": "$accent",
-                              "content": "“",
-                              "fontFamily": "Outfit",
-                              "fontSize": 28,
-                              "fontWeight": "700"
-                            },
-                            {
-                              "type": "text",
                               "id": "cpaMO",
                               "name": "medQuote",
                               "fill": "$text-primary",
@@ -13858,7 +13838,7 @@
                               "content": "우리가 어떤 사람을 미워한다면, 우리는 그의 모습 속에 들어앉은 우리 자신의 모습을 미워하는 것이다.",
                               "lineHeight": 1.5,
                               "fontFamily": "Outfit",
-                              "fontSize": 13,
+                              "fontSize": 15,
                               "fontWeight": "600",
                               "letterSpacing": -0.2
                             }
@@ -13922,188 +13902,61 @@
                   "fill": "$card",
                   "cornerRadius": 22,
                   "layout": "vertical",
-                  "padding": 20,
+                  "padding": 24,
                   "justifyContent": "space_between",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "yyyJI",
-                      "name": "lgHeader",
+                      "type": "text",
+                      "id": "FTMEB",
+                      "name": "lgIcon",
+                      "fill": "#3D8A5A",
+                      "content": "“",
+                      "fontFamily": "Outfit",
+                      "fontSize": 40,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "tjUMG",
+                      "name": "lgQuote",
+                      "fill": "#1A1918",
+                      "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "justifyContent": "space_between",
+                      "content": "“삶이 있는 한 희망은 있다.”",
+                      "lineHeight": 1.5,
+                      "fontFamily": "Outfit",
+                      "fontSize": 20,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.3
+                    },
+                    {
+                      "type": "text",
+                      "id": "Y7UDi",
+                      "name": "lgInfo",
+                      "fill": "#9C9B99",
+                      "content": "키케로",
+                      "fontFamily": "Outfit",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "1w9hY",
+                      "name": "lgBottom",
+                      "width": "fill_container",
+                      "justifyContent": "end",
                       "alignItems": "center",
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "u8qvP",
-                          "name": "lgTitle",
-                          "gap": 6,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon_font",
-                              "id": "f59cz",
-                              "name": "lgIcon",
-                              "width": 16,
-                              "height": 16,
-                              "iconFontName": "book-open",
-                              "iconFontFamily": "lucide",
-                              "fill": "$accent"
-                            },
-                            {
-                              "type": "text",
-                              "id": "9TAPF",
-                              "name": "lgLabel",
-                              "fill": "$text-primary",
-                              "content": "오늘의 문장",
-                              "fontFamily": "Outfit",
-                              "fontSize": 14,
-                              "fontWeight": "700",
-                              "letterSpacing": -0.2
-                            }
-                          ]
-                        },
-                        {
                           "type": "text",
-                          "id": "FbYW6",
+                          "id": "Kj6lu",
                           "name": "lgLogo",
                           "opacity": 0.5,
-                          "fill": "$accent",
+                          "fill": "#3D8A5A",
                           "content": "Bookmate",
                           "fontFamily": "Outfit",
                           "fontSize": 10,
                           "fontWeight": "600"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "zTqOD",
-                      "name": "lgQuotes",
-                      "width": "fill_container",
-                      "height": "fill_container",
-                      "layout": "vertical",
-                      "gap": 12,
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "2FnRl",
-                          "name": "q1",
-                          "width": "fill_container",
-                          "fill": "$bg",
-                          "cornerRadius": 14,
-                          "layout": "vertical",
-                          "gap": 8,
-                          "padding": [
-                            14,
-                            16
-                          ],
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "F6Jgu",
-                              "name": "q1text",
-                              "fill": "$text-primary",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "“삶이 있는 한 희망은 있다.”",
-                              "lineHeight": 1.4,
-                              "fontFamily": "Outfit",
-                              "fontSize": 13,
-                              "fontWeight": "600",
-                              "letterSpacing": -0.2
-                            },
-                            {
-                              "type": "text",
-                              "id": "zE3uU",
-                              "name": "q1info",
-                              "fill": "$text-tertiary",
-                              "content": "키케로",
-                              "fontFamily": "Outfit",
-                              "fontSize": 10,
-                              "fontWeight": "500"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "eYIPy",
-                          "name": "q2",
-                          "width": "fill_container",
-                          "fill": "$bg",
-                          "cornerRadius": 14,
-                          "layout": "vertical",
-                          "gap": 8,
-                          "padding": [
-                            14,
-                            16
-                          ],
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "LQ3d3",
-                              "name": "q2text",
-                              "fill": "$text-primary",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "“진정한 발견의 여행은 새로운 풍경을 찾는 것이 아니라 새로운 눈을 갖는 것이다.”",
-                              "lineHeight": 1.4,
-                              "fontFamily": "Outfit",
-                              "fontSize": 13,
-                              "fontWeight": "600",
-                              "letterSpacing": -0.2
-                            },
-                            {
-                              "type": "text",
-                              "id": "qEc8U",
-                              "name": "q2info",
-                              "fill": "$text-tertiary",
-                              "content": "마르셀 프루스트",
-                              "fontFamily": "Outfit",
-                              "fontSize": 10,
-                              "fontWeight": "500"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "Q5xkk",
-                          "name": "q3",
-                          "width": "fill_container",
-                          "fill": "$bg",
-                          "cornerRadius": 14,
-                          "layout": "vertical",
-                          "gap": 8,
-                          "padding": [
-                            14,
-                            16
-                          ],
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "555k5",
-                              "name": "q3text",
-                              "fill": "$text-primary",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "“나는 나를 파괴할 권리가 있다.”",
-                              "lineHeight": 1.4,
-                              "fontFamily": "Outfit",
-                              "fontSize": 13,
-                              "fontWeight": "600",
-                              "letterSpacing": -0.2
-                            },
-                            {
-                              "type": "text",
-                              "id": "nRu2l",
-                              "name": "q3info",
-                              "fill": "$text-tertiary",
-                              "content": "영호의 미술관 · 김영하",
-                              "fontFamily": "Outfit",
-                              "fontSize": 10,
-                              "fontWeight": "500"
-                            }
-                          ]
                         }
                       ]
                     }
@@ -14149,16 +14002,6 @@
                   "padding": 16,
                   "justifyContent": "space_between",
                   "children": [
-                    {
-                      "type": "text",
-                      "id": "s9Xvy",
-                      "name": "gsIcon",
-                      "fill": "#FFFFFF30",
-                      "content": "“",
-                      "fontFamily": "Outfit",
-                      "fontSize": 28,
-                      "fontWeight": "700"
-                    },
                     {
                       "type": "text",
                       "id": "erQMw",
@@ -14255,16 +14098,6 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "Zj9sl",
-                              "name": "gmIcon",
-                              "fill": "#FFFFFF30",
-                              "content": "“",
-                              "fontFamily": "Outfit",
-                              "fontSize": 28,
-                              "fontWeight": "700"
-                            },
-                            {
-                              "type": "text",
                               "id": "chuMr",
                               "name": "gmQuote",
                               "fill": "#FFFFFF",
@@ -14273,7 +14106,7 @@
                               "content": "우리가 어떤 사람을 미워한다면, 우리는 그의 모습 속에 들어앉은 우리 자신의 모습을 미워하는 것이다.",
                               "lineHeight": 1.5,
                               "fontFamily": "Outfit",
-                              "fontSize": 13,
+                              "fontSize": 15,
                               "fontWeight": "600",
                               "letterSpacing": -0.2
                             }
@@ -14354,187 +14187,60 @@
                   },
                   "cornerRadius": 22,
                   "layout": "vertical",
-                  "padding": 20,
+                  "padding": 24,
                   "justifyContent": "space_between",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "A1QXq",
-                      "name": "glHeader",
+                      "type": "text",
+                      "id": "pX0gB",
+                      "name": "glIcon",
+                      "fill": "#FFFFFF30",
+                      "content": "“",
+                      "fontFamily": "Outfit",
+                      "fontSize": 40,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "c7gPf",
+                      "name": "glQuote",
+                      "fill": "#FFFFFF",
+                      "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "justifyContent": "space_between",
+                      "content": "“삶이 있는 한 희망은 있다.”",
+                      "lineHeight": 1.5,
+                      "fontFamily": "Outfit",
+                      "fontSize": 20,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.3
+                    },
+                    {
+                      "type": "text",
+                      "id": "C3EK5",
+                      "name": "glInfo",
+                      "fill": "#FFFFFF80",
+                      "content": "키케로",
+                      "fontFamily": "Outfit",
+                      "fontSize": 11,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "adsx3",
+                      "name": "glBottom",
+                      "width": "fill_container",
+                      "justifyContent": "end",
                       "alignItems": "center",
                       "children": [
                         {
-                          "type": "frame",
-                          "id": "Tn4Q1",
-                          "name": "glTitle",
-                          "gap": 6,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "icon_font",
-                              "id": "rW59W",
-                              "name": "glIcon",
-                              "width": 16,
-                              "height": 16,
-                              "iconFontName": "book-open",
-                              "iconFontFamily": "lucide",
-                              "fill": "#FFFFFFCC"
-                            },
-                            {
-                              "type": "text",
-                              "id": "MDOKR",
-                              "name": "glLabel",
-                              "fill": "#FFFFFF",
-                              "content": "오늘의 문장",
-                              "fontFamily": "Outfit",
-                              "fontSize": 14,
-                              "fontWeight": "700",
-                              "letterSpacing": -0.2
-                            }
-                          ]
-                        },
-                        {
                           "type": "text",
-                          "id": "ATvWW",
+                          "id": "ACn0b",
                           "name": "glLogo",
                           "fill": "#FFFFFF40",
                           "content": "Bookmate",
                           "fontFamily": "Outfit",
                           "fontSize": 10,
                           "fontWeight": "600"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "whail",
-                      "name": "glQuotes",
-                      "width": "fill_container",
-                      "height": "fill_container",
-                      "layout": "vertical",
-                      "gap": 12,
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "2Y3Yt",
-                          "name": "gq1",
-                          "width": "fill_container",
-                          "fill": "#FFFFFF15",
-                          "cornerRadius": 14,
-                          "layout": "vertical",
-                          "gap": 8,
-                          "padding": [
-                            14,
-                            16
-                          ],
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "bxDCc",
-                              "name": "gq1t",
-                              "fill": "#FFFFFF",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "“삶이 있는 한 희망은 있다.”",
-                              "lineHeight": 1.4,
-                              "fontFamily": "Outfit",
-                              "fontSize": 13,
-                              "fontWeight": "600",
-                              "letterSpacing": -0.2
-                            },
-                            {
-                              "type": "text",
-                              "id": "8s3fZ",
-                              "name": "gq1i",
-                              "fill": "#FFFFFF80",
-                              "content": "키케로",
-                              "fontFamily": "Outfit",
-                              "fontSize": 10,
-                              "fontWeight": "500"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "lJfuZ",
-                          "name": "gq2",
-                          "width": "fill_container",
-                          "fill": "#FFFFFF15",
-                          "cornerRadius": 14,
-                          "layout": "vertical",
-                          "gap": 8,
-                          "padding": [
-                            14,
-                            16
-                          ],
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "5CeoF",
-                              "name": "gq2t",
-                              "fill": "#FFFFFF",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "“진정한 발견의 여행은 새로운 풍경을 찾는 것이 아니라 새로운 눈을 갖는 것이다.”",
-                              "lineHeight": 1.4,
-                              "fontFamily": "Outfit",
-                              "fontSize": 13,
-                              "fontWeight": "600",
-                              "letterSpacing": -0.2
-                            },
-                            {
-                              "type": "text",
-                              "id": "3JYdG",
-                              "name": "gq2i",
-                              "fill": "#FFFFFF80",
-                              "content": "마르셀 프루스트",
-                              "fontFamily": "Outfit",
-                              "fontSize": 10,
-                              "fontWeight": "500"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "Q05Bs",
-                          "name": "gq3",
-                          "width": "fill_container",
-                          "fill": "#FFFFFF15",
-                          "cornerRadius": 14,
-                          "layout": "vertical",
-                          "gap": 8,
-                          "padding": [
-                            14,
-                            16
-                          ],
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "y4P0K",
-                              "name": "gq3t",
-                              "fill": "#FFFFFF",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "“나는 나를 파괴할 권리가 있다.”",
-                              "lineHeight": 1.4,
-                              "fontFamily": "Outfit",
-                              "fontSize": 13,
-                              "fontWeight": "600",
-                              "letterSpacing": -0.2
-                            },
-                            {
-                              "type": "text",
-                              "id": "9XXkn",
-                              "name": "gq3i",
-                              "fill": "#FFFFFF80",
-                              "content": "영호의 미술관 · 김영하",
-                              "fontFamily": "Outfit",
-                              "fontSize": 10,
-                              "fontWeight": "500"
-                            }
-                          ]
                         }
                       ]
                     }
@@ -15843,6 +15549,373 @@
       "fontFamily": "Inter",
       "fontSize": 16,
       "fontWeight": "normal"
+    },
+    {
+      "type": "rectangle",
+      "id": "1LSMW",
+      "x": -2090,
+      "y": 662,
+      "fill": {
+        "type": "image",
+        "enabled": true,
+        "url": "image-6.png",
+        "mode": "fill"
+      },
+      "width": 1024,
+      "height": 559
+    },
+    {
+      "type": "frame",
+      "id": "BHCTb",
+      "x": -904,
+      "y": -1086,
+      "name": "1-1 홈 (Empty State)",
+      "width": 390,
+      "height": 844,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "7YWZ0",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            22,
+            20,
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "MVidN",
+              "name": "time",
+              "fill": "$text-primary",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "CgZQl",
+              "name": "icons",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "Jhdfa",
+                  "name": "ic1",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "signal",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "SxdAE",
+                  "name": "ic2",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "wifi",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "6NnRe",
+                  "name": "ic3",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "battery-full",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "x60sS",
+          "name": "Header",
+          "width": "fill_container",
+          "height": 64,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "5gYnu",
+              "name": "logo",
+              "fill": "$text-primary",
+              "content": "Bookmate",
+              "fontFamily": "Outfit",
+              "fontSize": 26,
+              "fontWeight": "700",
+              "letterSpacing": -0.5
+            },
+            {
+              "type": "icon_font",
+              "id": "A7g1K",
+              "name": "bellIcon",
+              "width": 22,
+              "height": 22,
+              "iconFontName": "bell",
+              "iconFontFamily": "lucide",
+              "fill": "$text-secondary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "IjV1p",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "padding": [
+            0,
+            20,
+            80,
+            20
+          ],
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "XnGEx",
+              "name": "emptyWrap",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QhQV1",
+                  "name": "Empty Illustration",
+                  "width": 240,
+                  "height": 240,
+                  "cornerRadius": 20
+                },
+                {
+                  "type": "frame",
+                  "id": "lEUiY",
+                  "name": "textWrap",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "QgCSl",
+                      "name": "title1",
+                      "fill": "$text-primary",
+                      "content": "아직 수집한 문구가 없어요.",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "4eZQY",
+                      "name": "title2",
+                      "fill": "$text-secondary",
+                      "content": "첫 번째 문구를 채워볼까요?",
+                      "fontFamily": "Inter",
+                      "fontSize": 15
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "TW5CO",
+                  "name": "CTA Button",
+                  "fill": "$accent",
+                  "cornerRadius": 100,
+                  "gap": 6,
+                  "padding": [
+                    12,
+                    24
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "3Ts2V",
+                      "name": "ctaIcon",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "plus",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FFFFFF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "lIJ3O",
+                      "name": "ctaText",
+                      "fill": "#FFFFFF",
+                      "content": "문구 수집 시작하기",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "8F2Id",
+          "name": "Tab Bar",
+          "width": "fill_container",
+          "height": 90,
+          "fill": "$bg",
+          "padding": [
+            12,
+            21,
+            21,
+            21
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "xiVta",
+              "name": "pill",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "$card",
+              "cornerRadius": 36,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "$border"
+              },
+              "padding": 4,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "nem71",
+                  "name": "tab1",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "$accent",
+                  "cornerRadius": 26,
+                  "layout": "vertical",
+                  "gap": 4,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "V1ZIx",
+                      "name": "tab1Icon",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "house",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FFFFFF"
+                    },
+                    {
+                      "type": "text",
+                      "id": "KRbW9",
+                      "name": "tab1Label",
+                      "fill": "#FFFFFF",
+                      "content": "홈",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "NZwNm",
+                  "name": "tab2",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "cornerRadius": 26,
+                  "layout": "vertical",
+                  "gap": 4,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "pj9i0",
+                      "name": "tab2Icon",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "circle-plus",
+                      "iconFontFamily": "lucide",
+                      "fill": "$tab-inactive"
+                    },
+                    {
+                      "type": "text",
+                      "id": "NNqFa",
+                      "name": "tab2Label",
+                      "fill": "$tab-inactive",
+                      "content": "수집",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "DwM7V",
+                  "name": "tab4",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "cornerRadius": 26,
+                  "layout": "vertical",
+                  "gap": 4,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "qaljZ",
+                      "name": "tab4Icon",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "user",
+                      "iconFontFamily": "lucide",
+                      "fill": "$tab-inactive"
+                    },
+                    {
+                      "type": "text",
+                      "id": "huNFx",
+                      "name": "tab4Label",
+                      "fill": "$tab-inactive",
+                      "content": "설정",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 10,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "variables": {
