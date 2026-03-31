@@ -2,14 +2,20 @@
 
 **맞춤형 독서 기록 및 공유 앱** - 책 속 문장을 촬영하고, 카드로 꾸미고, 나만의 컬렉션으로 정리하세요.
 
+> **개발 기간**: 2025.03.17 ~ 2025.03.31 (2주)
+
 ## Screenshots
 
 <p align="center">
-  <img src="images/데이터없을 때 화면.PNG" width="200" alt="홈 화면" />
-  &nbsp;&nbsp;
-  <img src="images/사진분석세팅화면.PNG" width="200" alt="OCR 텍스트 인식" />
-  &nbsp;&nbsp;
-  <img src="images/인식한 텍스트 리스트.PNG" width="200" alt="인식된 텍스트 목록" />
+  <img src="images/Apple iPhone 16 Pro Max Screenshot 1.png" width="180" alt="내 문장을 내 곁에" />
+  <img src="images/Apple iPhone 16 Pro Max Screenshot 2.png" width="180" alt="사진 촬영으로 손 쉬운 수집" />
+  <img src="images/Apple iPhone 16 Pro Max Screenshot 3.png" width="180" alt="원하는 문장만 골라 담기" />
+  <img src="images/Apple iPhone 16 Pro Max Screenshot 4.png" width="180" alt="마음 가는 대로 카드를 꾸미기" />
+</p>
+<p align="center">
+  <img src="images/Apple iPhone 16 Pro Max Screenshot 5.png" width="180" alt="찾고자 하는 책을 검색" />
+  <img src="images/Apple iPhone 16 Pro Max Screenshot 6.png" width="180" alt="손으로 적거나 카메라로 찍거나" />
+  <img src="images/Apple iPhone 16 Pro Max Screenshot 7.png" width="180" alt="수정과 삭제도 간편하게" />
 </p>
 
 ## Features
@@ -49,14 +55,16 @@
 Bookmate/
 ├── Bookmate/                    # Xcode 프로젝트
 │   └── Bookmate/
+│       ├── DesignSystem/         # AppColor, AppFont, AppIcon
 │       ├── Models/              # Realm 모델, API 응답 모델
-│       ├── Services/            # Naver API 서비스
+│       ├── Services/            # Naver API, OCR, Realm 설정
 │       ├── Repositories/        # Book/Quote CRUD
-│       ├── Screens/             # 화면별 ViewController
-│       ├── AppColor.swift       # 색상 팔레트
-│       ├── AppFont.swift        # 타이포그래피
-│       └── AppIcon.swift        # SF Symbol 매핑
-├── SampleRecognitionTExt/       # OCR 참고 프로젝트 (SwiftUI)
+│       └── Screens/             # 화면별 ViewController
+│           ├── Home/
+│           ├── Book/
+│           ├── Capture/
+│           ├── Quote/
+│           └── Components/
 ├── Bookmate.pen                 # Pencil 디자인 파일
 ├── images/                      # 스크린샷 및 디자인 미리보기
 ├── Functional_Specs.md          # 기능정의서
