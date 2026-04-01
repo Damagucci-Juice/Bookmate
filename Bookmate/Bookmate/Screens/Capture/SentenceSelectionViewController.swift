@@ -263,7 +263,7 @@ final class SentenceSelectionViewController: UIViewController {
             .subscribe(onNext: { [weak self] in
                 guard let self else { return }
                 let selectedText = self.selectionRange.map { range in
-                    range.map { self.sentences[$0] }.joined(separator: "\n")
+                    range.map { self.sentences[$0] }.joined(separator: " ")
                 } ?? ""
 
                 let sheet = DetailSheetViewController()

@@ -3,6 +3,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 import Vision
+import NaturalLanguage
 
 final class TextRecognitionViewController: UIViewController {
 
@@ -366,14 +367,25 @@ final class TextRecognitionViewController: UIViewController {
                 let sortedObservations = self.imageOCR.observations.sorted {
                     $0.boundingBox.origin.y > $1.boundingBox.origin.y
                 }
-                let lines = sortedObservations
+                // OCR 줄들을 하나의 텍스트로 합친 뒤 문장 단위로 재분리
+                let rawText = sortedObservations
                     .compactMap { $0.topCandidates(1).first }
                     .filter { $0.confidence > 0.3 && $0.string.count >= 2 }
                     .flatMap { candidate in
                         candidate.string.components(separatedBy: .newlines)
                             .map { $0.trimmingCharacters(in: .whitespaces) }
-                            .filter { !$0.isEmpty && $0.count >= 2 }
+                            .filter { !$0.isEmpty }
                     }
+                    .joined(separator: " ")
+
+                let tokenizer = NLTokenizer(unit: .sentence)
+                tokenizer.string = rawText
+                var lines: [String] = []
+                tokenizer.enumerateTokens(in: rawText.startIndex..<rawText.endIndex) { range, _ in
+                    let s = rawText[range].trimmingCharacters(in: .whitespacesAndNewlines)
+                    if s.count >= 2 { lines.append(s) }
+                    return true
+                }
                 guard !lines.isEmpty else { return }
                 // 다음 화면으로 이동 전 메모리 해제
                 self.imageData = nil
