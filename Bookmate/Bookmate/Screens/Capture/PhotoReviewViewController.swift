@@ -297,14 +297,16 @@ final class PhotoReviewViewController: UIViewController {
         let h = CGFloat(cgImage.height)
 
         // 정규 좌표 (좌하단 원점) → 픽셀 좌표 (좌상단 원점)
+        let imageBounds = CGRect(x: 0, y: 0, width: w, height: h)
         let pixelRect = CGRect(
             x: regionOfInterest.origin.x * w,
             y: (1.0 - regionOfInterest.origin.y - regionOfInterest.height) * h,
             width: regionOfInterest.width * w,
             height: regionOfInterest.height * h
-        ).integral
+        ).integral.intersection(imageBounds)
 
-        guard let cropped = cgImage.cropping(to: pixelRect) else { return nil }
+        guard pixelRect.width > 0, pixelRect.height > 0,
+              let cropped = cgImage.cropping(to: pixelRect) else { return nil }
         return UIImage(cgImage: cropped).jpegData(compressionQuality: 0.95)
     }
 
