@@ -12,9 +12,9 @@ final class PhotoReviewViewController: UIViewController {
     private let disposeBag = DisposeBag()
 
     private var isAdjustMode = false
-    private var regionOfInterest: CGRect = CGRect(x: 0, y: 0, width: 1, height: 1)
-    private let fullRect = CGRect(x: 0, y: 0, width: 1, height: 1)
-    private var isCropped: Bool { regionOfInterest != fullRect }
+    private let defaultRegion = CGRect(x: 0.05, y: 0.05, width: 0.9, height: 0.9)
+    private var regionOfInterest: CGRect = CGRect(x: 0.05, y: 0.05, width: 0.9, height: 0.9)
+    private var isCropped: Bool { regionOfInterest != defaultRegion }
 
     // Crop Preview Layers (조절 모드 아닐 때 표시)
     private let cropDimmingLayer = CAShapeLayer()
@@ -102,6 +102,16 @@ final class PhotoReviewViewController: UIViewController {
     }
 
     override var prefersStatusBarHidden: Bool { true }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
+    }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
