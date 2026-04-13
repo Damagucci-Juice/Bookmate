@@ -134,16 +134,19 @@ final class CardPreviewView: UIView {
         addSubview(topSection)
         addSubview(bottomRow)
 
-        bottomRow.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(32)
-            $0.bottom.equalToSuperview().inset(40)
+        snp.makeConstraints {
+            $0.height.greaterThanOrEqualTo(420)
         }
 
         topSection.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(32)
-            $0.top.greaterThanOrEqualToSuperview().inset(40)
-            $0.bottom.lessThanOrEqualTo(bottomRow.snp.top).offset(-20)
-            $0.centerY.equalToSuperview().offset(-20).priority(.medium)
+            $0.top.equalToSuperview().inset(40)
+            $0.bottom.equalTo(bottomRow.snp.top).offset(-20)
+        }
+
+        bottomRow.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview().inset(32)
+            $0.bottom.equalToSuperview().inset(40)
         }
 
         configure(styleType: .green)

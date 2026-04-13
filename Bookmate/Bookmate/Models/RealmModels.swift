@@ -31,6 +31,8 @@ class Book: Object {
 // MARK: - Quote
 
 class Quote: Object {
+    static let maxCharacterCount = 300
+
     @Persisted(primaryKey: true) var id: ObjectId
     @Persisted var text: String = ""
     @Persisted var memo: String?

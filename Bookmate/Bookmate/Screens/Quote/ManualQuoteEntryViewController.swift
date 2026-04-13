@@ -13,6 +13,7 @@ final class ManualQuoteEntryViewController: UIViewController {
     private let quoteRepository = QuoteRepository()
     private let bookRepository = BookRepository()
     private let disposeBag = DisposeBag()
+    private let maxCharacterCount = Quote.maxCharacterCount
 
     // MARK: - Init
 
@@ -68,6 +69,14 @@ final class ManualQuoteEntryViewController: UIViewController {
         tv.textContainerInset = .zero
         tv.textContainer.lineFragmentPadding = 0
         return tv
+    }()
+
+    private let charCountLabel: UILabel = {
+        let l = UILabel()
+        l.font = .systemFont(ofSize: 12, weight: .medium)
+        l.textColor = AppColor.textTertiary
+        l.textAlignment = .right
+        return l
     }()
 
     // Page Number
@@ -229,10 +238,12 @@ final class ManualQuoteEntryViewController: UIViewController {
         }
 
         // Quote Section
-        let quoteSection = UIStackView(arrangedSubviews: [quoteSectionLabel, quoteContainer])
+        let quoteSection = UIStackView(arrangedSubviews: [quoteSectionLabel, quoteContainer, charCountLabel])
         quoteSection.axis = .vertical
         quoteSection.spacing = 10
+        quoteSection.setCustomSpacing(6, after: quoteContainer)
         contentStack.addArrangedSubview(quoteSection)
+        updateCharCount()
 
         quoteContainer.addSubview(quotePlaceholder)
         quoteContainer.addSubview(quoteTextView)
@@ -332,22 +343,30 @@ final class ManualQuoteEntryViewController: UIViewController {
             : "선택됨: \(selectedTags.map { "#\($0)" }.joined(separator: " ")) (\(selectedTags.count)/\(maxTags))"
     }
 
+    private func updateCharCount() {
+        let count = quoteTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).count
+        charCountLabel.text = "\(count)/\(maxCharacterCount)자"
+        let isOver = count > maxCharacterCount
+        charCountLabel.textColor = isOver ? AppColor.coral : AppColor.textTertiary
+    }
+
+    private func updateSaveButtonState() {
+        let text = quoteTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        let isValid = !text.isEmpty && text.count <= maxCharacterCount
+        saveButton.isEnabled = isValid
+        saveButton.alpha = isValid ? 1.0 : 0.4
+    }
+
     // MARK: - Bindings
 
     private func bindActions() {
         quoteTextView.delegate = self
 
-        let hasText = quoteTextView.rx.text.orEmpty
-            .map { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
-            .share(replay: 1)
-
-        hasText
-            .bind(to: saveButton.rx.isEnabled)
-            .disposed(by: disposeBag)
-
-        hasText
-            .map { $0 ? 1.0 : 0.4 }
-            .bind(to: saveButton.rx.alpha)
+        quoteTextView.rx.text.orEmpty
+            .subscribe(onNext: { [weak self] _ in
+                self?.updateCharCount()
+                self?.updateSaveButtonState()
+            })
             .disposed(by: disposeBag)
 
         saveButton.rx.tap
@@ -386,6 +405,8 @@ final class ManualQuoteEntryViewController: UIViewController {
 
         suggestCollectionView.reloadData()
         updateTagHint()
+        updateCharCount()
+        updateSaveButtonState()
     }
 
     // MARK: - Save
@@ -426,6 +447,8 @@ final class ManualQuoteEntryViewController: UIViewController {
 extension ManualQuoteEntryViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         quotePlaceholder.isHidden = !textView.text.isEmpty
+        updateCharCount()
+        updateSaveButtonState()
     }
 }
 

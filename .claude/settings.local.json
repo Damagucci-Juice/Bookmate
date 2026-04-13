@@ -36,7 +36,8 @@
       "Bash(ls -la /Users/will/Desktop/Bookmate/Bookmate/*.lock)",
       "Bash(grep -r \"tracking\\\\|analytics\\\\|telemetry\\\\|crash\\\\|log\" /Users/will/Desktop/Bookmate/Bookmate/Bookmate/*.swift)",
       "Bash(ls -la /Users/will/Desktop/Bookmate/LICENSE*)",
-      "Bash(git mv:*)"
+      "Bash(git mv:*)",
+      "Bash(grep -E \"\\\\.swift$\")"
     ]
   }
 }

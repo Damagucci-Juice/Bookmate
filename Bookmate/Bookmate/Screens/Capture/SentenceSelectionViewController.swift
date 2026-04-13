@@ -12,6 +12,7 @@ final class SentenceSelectionViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private let quoteRepository = QuoteRepository()
     private let maxSelection = 3
+    private let maxCharacterCount = Quote.maxCharacterCount
 
     private var selectionRange: ClosedRange<Int>?
 
@@ -48,6 +49,16 @@ final class SentenceSelectionViewController: UIViewController {
         btn.isEnabled = false
         btn.alpha = 0.4
         return btn
+    }()
+
+    private let charLimitWarningLabel: UILabel = {
+        let l = UILabel()
+        l.text = "최대 300자까지 선택할 수 있습니다"
+        l.font = .systemFont(ofSize: 13, weight: .medium)
+        l.textColor = AppColor.coral
+        l.textAlignment = .center
+        l.alpha = 0
+        return l
     }()
 
     private var bottomContainerBottom: Constraint?
@@ -108,6 +119,13 @@ final class SentenceSelectionViewController: UIViewController {
         }
     }
 
+    private func showCharLimitWarning() {
+        charLimitWarningLabel.alpha = 1
+        UIView.animate(withDuration: 2.0, delay: 0, options: .curveEaseOut) {
+            self.charLimitWarningLabel.alpha = 0
+        }
+    }
+
     // MARK: - Layout
 
     private func setupLayout() {
@@ -116,6 +134,7 @@ final class SentenceSelectionViewController: UIViewController {
 
         view.addSubview(bottomContainer)
 
+        bottomContainer.addSubview(charLimitWarningLabel)
         bottomContainer.addSubview(continueButton)
 
         bottomContainer.snp.makeConstraints {
@@ -123,8 +142,13 @@ final class SentenceSelectionViewController: UIViewController {
             bottomContainerBottom = $0.bottom.equalTo(view.safeAreaLayoutGuide).constraint
         }
 
+        charLimitWarningLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(8)
+            $0.leading.trailing.equalToSuperview().inset(20)
+        }
+
         continueButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
+            $0.top.equalTo(charLimitWarningLabel.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview().inset(20)
             $0.bottom.equalToSuperview().offset(-16)
         }
@@ -192,6 +216,11 @@ final class SentenceSelectionViewController: UIViewController {
             let newUpper = max(range.upperBound, index)
             let newRange = newLower...newUpper
             guard newRange.count <= maxSelection else { return }
+            let charCount = newRange.map { sentences[$0] }.joined(separator: " ").count
+            guard charCount <= maxCharacterCount else {
+                showCharLimitWarning()
+                return
+            }
             selectionRange = newRange
         }
         updateLineAppearances()
@@ -200,10 +229,14 @@ final class SentenceSelectionViewController: UIViewController {
     private func updateLineAppearances() {
         let count = selectionRange?.count ?? 0
         let hasSelection = count > 0
+        let charCount = selectionRange.map { range in
+            range.map { sentences[$0] }.joined(separator: " ").count
+        } ?? 0
+
         continueButton.isEnabled = hasSelection
         continueButton.alpha = hasSelection ? 1.0 : 0.4
         continueButton.configuration?.title = hasSelection
-            ? "계속하기(\(count)/\(maxSelection))"
+            ? "계속하기 (\(charCount)/\(maxCharacterCount)자)"
             : "계속"
 
         var adjacentIndices: Set<Int> = []

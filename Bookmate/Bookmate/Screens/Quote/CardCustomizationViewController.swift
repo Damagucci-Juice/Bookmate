@@ -196,7 +196,6 @@ final class CardCustomizationViewController: UIViewController {
             $0.top.equalToSuperview().offset(20)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(327)
-            $0.height.equalTo(420)
         }
 
         // Style section
