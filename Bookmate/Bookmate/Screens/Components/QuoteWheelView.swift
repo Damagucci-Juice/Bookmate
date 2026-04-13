@@ -216,13 +216,13 @@ final class QuoteWheelView: UIView {
             guard items.count > 1 else { return }
             let translation = gesture.translation(in: container)
             let rawDelta = -translation.y / rowHeight
-            // Clamp dragging to at most 1 card in either direction
             let clampedDelta = max(-1, min(1, rawDelta))
-            scrollOffset = panStartOffset + clampedDelta
+            let newOffset = panStartOffset + clampedDelta
+            scrollOffset = max(0, min(CGFloat(items.count - 1), newOffset))
             layoutVisibleCards()
 
         case .ended, .cancelled:
-            let snapTarget = scrollOffset.rounded()
+            let snapTarget = min(max(0, scrollOffset.rounded()), CGFloat(items.count - 1))
 
             UIView.animate(
                 withDuration: 0.4,
@@ -317,7 +317,7 @@ final class WheelCardView: UIView {
     required init?(coder: NSCoder) { fatalError() }
 
     func setExpanded(_ expanded: Bool) {
-        quoteLabel.numberOfLines = 4
+        quoteLabel.numberOfLines = expanded ? 0 : 4
     }
 
     func preferredHeight(forWidth width: CGFloat) -> CGFloat {
