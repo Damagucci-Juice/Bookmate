@@ -8,7 +8,7 @@ platform :ios do
     scan(
       project: "Bookmate/Bookmate.xcodeproj",
       scheme: "Bookmate",
-      destination: "platform=iOS Simulator,name=iPhone 16 Pro,OS=26.1",
+      destination: "platform=iOS Simulator,name=iPhone 16,OS=latest",
       clean: true,
       code_coverage: true,
       output_directory: "./fastlane/test_output",

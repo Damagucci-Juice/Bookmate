@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.3.app/Contents/Developer
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
 
       - name: Generate Secrets.xcconfig
         run: |
@@ -37,7 +37,12 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
-          bundler-cache: true
+          bundler-cache: false
+
+      - name: Install Gems
+        run: |
+          rm -f Gemfile.lock
+          bundle install
 
       - name: Resolve SPM Dependencies
         run: |
