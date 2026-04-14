@@ -5,10 +5,15 @@ platform :ios do
   # ── Test lane ──────────────────────────────────────
   desc "Run unit tests"
   lane :test do
+    # Find an available iPhone simulator dynamically
+    sim_name = `xcrun simctl list devices available | grep -oE "iPhone [0-9]+ Pro" | head -1`.strip
+    sim_name = "iPhone 16" if sim_name.empty?
+    UI.message("Using simulator: #{sim_name}")
+
     scan(
       project: "Bookmate/Bookmate.xcodeproj",
       scheme: "Bookmate",
-      destination: "platform=iOS Simulator,name=iPhone 16,OS=latest",
+      device: sim_name,
       clean: true,
       code_coverage: true,
       output_directory: "./fastlane/test_output",

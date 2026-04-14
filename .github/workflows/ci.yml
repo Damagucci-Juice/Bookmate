@@ -20,8 +20,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: List Available Xcodes
+        run: ls /Applications | grep Xcode
+
       - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app/Contents/Developer
+        run: |
+          # Use the latest available Xcode on the runner
+          XCODE_PATH=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1)
+          echo "Using: $XCODE_PATH"
+          sudo xcode-select -s "$XCODE_PATH/Contents/Developer"
+          xcodebuild -version
+
+      - name: List Available Simulators
+        run: xcrun simctl list devices available | grep -i "iphone" | head -10
 
       - name: Generate Secrets.xcconfig
         run: |
