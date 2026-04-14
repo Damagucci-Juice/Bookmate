@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Unit Tests
+    runs-on: macos-15
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.3.app/Contents/Developer
+
+      - name: Generate Secrets.xcconfig
+        run: |
+          cat > Bookmate/Secrets.xcconfig << 'XCEOF'
+          NAVER_CLIENT_ID = ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET = ${{ secrets.NAVER_CLIENT_SECRET }}
+          XCEOF
+
+      - name: Generate GoogleService-Info.plist
+        run: echo '${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}' > Bookmate/Bookmate/GoogleService-Info.plist
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+
+      - name: Resolve SPM Dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project Bookmate/Bookmate.xcodeproj \
+            -scheme Bookmate
+
+      - name: Run Tests
+        run: bundle exec fastlane test
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: fastlane/test_output/

@@ -32,3 +32,15 @@ Podfile.lock
 # Firebase
 GoogleService-Info.plist
 firebase_app_id_file.json
+
+# Fastlane
+fastlane/api_key.json
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+build/
+
+# Ruby
+vendor/bundle
+.bundle

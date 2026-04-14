@@ -1,0 +1,75 @@
+name: Deploy
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      lane:
+        description: "Fastlane lane (beta or release)"
+        required: true
+        default: "beta"
+        type: choice
+        options:
+          - beta
+          - release
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build & Upload
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.3.app/Contents/Developer
+
+      - name: Generate Secrets.xcconfig
+        run: |
+          cat > Bookmate/Secrets.xcconfig << 'XCEOF'
+          NAVER_CLIENT_ID = ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET = ${{ secrets.NAVER_CLIENT_SECRET }}
+          XCEOF
+
+      - name: Generate GoogleService-Info.plist
+        run: echo '${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}' > Bookmate/Bookmate/GoogleService-Info.plist
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+
+      - name: Resolve SPM Dependencies
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project Bookmate/Bookmate.xcodeproj \
+            -scheme Bookmate
+
+      - name: Run Tests
+        run: bundle exec fastlane test
+
+      - name: Determine lane
+        id: lane
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "name=${{ github.event.inputs.lane }}" >> $GITHUB_OUTPUT
+          else
+            echo "name=beta" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT }}
+        run: bundle exec fastlane ${{ steps.lane.outputs.name }}

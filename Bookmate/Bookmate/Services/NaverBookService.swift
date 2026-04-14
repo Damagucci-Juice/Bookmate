@@ -2,7 +2,11 @@ import Foundation
 import Alamofire
 import RxSwift
 
-final class NaverBookService {
+protocol BookSearchServiceProtocol {
+    func search(query: String, display: Int, start: Int) -> Observable<BookSearchResponse>
+}
+
+final class NaverBookService: BookSearchServiceProtocol {
 
     private let clientID: String
     private let clientSecret: String

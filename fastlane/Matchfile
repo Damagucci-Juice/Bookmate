@@ -1,0 +1,6 @@
+git_url(ENV["MATCH_GIT_URL"] || "https://github.com/Damagucci-Juice/bookmate-certs.git")
+storage_mode("git")
+type("appstore")
+app_identifier(["com.gucci.Bookmate", "com.gucci.Bookmate.BookmateWidget"])
+team_id("D7F6ZDDCV9")
+force_legacy_encryption(true)

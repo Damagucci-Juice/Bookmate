@@ -1,0 +1,5 @@
+app_identifier("com.gucci.Bookmate")
+team_id("D7F6ZDDCV9")
+
+# Apple ID는 환경변수 또는 App Store Connect API Key 사용
+# apple_id(ENV["APPLE_ID"])
