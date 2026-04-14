@@ -15532,44 +15532,24 @@
     },
     {
       "type": "rectangle",
-      "id": "68ft8",
-      "x": -1801,
-      "y": -46,
-      "fill": "#CCCCCC",
-      "width": 735,
-      "height": 451
-    },
-    {
-      "type": "text",
-      "id": "xxUFV",
-      "x": -1749,
-      "y": 6,
-      "fill": "#000000",
-      "content": "기술적 구현 사항\n\n- 수집한 카드를 core bluetooth를 이용해서 넘긴다던가 하는 방법,\n이거를…앱에 추가할거야? 아니면, 이미지를 공유할거야?\n- 문장에서 즐겨찾기(하트, 좋아요) 상태를 수집해서, 위젯으로 보여준다.\n- 배민 검색 처럼 꽉찬 느낌으로 주고 서버가 없으면 JSON을 몇가지 저장을 하면 된다.\n책 마다 정확한 높이와 비율이 다를 수 있으므로, 그들 사이에 차별을 정확히 두는 것을 추천한다.\n- 문구 돌아가는 물레방아 뷰를 구현\n- 사후 70년 지난 작가의 문구나 이런거를 넣기, 저작권 문제가 없다고 함\n- 장르별 스택을 몇개 쌓아 놓고 랜덤으로 보여주기\n- 위젯 구현 \n\n\n\n\n\n\n",
-      "fontFamily": "Inter",
-      "fontSize": 16,
-      "fontWeight": "normal"
-    },
-    {
-      "type": "rectangle",
-      "id": "1LSMW",
-      "x": -2090,
-      "y": 662,
+      "id": "0tcFw",
+      "x": -904,
+      "y": 854,
       "fill": {
         "type": "image",
         "enabled": true,
-        "url": "image-6.png",
+        "url": "image.png",
         "mode": "fill"
       },
-      "width": 1024,
-      "height": 559
+      "width": 402,
+      "height": 932
     },
     {
       "type": "frame",
-      "id": "BHCTb",
-      "x": -904,
-      "y": -1086,
-      "name": "1-1 홈 (Empty State)",
+      "id": "rgRny",
+      "x": 3611,
+      "y": -46,
+      "name": "1-1 홈 (펼쳐보기)",
       "width": 390,
       "height": 844,
       "fill": "$bg",
@@ -15577,7 +15557,7 @@
       "children": [
         {
           "type": "frame",
-          "id": "7YWZ0",
+          "id": "JusaA",
           "name": "Status Bar",
           "width": "fill_container",
           "height": 62,
@@ -15592,7 +15572,7 @@
           "children": [
             {
               "type": "text",
-              "id": "MVidN",
+              "id": "RxA51",
               "name": "time",
               "fill": "$text-primary",
               "content": "9:41",
@@ -15602,13 +15582,13 @@
             },
             {
               "type": "frame",
-              "id": "CgZQl",
+              "id": "YTHjy",
               "name": "icons",
               "gap": 6,
               "children": [
                 {
                   "type": "icon_font",
-                  "id": "Jhdfa",
+                  "id": "ML6Pn",
                   "name": "ic1",
                   "width": 16,
                   "height": 16,
@@ -15618,7 +15598,7 @@
                 },
                 {
                   "type": "icon_font",
-                  "id": "SxdAE",
+                  "id": "RaWD3",
                   "name": "ic2",
                   "width": 16,
                   "height": 16,
@@ -15628,7 +15608,7 @@
                 },
                 {
                   "type": "icon_font",
-                  "id": "6NnRe",
+                  "id": "Y1Cus",
                   "name": "ic3",
                   "width": 16,
                   "height": 16,
@@ -15642,7 +15622,7 @@
         },
         {
           "type": "frame",
-          "id": "x60sS",
+          "id": "ZHVEW",
           "name": "Header",
           "width": "fill_container",
           "height": 64,
@@ -15655,7 +15635,7 @@
           "children": [
             {
               "type": "text",
-              "id": "5gYnu",
+              "id": "lzxgW",
               "name": "logo",
               "fill": "$text-primary",
               "content": "Bookmate",
@@ -15666,7 +15646,7 @@
             },
             {
               "type": "icon_font",
-              "id": "A7g1K",
+              "id": "BU419",
               "name": "bellIcon",
               "width": 22,
               "height": 22,
@@ -15678,100 +15658,395 @@
         },
         {
           "type": "frame",
-          "id": "IjV1p",
+          "id": "Amhw5",
           "name": "Content",
           "width": "fill_container",
           "height": "fill_container",
           "layout": "vertical",
+          "gap": 28,
           "padding": [
             0,
             20,
-            80,
+            24,
             20
           ],
-          "justifyContent": "center",
-          "alignItems": "center",
           "children": [
             {
               "type": "frame",
-              "id": "XnGEx",
-              "name": "emptyWrap",
+              "id": "cFY94",
+              "name": "Curation Section",
               "width": "fill_container",
               "layout": "vertical",
-              "gap": 24,
-              "alignItems": "center",
+              "gap": 16,
               "children": [
                 {
                   "type": "frame",
-                  "id": "QhQV1",
-                  "name": "Empty Illustration",
-                  "width": 240,
-                  "height": 240,
-                  "cornerRadius": 20
-                },
-                {
-                  "type": "frame",
-                  "id": "lEUiY",
-                  "name": "textWrap",
+                  "id": "cdGd4",
+                  "name": "curationHeader",
                   "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 8,
+                  "justifyContent": "space_between",
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "text",
-                      "id": "QgCSl",
-                      "name": "title1",
+                      "id": "KlHGg",
+                      "name": "curationTitle",
                       "fill": "$text-primary",
-                      "content": "아직 수집한 문구가 없어요.",
-                      "fontFamily": "Inter",
-                      "fontSize": 17,
-                      "fontWeight": "600"
+                      "content": "수집한 문장",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 18,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.2
                     },
                     {
                       "type": "text",
-                      "id": "4eZQY",
-                      "name": "title2",
-                      "fill": "$text-secondary",
-                      "content": "첫 번째 문구를 채워볼까요?",
-                      "fontFamily": "Inter",
-                      "fontSize": 15
+                      "id": "jNn0C",
+                      "name": "seeAll",
+                      "fill": "$accent",
+                      "content": "전체보기",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 13,
+                      "fontWeight": "500"
                     }
                   ]
                 },
                 {
                   "type": "frame",
-                  "id": "TW5CO",
-                  "name": "CTA Button",
-                  "fill": "$accent",
-                  "cornerRadius": 100,
-                  "gap": 6,
-                  "padding": [
-                    12,
-                    24
-                  ],
-                  "justifyContent": "center",
-                  "alignItems": "center",
+                  "id": "0NXaS",
+                  "name": "Vertical Wheel",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": 420,
+                  "cornerRadius": 16,
+                  "layout": "none",
                   "children": [
                     {
-                      "type": "icon_font",
-                      "id": "3Ts2V",
-                      "name": "ctaIcon",
-                      "width": 16,
-                      "height": 16,
-                      "iconFontName": "plus",
-                      "iconFontFamily": "lucide",
-                      "fill": "#FFFFFF"
+                      "type": "frame",
+                      "id": "biXXS",
+                      "x": 17,
+                      "y": 36,
+                      "name": "Card -5",
+                      "opacity": 0.03,
+                      "width": 320,
+                      "height": 22,
+                      "fill": "#E0D5C5",
+                      "cornerRadius": 8
                     },
                     {
-                      "type": "text",
-                      "id": "lIJ3O",
-                      "name": "ctaText",
-                      "fill": "#FFFFFF",
-                      "content": "문구 수집 시작하기",
-                      "fontFamily": "Inter",
-                      "fontSize": 15,
-                      "fontWeight": "600"
+                      "type": "frame",
+                      "id": "XKd9m",
+                      "x": 17,
+                      "y": 42,
+                      "name": "Card -4",
+                      "opacity": 0.06,
+                      "width": 320,
+                      "height": 30,
+                      "fill": "#D8C4B0",
+                      "cornerRadius": 10
+                    },
+                    {
+                      "type": "frame",
+                      "id": "hkwKH",
+                      "x": 17,
+                      "y": 415,
+                      "name": "Card +4",
+                      "opacity": 0.06,
+                      "width": 320,
+                      "height": 30,
+                      "fill": "#C0B5A5",
+                      "cornerRadius": 10
+                    },
+                    {
+                      "type": "frame",
+                      "id": "HH9gj",
+                      "x": 17,
+                      "y": 54,
+                      "name": "Card -3",
+                      "opacity": 0.13,
+                      "width": 320,
+                      "fill": "#9BA8A0",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        12,
+                        18
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "XQyNb",
+                          "name": "tn3",
+                          "fill": "#FFFFFF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "\"삶이 있는 한 희망은 있다. 그리고 희망이 있는 곳에 반드시 길이 있다. 절망의 끝에서도 한 줄기 빛은 반드시 찾아온다. 포기하지 않는 한 우리는 언제나 다시 시작할 수 있다.\"",
+                          "lineHeight": 1.3,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Jt9eK",
+                      "x": 17,
+                      "y": 410,
+                      "name": "Card +3",
+                      "opacity": 0.13,
+                      "width": 320,
+                      "fill": "#A3B5A0",
+                      "cornerRadius": 12,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        12,
+                        18
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Uu3oN",
+                          "name": "tp3",
+                          "fill": "#1A1918",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "\"나는 생각한다, 고로 존재한다. 의심할 수 없는 것은 의심하고 있는 나 자신의 존재뿐이다. 모든 확실한 지식의 출발점은 바로 여기 생각하는 나 자신에게 있다. 이성의 빛으로 세상을 밝혀야 한다.\"",
+                          "lineHeight": 1.3,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "1p3Vw",
+                      "x": 17,
+                      "y": 76,
+                      "name": "Card -2",
+                      "opacity": 0.28,
+                      "width": 320,
+                      "fill": "#D4C0A0",
+                      "cornerRadius": 14,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": [
+                        14,
+                        20
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "EP3Wf",
+                          "name": "tn2",
+                          "fill": "#1A1918",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "\"진정한 발견의 여행은 새로운 풍경을 찾는 것이 아니라 새로운 눈을 갖는 것이다. 과거는 우리 안에 고스란히 살아 있으며 기억의 조각들은 한 잔의 차 향기 속에서도 다시 피어오른다. 우리가 사랑했던 장소와 사람들은 시간이 흘러도 마음속에 영원히 머무른다.\"",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "g2wvW",
+                          "name": "an2",
+                          "fill": "#6D6C6A",
+                          "content": "프루스트 · 잃어버린 시간을 찾아서",
+                          "fontFamily": "Pretendard",
+                          "fontSize": 9,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "iRXEK",
+                      "x": 17,
+                      "y": 400,
+                      "name": "Card +2",
+                      "opacity": 0.28,
+                      "width": 320,
+                      "fill": "#B5BFA1",
+                      "cornerRadius": 14,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "padding": [
+                        14,
+                        20
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "TCKc7",
+                          "name": "tp2",
+                          "fill": "#1A1918",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "\"모든 행복한 가정은 서로 닮았고 불행한 가정은 제각각의 이유로 불행하다. 사랑이란 상대방의 행복을 나의 행복과 동일시하는 것이다. 진정한 사랑은 끝이 없으며 우리의 마음을 더 넓고 깊게 만들어 준다.\"",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 11,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "NLGTo",
+                          "name": "ap2",
+                          "fill": "#6D6C6A",
+                          "content": "톨스토이 · 안나 카레니나",
+                          "fontFamily": "Pretendard",
+                          "fontSize": 9,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cr148",
+                      "x": 17,
+                      "y": 111,
+                      "name": "Card -1",
+                      "opacity": 0.55,
+                      "width": 320,
+                      "fill": "#8A9B7A",
+                      "cornerRadius": 14,
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": [
+                        16,
+                        20
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "KWaVO",
+                          "name": "tn1",
+                          "fill": "#FFFFFF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "\"사막이 아름다운 것은 어딘가에 우물을 숨기고 있기 때문이야. 중요한 것은 눈에 보이지 않아. 오직 마음으로만 잘 볼 수 있지. 어른들은 언제나 숫자를 좋아하지. 새로운 친구가 생겼다고 말하면 어른들은 정말 중요한 것에 대해서는 절대로 묻지 않거든. 네가 무언가를 길들였다면 그것에 대해 너는 영원히 책임을 져야만 해.\"",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 13,
+                          "fontWeight": "600",
+                          "letterSpacing": -0.2
+                        },
+                        {
+                          "type": "text",
+                          "id": "XIQtz",
+                          "name": "an1",
+                          "fill": "#FFFFFFCC",
+                          "content": "어린 왕자 · 생텍쥐페리",
+                          "fontFamily": "Pretendard",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Y3QiV",
+                      "x": 17,
+                      "y": 395,
+                      "name": "Card +1",
+                      "opacity": 0.55,
+                      "width": 320,
+                      "fill": "#C8A882",
+                      "cornerRadius": 14,
+                      "layout": "vertical",
+                      "gap": 4,
+                      "padding": [
+                        16,
+                        20
+                      ],
+                      "justifyContent": "end",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "amgwV",
+                          "name": "tp1",
+                          "fill": "#1A1918",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "\"인생이란 자전거를 타는 것과 같다. 균형을 잡으려면 계속 움직여야 한다. 상상력은 지식보다 중요하다. 지식에는 한계가 있지만 상상력은 세상의 모든 것을 끌어안을 수 있기 때문이다. 과거에서 배우고 오늘을 위해 살며 미래에 대한 희망을 결코 버리지 마라.\"",
+                          "lineHeight": 1.4,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 13,
+                          "fontWeight": "600",
+                          "letterSpacing": -0.2
+                        },
+                        {
+                          "type": "text",
+                          "id": "YLbnX",
+                          "name": "ap1",
+                          "fill": "#6D6C6A",
+                          "content": "아인슈타인 · 명언집",
+                          "fontFamily": "Pretendard",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "IKUir",
+                      "x": 17,
+                      "y": 166,
+                      "name": "Center Card",
+                      "width": 320,
+                      "fill": "#F0E6D8",
+                      "cornerRadius": 16,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": [
+                        20,
+                        24
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "4Vqps",
+                          "name": "qtx",
+                          "fill": "#1A1918",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "\"우리가 두려워해야 할 유일한 것은 두려움 그 자체이다. 용기란 두려움이 없는 것이 아니라 두려움보다 중요한 것이 있다고 판단하는 것이다. 자유를 향한 긴 여정에서 나는 수없이 넘어졌지만 매번 다시 일어나는 법을 배웠다. 어둠 속에서도 빛을 찾아가는 여정이 바로 인생이 우리에게 주는 가장 큰 선물이다.\"",
+                          "lineHeight": 1.5,
+                          "fontFamily": "Pretendard",
+                          "fontSize": 15,
+                          "fontWeight": "500",
+                          "letterSpacing": -0.2
+                        },
+                        {
+                          "type": "frame",
+                          "id": "2WTeA",
+                          "name": "brow",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "vFxHo",
+                              "name": "autx",
+                              "fill": "#6D6C6A",
+                              "content": "넬슨 만델라 · 자유를 향한 긴 여정",
+                              "fontFamily": "Pretendard",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 }
@@ -15781,7 +16056,7 @@
         },
         {
           "type": "frame",
-          "id": "8F2Id",
+          "id": "IBPot",
           "name": "Tab Bar",
           "width": "fill_container",
           "height": 90,
@@ -15795,7 +16070,7 @@
           "children": [
             {
               "type": "frame",
-              "id": "xiVta",
+              "id": "7Czfw",
               "name": "pill",
               "width": "fill_container",
               "height": "fill_container",
@@ -15810,7 +16085,7 @@
               "children": [
                 {
                   "type": "frame",
-                  "id": "nem71",
+                  "id": "MnHoy",
                   "name": "tab1",
                   "width": "fill_container",
                   "height": "fill_container",
@@ -15823,7 +16098,7 @@
                   "children": [
                     {
                       "type": "icon_font",
-                      "id": "V1ZIx",
+                      "id": "Eipgf",
                       "name": "tab1Icon",
                       "width": 18,
                       "height": 18,
@@ -15833,7 +16108,7 @@
                     },
                     {
                       "type": "text",
-                      "id": "KRbW9",
+                      "id": "9CsWB",
                       "name": "tab1Label",
                       "fill": "#FFFFFF",
                       "content": "홈",
@@ -15845,7 +16120,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "NZwNm",
+                  "id": "c2beU",
                   "name": "tab2",
                   "width": "fill_container",
                   "height": "fill_container",
@@ -15857,7 +16132,7 @@
                   "children": [
                     {
                       "type": "icon_font",
-                      "id": "pj9i0",
+                      "id": "wipO9",
                       "name": "tab2Icon",
                       "width": 18,
                       "height": 18,
@@ -15867,7 +16142,7 @@
                     },
                     {
                       "type": "text",
-                      "id": "NNqFa",
+                      "id": "WBw8J",
                       "name": "tab2Label",
                       "fill": "$tab-inactive",
                       "content": "수집",
@@ -15879,7 +16154,7 @@
                 },
                 {
                   "type": "frame",
-                  "id": "DwM7V",
+                  "id": "mf4Lz",
                   "name": "tab4",
                   "width": "fill_container",
                   "height": "fill_container",
@@ -15891,7 +16166,7 @@
                   "children": [
                     {
                       "type": "icon_font",
-                      "id": "qaljZ",
+                      "id": "KyUgZ",
                       "name": "tab4Icon",
                       "width": 18,
                       "height": 18,
@@ -15901,13 +16176,465 @@
                     },
                     {
                       "type": "text",
-                      "id": "huNFx",
+                      "id": "Tcabb",
                       "name": "tab4Label",
                       "fill": "$tab-inactive",
                       "content": "설정",
                       "fontFamily": "Pretendard",
                       "fontSize": 10,
                       "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "AQ8iw",
+      "x": 4061,
+      "y": -46,
+      "name": "1-2 홈 (펼쳐진 상태)",
+      "width": 390,
+      "height": 844,
+      "fill": "$bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "h1kVf",
+          "name": "statusBar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            22,
+            20,
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "SRASd",
+              "name": "time",
+              "fill": "$text-primary",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "zYWHP",
+              "name": "icons",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "tJqSA",
+                  "name": "ic1",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "signal",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "mCqbx",
+                  "name": "ic2",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "wifi",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "fAfRc",
+                  "name": "ic3",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "battery-full",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "md1pY",
+          "name": "Header Expanded",
+          "width": "fill_container",
+          "height": 64,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "WFcTL",
+              "name": "headerTitle",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "X7Ogv",
+                  "name": "titleText",
+                  "fill": "$text-primary",
+                  "content": "수집한 문장",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "cRBC5",
+                  "name": "subtitleText",
+                  "fill": "$text-secondary",
+                  "content": "6개의 문장",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Jdyff",
+              "name": "foldBtn",
+              "fill": "$card",
+              "cornerRadius": 16,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "$border"
+              },
+              "gap": 4,
+              "padding": [
+                6,
+                12
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "2nI0M",
+                  "name": "foldIcon",
+                  "width": 14,
+                  "height": 14,
+                  "iconFontName": "layers",
+                  "iconFontFamily": "lucide",
+                  "fill": "$accent"
+                },
+                {
+                  "type": "text",
+                  "id": "UwbsD",
+                  "name": "foldText",
+                  "fill": "$accent",
+                  "content": "접기",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "3Qpux",
+          "name": "Scroll Content",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            0,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "NBNNK",
+              "name": "Top Cards",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "hlviV",
+                  "name": "card1",
+                  "width": "fill_container",
+                  "fill": "#F0E6D8",
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    20,
+                    24
+                  ],
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "fMaws",
+                      "name": "q1",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "우리가 두려워해야 할 유일한 것은 두려움 그 자체이다. 용기란 두려움이 없는 것이 아니라 두려움보다 중요한 것이 있다고 판단하는 것이다. 자유를 향한 긴 여정에서 나는 수없이 넘어졌지만 매번 다시 일어나는 법을 배웠다.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "Pretendard",
+                      "fontSize": 15,
+                      "fontWeight": "500",
+                      "letterSpacing": -0.2
+                    },
+                    {
+                      "type": "text",
+                      "id": "ZsgtG",
+                      "name": "a1",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "넬슨 만델라 · 자유를 향한 긴 여정",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ILoex",
+                  "name": "card2",
+                  "width": "fill_container",
+                  "fill": "#8A9B7A",
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    20,
+                    24
+                  ],
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "wP6oS",
+                      "name": "q2",
+                      "fill": "#FFFFFF",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "사막이 아름다운 것은 어딘가에 우물을 숨기고 있기 때문이야. 중요한 것은 눈에 보이지 않아. 오직 마음으로만 잘 볼 수 있지. 네가 무언가를 길들였다면 그것에 대해 너는 영원히 책임을 져야만 해.",
+                      "lineHeight": 1.5,
+                      "fontFamily": "Pretendard",
+                      "fontSize": 15,
+                      "fontWeight": "500",
+                      "letterSpacing": -0.2
+                    },
+                    {
+                      "type": "text",
+                      "id": "3Uvr4",
+                      "name": "a2",
+                      "fill": "#FFFFFFCC",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "어린 왕자 · 생텍쥐페리",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YB4ws",
+                  "name": "card3",
+                  "width": "fill_container",
+                  "fill": "#C8A882",
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    20,
+                    24
+                  ],
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "GsEZr",
+                      "name": "q3",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "인생이란 자전거를 타는 것과 같다. 균형을 잡으려면 계속 움직여야 한다. 상상력은 지식보다 중요하다. 지식에는 한계가 있지만 상상력은 세상의 모든 것을 끌어안을 수 있기 때문이다.",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Pretendard",
+                      "fontSize": 13,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.2
+                    },
+                    {
+                      "type": "text",
+                      "id": "4Jil7",
+                      "name": "a3",
+                      "fill": "$text-secondary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "아인슈타인 · 명언집",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "bOsgy",
+              "name": "Bottom Cards",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "xtQKR",
+                  "name": "Card Prousrt",
+                  "width": "fill_container",
+                  "fill": "#D4C0A0",
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    20,
+                    24
+                  ],
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "zpDt0",
+                      "name": "qt4",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "\"진정한 발견의 여행은 새로운 풍경을 찾는 것이 아니라 새로운 눈을 갖는 것이다. 과거는 우리 안에 고스란히 살아 있으며 기억의 조각들은 한 잔의 차 향기 속에서도 다시 피어오른다. 우리가 사랑했던 장소와 사람들은 시간이 흘러도 마음속에 영원히 머무른다.\"",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Pretendard",
+                      "fontSize": 13,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.2
+                    },
+                    {
+                      "type": "text",
+                      "id": "AqOc7",
+                      "name": "au4",
+                      "fill": "$text-secondary",
+                      "content": "프루스트 · 잃어버린 시간을 찾아서",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ieR4h",
+                  "name": "Card Tolstoy",
+                  "width": "fill_container",
+                  "fill": "#B5BFA1",
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    20,
+                    24
+                  ],
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "fJtLd",
+                      "name": "qt5",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "\"모든 행복한 가정은 서로 닮았고 불행한 가정은 제각각의 이유로 불행하다. 사랑이란 상대방의 행복을 나의 행복과 동일시하는 것이다. 진정한 사랑은 끝이 없으며 우리의 마음을 더 넓고 깊게 만들어 준다.\"",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Pretendard",
+                      "fontSize": 13,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.2
+                    },
+                    {
+                      "type": "text",
+                      "id": "r6brT",
+                      "name": "au5",
+                      "fill": "$text-secondary",
+                      "content": "톨스토이 · 안나 카레니나",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "IDQFw",
+                  "name": "Card Hope",
+                  "width": "fill_container",
+                  "fill": "#9BA8A0",
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    20,
+                    24
+                  ],
+                  "justifyContent": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "xmArc",
+                      "name": "qt6",
+                      "fill": "#FFFFFF",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "\"삶이 있는 한 희망은 있다. 그리고 희망이 있는 곳에 반드시 길이 있다. 절망의 끝에서도 한 줄기 빛은 반드시 찾아온다. 포기하지 않는 한 우리는 언제나 다시 시작할 수 있다.\"",
+                      "lineHeight": 1.4,
+                      "fontFamily": "Pretendard",
+                      "fontSize": 13,
+                      "fontWeight": "600",
+                      "letterSpacing": -0.2
+                    },
+                    {
+                      "type": "text",
+                      "id": "X6aZa",
+                      "name": "au6",
+                      "fill": "#FFFFFFCC",
+                      "content": "작자 미상",
+                      "fontFamily": "Pretendard",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
